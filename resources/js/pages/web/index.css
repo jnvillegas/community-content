@@ -1,0 +1,121 @@
+@font-face {
+  font-family: "Jakarta-sans";
+  src: url('./fonts/plus-jakarta-sans-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: "Jakarta-sans-bold";
+  src: url('./fonts/plus-jakarta-sans-bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: "Playfair-display-italic";
+  src: url('./fonts/playfair-display-italic.woff2') format('woff2');
+}
+
+:root {
+  font-family: Jakarta-sans, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --bg: #fff;
+  --fg: #f6f8f6;
+
+  --nav-bg: #ffffff;
+  --nav-white: #fff;
+  --nav-black: #1f1f1f;
+
+  --black: #000;
+  --white: #fff;
+  --white1: #e5e7eb;
+  --primary: #2D4B33;
+  --secondary: #7FD791;
+  --green2: #025a4e31;
+  --green3: #025a4e18;
+  --text: #494949;
+  --badge-bg: #dddfdd;
+  --badge-text: #2D4B33;
+
+  --title: #1f1f1f;
+  --border: #e7e7e7;
+  --border2: #1f1f1f25;
+}
+
+[data-theme=dark] {
+  --bg: #121212;
+  --fg: #1a1a1a;
+
+  --nav-bg: #121212;
+  --nav-white: #fff;
+  --nav-black: #fff;
+
+  --black: #000;
+  --white: #fff;
+  --white1: #e5e7eb;
+  --primary: #2D4B33;
+  --secondary: #7FD791;
+  --green2: #2d4b333d;
+  --green3: #025a4e18;
+  --text: #a7a5a5;
+  --badge-bg: #00000049;
+  --badge-text: #7FD791;
+
+  --title: #fdfdfd;
+  --border: #1f1f1f;
+  --border2: #1f1f1f25;
+}
+
+/* body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg);
+} */
+
+/* button {
+  font-family: Jakarta-sans, sans-serif;
+} */
+
+/* h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: Jakarta-sans-bold, sans-serif;
+} */
+
+/* a {
+  text-decoration: none;
+  color: #fff;
+} */
+
+/* p {
+  color: var(--text);
+} */
+
+.web-layout {
+  background-color: var(--bg);
+}
+
+.web-layout button {
+  font-family: Jakarta-sans, sans-serif;
+}
+
+.web-layout h1,
+.web-layout h2,
+.web-layout h3 {
+  margin: 0;
+  font-family: Jakarta-sans-bold, sans-serif;
+}
+
+.web-layout a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.web-layout p {
+  color: var(--text);
+}

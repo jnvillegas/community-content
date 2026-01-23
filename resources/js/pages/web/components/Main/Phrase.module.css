@@ -1,0 +1,60 @@
+.section {
+    padding: 8rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.container {
+    max-width: 64rem;
+    text-align: center;
+}
+
+.svg {
+    display: block;
+    margin: 0 auto 1.5rem auto;
+}
+
+.quote_icon {
+    align-self: center;
+    display: block;
+    fill: #025a4e;
+}
+
+@media (min-width: 768px) {
+    .quoteIcon {
+        font-size: 6rem;
+    }
+}
+
+.quote {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: 300;
+    color: var(--title);
+    line-height: 1.25;
+    font-size: 1.875rem;
+}
+
+@media (min-width: 768px) {
+    .quote {
+        font-size: 3rem;
+    }
+}
+
+.highlight {
+    color: var(--primary);
+    text-decoration: underline;
+    text-decoration-color: var(--secondary);
+    text-underline-offset: 8px;
+}
+
+.cite {
+    display: block;
+    margin-top: 2rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text);
+    font-style: normal;
+}
