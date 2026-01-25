@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.5-cli
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -25,15 +25,40 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-# Copy existing application directory
-COPY . /var/www
+# Copy composer files first for better caching
+COPY composer.json composer.lock ./
 
-# Copy existing application directory permissions
-COPY --chown=www-data:www-data . /var/www
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
-# Change current user to www
-USER www-data
+# Copy package files
+COPY package*.json ./
 
-# Expose port 9000 and start php-fpm server
-EXPOSE 9000
-CMD ["php-fpm"]
+# Install NPM dependencies
+RUN npm ci
+
+# Copy application code
+COPY . .
+
+# Build frontend assets
+RUN npm run build
+
+# Set permissions
+RUN chmod -R 775 storage bootstrap/cache
+
+# Clear and optimize Laravel
+RUN php artisan config:clear && \
+    php artisan cache:clear && \
+    php artisan view:clear && \
+    php artisan route:clear
+
+# Expose port
+EXPOSE 8080
+
+# Start command
+CMD php artisan migrate --force --no-interaction && \
+    php artisan config:cache && \
+    php artisan route:cache && \
+    php artisan view:cache && \
+    php artisan storage:link && \
+    php artisan serve --host=0.0.0.0 --port=8080
