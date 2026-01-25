@@ -77,3 +77,27 @@ export interface User {
     roles?: Role[]; // Added roles
     [key: string]: unknown;
 }
+
+export interface Wallpaper {
+    id: number;
+    title: string;
+    slug: string;
+    alt: string | null;
+    src: string;
+    is_locked: boolean;
+    lock_text: string | null;
+    lock_subtitle: string | null;
+    category: 'mobile' | 'desktop' | 'both';
+    resolution: string | null;
+    file_size: string | null;
+    downloads_count: number;
+    is_featured: boolean;
+    status: 'draft' | 'published' | 'archived';
+    published_at: string | null;
+    author_id: number | null;
+    author?: User;
+    created_at: string;
+    updated_at: string;
+    deleted_at: string | null;
+}
+
