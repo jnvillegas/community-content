@@ -40,16 +40,13 @@ RUN npm run build
 # Set permissions
 RUN chmod -R 775 storage bootstrap/cache
 
-# Clear and optimize Laravel
-RUN php artisan config:clear && \
-    php artisan cache:clear && \
-    php artisan view:clear && \
-    php artisan route:clear
+# Clear config (no requiere DB)
+RUN php artisan config:clear
 
 # Expose port
 EXPOSE 8080
 
-# Start command
+# Start command - Ejecuta comandos que necesitan DB en runtime
 CMD php artisan migrate --force --no-interaction && \
     php artisan config:cache && \
     php artisan route:cache && \
