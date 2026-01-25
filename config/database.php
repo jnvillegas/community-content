@@ -2,18 +2,6 @@
 
 use Illuminate\Support\Str;
 
-// Parse DATABASE_URL for Railway/Heroku compatibility
-if ($databaseUrl = env('DATABASE_URL')) {
-    $url = parse_url($databaseUrl);
-
-    putenv('DB_CONNECTION=' . ($url['scheme'] ?? 'pgsql'));
-    putenv('DB_HOST=' . ($url['host'] ?? '127.0.0.1'));
-    putenv('DB_PORT=' . ($url['port'] ?? '5432'));
-    putenv('DB_DATABASE=' . ltrim($url['path'] ?? '/laravel', '/'));
-    putenv('DB_USERNAME=' . ($url['user'] ?? 'root'));
-    putenv('DB_PASSWORD=' . ($url['pass'] ?? ''));
-}
-
 return [
 
     /*
@@ -97,7 +85,6 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'url' => env('DATABASE_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '5432'),
             'database' => env('DB_DATABASE', 'laravel'),
