@@ -3,13 +3,8 @@ import styles from './Wallpaper.module.css';
 import Footer from '../../components/Footer/Footer';
 import Navbar from "../../components/Navbar/Navbar";
 import { useAppearance } from "@/hooks/use-appearance";
-import { Wallpaper as WallpaperType } from '@/types';
 
-interface WallpaperPageProps {
-    wallpapers: WallpaperType[];
-}
-
-const Wallpaper: React.FC<WallpaperPageProps> = ({ wallpapers }) => {
+const Wallpaper = ({ wallpapers }) => {
     const { appearance, updateAppearance } = useAppearance();
     const darkMode = appearance === 'dark';
 
