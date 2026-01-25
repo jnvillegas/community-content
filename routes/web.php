@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
+// Cargar rutas de comandos administrativos (sin shell de pago)
+require __DIR__ . '/admin-commands.php';
+
 Route::get('/', function () {
     return Inertia::render('web/views/Home/Home');
 })->name('home');
