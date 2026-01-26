@@ -3,10 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
+use App\Http\Controllers\Web\HomeController;
+use App\Http\Controllers\Web\BlogController;
 
-Route::get('/', function () {
-    return Inertia::render('web/views/Home/Home');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/about', function () {
     return Inertia::render('web/views/About/About');
@@ -15,6 +15,8 @@ Route::get('/about', function () {
 Route::get('/blog', function () {
     return Inertia::render('web/views/Blog/Blog');
 })->name('blog');
+
+Route::get('/blog/{id}', [BlogController::class, 'show'])->name('blog.show');
 
 Route::get('/wallpaper', function () {
     return Inertia::render('web/views/Wallpaper/Wallpaper');

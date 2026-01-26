@@ -1,8 +1,12 @@
 import styles from './BlogDetail.module.css';
 import { useParams } from 'react-router-dom';
+import { usePage } from '@inertiajs/react';
 
 const BlogDetail = () => {
     const { id } = useParams();
+    const { article = [] } = usePage().props;
+
+    console.log("articles desde backend:", article);
 
     const post = {
         id: 1,
@@ -18,19 +22,19 @@ const BlogDetail = () => {
                 <div
                     className={styles.parallax_bg}
                     style={{
-                        backgroundImage: `url(${post.imageUrl})`
+                        backgroundImage: `url(${article.featured_image})`
                     }}
                 />
 
                 <div className={styles.hero_content}>
-                    <h1 className={styles.hero_title}>{post.title}</h1>
+                    <h1 className={styles.hero_title}>{article.title}</h1>
                 </div>
 
                 <div className={styles.filter} />
             </section>
 
             <div className={styles.content}>
-                <p className={styles.post_text}>{post.text}</p>
+                <p className={styles.post_text}>{article.content}</p>
             </div>
         </div>
     );
