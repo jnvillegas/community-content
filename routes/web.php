@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
+
+// Cargar rutas de comandos administrativos (sin shell de pago)
+require __DIR__ . '/admin-commands.php';
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\BlogController;
 
@@ -18,9 +21,8 @@ Route::get('/blog', function () {
 
 Route::get('/blog/{id}', [BlogController::class, 'show'])->name('blog.show');
 
-Route::get('/wallpaper', function () {
-    return Inertia::render('web/views/Wallpaper/Wallpaper');
-})->name('wallpaper');
+Route::get('/wallpaper', [\App\Http\Controllers\WallpaperController::class, 'publicIndex'])->name('wallpaper');
+Route::get('/wallpaper/{wallpaper}/download', [\App\Http\Controllers\WallpaperController::class, 'download'])->name('wallpaper.download');
 
 // Rutas pendientes de implementación real
 foreach (['community', 'contact'] as $route) {
@@ -50,6 +52,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Videos (Travel Explorer Hub)
     Route::resource('videos', \App\Http\Controllers\VideoController::class);
+
+    // Wallpapers
+    Route::resource('wallpapers', \App\Http\Controllers\WallpaperController::class);
 });
 
 require __DIR__ . '/settings.php';
