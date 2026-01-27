@@ -1,7 +1,3 @@
-.container {
-    height: 200vh;
-}
-
 .hero {
     position: relative;
     height: 60vh;
@@ -45,4 +41,13 @@
     .hero_title {
         font-size: 6rem;
     }
+}
+
+.content {
+    max-width: 900px;
+    margin: 2em auto;
+    padding: 2rem;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: var(--text);
 }

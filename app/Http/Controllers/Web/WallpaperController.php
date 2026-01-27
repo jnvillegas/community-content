@@ -13,10 +13,29 @@ class WallpaperController extends Controller
      */
     public function index()
     {
-        $wallpapers = Wallpaper::published()
-            ->orderBy('is_featured', 'desc')
-            ->orderBy('published_at', 'desc')
-            ->get();
+        $wallpapers = Wallpaper::where('status', 'published')
+            ->latest('created_at')
+            ->paginate(12)
+            ->through(function ($wallpaper) {
+                return [
+                    'id' => $wallpaper->id,
+                    'title' => $wallpaper->title,
+                    'slug' => $wallpaper->slug,
+                    'alt' => $wallpaper->alt,
+                    'src' => $wallpaper->src,
+
+                    'is_locked' => (bool) $wallpaper->is_locked,
+                    'lock_text' => $wallpaper->lock_text,
+                    'lock_subtitle' => $wallpaper->lock_subtitle,
+
+                    'category' => $wallpaper->category,
+                    'downloads' => $wallpaper->downloads_count,
+                    'is_featured' => (bool) $wallpaper->is_featured,
+
+                    'published_at' => optional($wallpaper->published_at)
+                        ?->format('d M Y'),
+                ];
+            });
 
         return Inertia::render('web/views/Wallpaper/Wallpaper', [
             'wallpapers' => $wallpapers,

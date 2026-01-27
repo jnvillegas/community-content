@@ -3,7 +3,6 @@ import { usePage } from '@inertiajs/react';
 
 const Youtube = () => {
     const { featuredVideos = [] } = usePage().props;
-    console.log("featuredVideos desde backend:", featuredVideos);
 
     const items = featuredVideos.length > 0 ? featuredVideos : [
     ];
