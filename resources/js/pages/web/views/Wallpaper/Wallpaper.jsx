@@ -1,20 +1,11 @@
 import React from 'react';
 import styles from './Wallpaper.module.css';
-import Footer from '../../components/Footer/Footer';
-import Navbar from "../../components/Navbar/Navbar";
-import { useAppearance } from "@/hooks/use-appearance";
+import WebLayout from '../../layout';
 
 const Wallpaper = ({ wallpapers }) => {
-    const { appearance, updateAppearance } = useAppearance();
-    const darkMode = appearance === 'dark';
-
-    const toggleTheme = () => {
-        updateAppearance(darkMode ? 'light' : 'dark');
-    };
 
     return (
-        <div className="web-layout">
-            <Navbar toggleTheme={toggleTheme} darkMode={darkMode} />
+        <div >
             <section className={styles.hero}>
                 <div className={styles.parallax_bg}></div>
                 <div className={styles.hero_content}>
@@ -30,27 +21,6 @@ const Wallpaper = ({ wallpapers }) => {
                 </div>
                 <div className={styles.filter}></div>
             </section>
-            {/* <header className={styles.hero_header}>
-                <img
-                    src="https://images.unsplash.com/photo-1511884642898-4c92249e20b6?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    alt="High impact landscape traveler at waterfall"
-                    className={styles.hero_background}
-                />
-                <div className={styles.hero_overlay}></div>
-
-                <div className={styles.hero_content}>
-                    <h1 className={styles.hero_title}>Wallpaper</h1>
-                    <p className={styles.hero_subtitle}>
-                        Sinta a jornada em cada clique
-                    </p>
-                </div>
-
-                <div className={styles.scroll_indicator}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none">
-                        <path d="M5.70711 9.71069C5.31658 10.1012 5.31658 10.7344 5.70711 11.1249L10.5993 16.0123C11.3805 16.7927 12.6463 16.7924 13.4271 16.0117L18.3174 11.1213C18.708 10.7308 18.708 10.0976 18.3174 9.70708C17.9269 9.31655 17.2937 9.31655 16.9032 9.70708L12.7176 13.8927C12.3271 14.2833 11.6939 14.2832 11.3034 13.8927L7.12132 9.71069C6.7308 9.32016 6.09763 9.32016 5.70711 9.71069Z" fill="#fff" />
-                    </svg>
-                </div>
-            </header> */}
 
             <section className={styles.intro_section}>
                 <h2 className={styles.intro_title}>Conecte-se com a Estrada</h2>
@@ -65,7 +35,7 @@ const Wallpaper = ({ wallpapers }) => {
 
             <main className={styles.gallery_container}>
                 <div className={styles.wallpaper_grid}>
-                    {wallpapers.map((wallpaper) => (
+                    {/* {wallpapers.map((wallpaper) => (
                         <div
                             key={wallpaper.id}
                             className={`${styles.wallpaper_card} ${wallpaper.is_locked ? styles.locked : ''}`}
@@ -97,13 +67,13 @@ const Wallpaper = ({ wallpapers }) => {
                                 </>
                             )}
                         </div>
-                    ))}
+                    ))} */}
                 </div>
-
-                <Footer />
             </main>
         </div>
     );
 }
+
+Wallpaper.layout = page => <WebLayout>{page}</WebLayout>
 
 export default Wallpaper;

@@ -3,11 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
-
-// Cargar rutas de comandos administrativos (sin shell de pago)
-require __DIR__ . '/admin-commands.php';
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\BlogController;
+use App\Http\Controllers\Web\WallpaperController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -15,14 +13,16 @@ Route::get('/about', function () {
     return Inertia::render('web/views/About/About');
 })->name('about');
 
-Route::get('/blog', function () {
-    return Inertia::render('web/views/Blog/Blog');
-})->name('blog');
+// Route::get('/blog', function () {
+//     return Inertia::render('web/views/Blog/Blog');
+// })->name('blog');
+
+Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 
 Route::get('/blog/{id}', [BlogController::class, 'show'])->name('blog.show');
 
-Route::get('/wallpaper', [\App\Http\Controllers\WallpaperController::class, 'publicIndex'])->name('wallpaper');
-Route::get('/wallpaper/{wallpaper}/download', [\App\Http\Controllers\WallpaperController::class, 'download'])->name('wallpaper.download');
+Route::get('/wallpaper', [WallpaperController::class, 'index'])->name('wallpaper');
+Route::get('/wallpaper/{wallpaper}/download', [WallpaperController::class, 'download'])->name('wallpaper.download');
 
 // Rutas pendientes de implementación real
 foreach (['community', 'contact'] as $route) {
@@ -58,3 +58,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 require __DIR__ . '/settings.php';
+require __DIR__ . '/admin-commands.php';

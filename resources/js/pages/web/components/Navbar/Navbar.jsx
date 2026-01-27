@@ -3,7 +3,7 @@ import PATHROUTES from "../../helpers/PathRoutes"
 import { useState } from "react"
 import { Link, usePage } from "@inertiajs/react"
 
-const Navbar = ({ toggleTheme, darkMode }) => {
+const Navbar = () => {
     const [modal, setModal] = useState(false);
     const { url } = usePage();
 

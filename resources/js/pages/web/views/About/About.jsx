@@ -1,21 +1,12 @@
 import React from 'react';
 import styles from './About.module.css';
 import logo from '../../assets/bear.png'
-import Footer from '../../components/Footer/Footer';
-import Navbar from "../../components/Navbar/Navbar";
-import { useAppearance } from "@/hooks/use-appearance";
+import WebLayout from '../../layout';
 
 const About = () => {
-    const { appearance, updateAppearance } = useAppearance();
-    const darkMode = appearance === 'dark';
-
-    const toggleTheme = () => {
-        updateAppearance(darkMode ? 'light' : 'dark');
-    };
 
     return (
-        <div className="web-layout">
-            <Navbar toggleTheme={toggleTheme} darkMode={darkMode} />
+        <div>
             <section className={styles.hero}>
                 <div className={styles.parallax_bg}></div>
                 <div className={styles.hero_content}>
@@ -169,10 +160,10 @@ const About = () => {
                     </div>
                 </div>
             </section>
-
-            <Footer />
         </div>
     );
 }
+
+About.layout = page => <WebLayout>{page}</WebLayout>
 
 export default About;

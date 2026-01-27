@@ -11,21 +11,6 @@ use Illuminate\Http\RedirectResponse;
 class WallpaperController extends Controller
 {
     /**
-     * Display wallpapers for the public page.
-     */
-    public function publicIndex(): Response
-    {
-        $wallpapers = Wallpaper::published()
-            ->orderBy('is_featured', 'desc')
-            ->orderBy('published_at', 'desc')
-            ->get();
-
-        return Inertia::render('web/views/Wallpaper/Wallpaper', [
-            'wallpapers' => $wallpapers,
-        ]);
-    }
-
-    /**
      * Display a listing of wallpapers for admin panel.
      */
     public function index(): Response

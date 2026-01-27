@@ -1,12 +1,22 @@
-import { useLocation } from "react-router-dom";
 import styles from "./Theme.module.css";
+import { useEffect, useState } from "react";
 
-const Theme = ({ toggleTheme, darkMode }) => {
-    const location = useLocation();
+const Theme = () => {
 
-    if (location.pathname === "/login") {
-        return null;
-    }
+    const [darkMode, setDarkMode] = useState(() => {
+        const saved = localStorage.getItem("darkMode");
+        return saved !== null ? saved === "true" : false;
+    });
+
+    useEffect(() => {
+        document.documentElement.setAttribute(
+            "data-theme",
+            darkMode ? "dark" : "light"
+        );
+        localStorage.setItem("darkMode", darkMode);
+    }, [darkMode]);
+
+    const toggleTheme = () => setDarkMode((prev) => !prev);
 
     return (
         <button onClick={toggleTheme} className={styles.button}>

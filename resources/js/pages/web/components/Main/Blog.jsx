@@ -5,13 +5,8 @@ import { usePage } from '@inertiajs/react';
 
 const Blog = () => {
     const { featuredArticles = [] } = usePage().props;
-    console.log("featuredArticles desde backend:", featuredArticles);
 
-    // Si no hay artículos del backend, puedes fallback a los estáticos (opcional)
-    // Pero lo ideal es que siempre haya al menos 3-4 en la DB para que se vea bien
-    const items = featuredArticles.length > 0 ? featuredArticles : [
-        // tus items estáticos originales como fallback (opcional)
-    ];
+    const items = featuredArticles.length > 0 ? featuredArticles : [];
 
     const scrollTop = () => {
         window.scrollTo(0, 0);
