@@ -38,10 +38,12 @@ export default function Edit({ wallpaper }: Props) {
         { title: 'Edit', href: `/wallpapers/${wallpaper.id}/edit` },
     ];
 
-    const { data, setData, put, processing, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
+        _method: 'put',
         title: wallpaper.title || '',
         alt: wallpaper.alt || '',
         src: wallpaper.src || '',
+        image_file: null as File | null,
         is_locked: wallpaper.is_locked || false,
         lock_text: wallpaper.lock_text || 'Junte-se à Nossa Comunidade',
         lock_subtitle: wallpaper.lock_subtitle || 'EXCLUSIVO PARA MEMBROS',
@@ -55,7 +57,7 @@ export default function Edit({ wallpaper }: Props) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        put(`/wallpapers/${wallpaper.id}`);
+        post(`/wallpapers/${wallpaper.id}`);
     };
 
     return (
@@ -117,31 +119,46 @@ export default function Edit({ wallpaper }: Props) {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="p-6 pt-0 space-y-4">
-                                {data.src ? (
-                                    <div className="aspect-video w-full rounded-xl overflow-hidden border border-gray-100 dark:border-gray-800">
+                                <div
+                                    className="aspect-video w-full rounded-xl overflow-hidden border-2 border-dashed border-gray-100 bg-gray-50/50 flex flex-col items-center justify-center dark:border-gray-800 dark:bg-gray-950/50 relative group cursor-pointer hover:border-blue-400 hover:bg-blue-50/10 transition-all"
+                                    onClick={() => document.getElementById('wallpaper-upload')?.click()}
+                                >
+                                    {data.image_file ? (
+                                        <img
+                                            src={URL.createObjectURL(data.image_file)}
+                                            alt="Preview"
+                                            className="w-full h-full object-cover"
+                                        />
+                                    ) : data.src ? (
                                         <img
                                             src={data.src}
                                             alt={data.alt || data.title}
                                             className="w-full h-full object-cover"
                                         />
+                                    ) : (
+                                        <div className="flex flex-col items-center">
+                                            <ImageIcon className="h-12 w-12 text-gray-300 mb-2" />
+                                            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Click to Upload Image</span>
+                                        </div>
+                                    )}
+
+                                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <span className="text-white font-bold text-xs uppercase">Select Image</span>
                                     </div>
-                                ) : (
-                                    <div className="aspect-video w-full rounded-xl border-2 border-dashed border-gray-100 bg-gray-50/50 flex flex-col items-center justify-center dark:border-gray-800 dark:bg-gray-950/50">
-                                        <ImageIcon className="h-12 w-12 text-gray-300 mb-2" />
-                                        <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">No Image</span>
-                                    </div>
-                                )}
-                                <div className="space-y-2">
-                                    <Label htmlFor="src" className="text-sm font-medium">Image URL *</Label>
-                                    <Input
-                                        id="src"
-                                        placeholder="https://example.com/wallpaper.jpg"
-                                        className="border-gray-100 bg-gray-50/30"
-                                        value={data.src}
-                                        onChange={e => setData('src', e.target.value)}
-                                    />
-                                    {errors.src && <p className="text-sm text-red-500">{errors.src}</p>}
                                 </div>
+                                <input
+                                    id="wallpaper-upload"
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={e => {
+                                        if (e.target.files && e.target.files[0]) {
+                                            setData('image_file', e.target.files[0]);
+                                        }
+                                    }}
+                                />
+
+                                {/* URL Input Removed - Only File Upload Allowed */}
                                 <div className="space-y-2">
                                     <Label htmlFor="alt" className="text-sm font-medium">Alt Text (Description)</Label>
                                     <Input

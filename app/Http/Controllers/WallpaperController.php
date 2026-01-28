@@ -41,7 +41,8 @@ class WallpaperController extends Controller
             'title' => 'required|string|max:255',
             'slug' => 'nullable|string|unique:wallpapers,slug',
             'alt' => 'nullable|string',
-            'src' => 'required|string',
+            'src' => 'nullable|string', // Make nullable to allow file upload replacement
+            'image_file' => 'nullable|image|max:10240', // 10MB limit
             'is_locked' => 'boolean',
             'lock_text' => 'nullable|string|max:255',
             'lock_subtitle' => 'nullable|string|max:255',
@@ -52,6 +53,15 @@ class WallpaperController extends Controller
             'status' => 'required|in:draft,published,archived',
             'published_at' => 'nullable|date',
         ]);
+
+        if ($request->hasFile('image_file')) {
+            $path = $request->file('image_file')->store('wallpapers', 'public');
+            $validated['src'] = '/storage/' . $path;
+        }
+
+        if (empty($validated['src'])) {
+            return back()->withErrors(['src' => 'Please provide an Image URL or upload a file.']);
+        }
 
         $validated['author_id'] = auth()->id();
 
@@ -83,16 +93,14 @@ class WallpaperController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified wallpaper in storage.
-     */
     public function update(Request $request, Wallpaper $wallpaper): RedirectResponse
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'slug' => 'nullable|string|unique:wallpapers,slug,' . $wallpaper->id,
             'alt' => 'nullable|string',
-            'src' => 'required|string',
+            'src' => 'nullable|string',
+            'image_file' => 'nullable|image|max:10240',
             'is_locked' => 'boolean',
             'lock_text' => 'nullable|string|max:255',
             'lock_subtitle' => 'nullable|string|max:255',
@@ -103,6 +111,20 @@ class WallpaperController extends Controller
             'status' => 'required|in:draft,published,archived',
             'published_at' => 'nullable|date',
         ]);
+
+        if ($request->hasFile('image_file')) {
+            $path = $request->file('image_file')->store('wallpapers', 'public');
+            $validated['src'] = '/storage/' . $path;
+        }
+
+        // If src is still empty (and no new file), keep original src? 
+        // Typically update request might send 'src' as existing string.
+        // If 'src' is null from form but we didn't upload file, we might lose image if not careful.
+        // Frontend should send existing 'src' if not changing, or we should handle logic here.
+        if (empty($validated['src']) && !$request->hasFile('image_file')) {
+            // Keep existing src if nothing provided (optional fail-safe)
+            $validated['src'] = $wallpaper->src;
+        }
 
         $wallpaper->update($validated);
 
