@@ -69,6 +69,12 @@ export default function Index({ videos, filters = {} }: Props) {
         );
     };
 
+    const handleDelete = (id: number) => {
+        if (confirm('Are you sure you want to delete this video?')) {
+            router.delete(`/videos/${id}`);
+        }
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Videos" />
@@ -192,7 +198,10 @@ export default function Index({ videos, filters = {} }: Props) {
                                                         <Edit className="mr-2 h-3.5 w-3.5" /> Edit
                                                     </Link>
                                                 </DropdownMenuItem>
-                                                <DropdownMenuItem className="text-red-600 focus:text-red-600 cursor-pointer">
+                                                <DropdownMenuItem
+                                                    className="text-red-600 focus:text-red-600 cursor-pointer"
+                                                    onClick={() => handleDelete(video.id)}
+                                                >
                                                     <Trash2 className="mr-2 h-3.5 w-3.5" /> Delete
                                                 </DropdownMenuItem>
                                             </DropdownMenuContent>
