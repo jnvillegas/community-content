@@ -62,8 +62,13 @@ class ArticleController extends Controller
             'tags' => 'array',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
-            'featured_image' => 'nullable|string',
+            'featured_image' => 'nullable|image|max:5120', // 5MB Max
         ]);
+
+        $imagePath = null;
+        if ($request->hasFile('featured_image')) {
+            $imagePath = $request->file('featured_image')->store('articles', 'public');
+        }
 
         $article = Article::create([
             'title' => $validated['title'],
@@ -73,7 +78,7 @@ class ArticleController extends Controller
             'author_id' => auth()->id(),
             'meta_title' => $validated['meta_title'],
             'meta_description' => $validated['meta_description'],
-            'featured_image' => $validated['featured_image'],
+            'featured_image' => $imagePath,
             'published_at' => $validated['status'] === 'published' ? now() : null,
         ]);
 
@@ -105,7 +110,11 @@ class ArticleController extends Controller
      */
     public function update(Request $request, Article $article): RedirectResponse
     {
-        $validated = $request->validate([
+        // Note: 'featured_image' can be nullable string (existing URL) or file (new upload)
+        // Inertia might send 'null' string if cleared, or the file object.
+        // If it's a file, we validate it as image. If it's a string, we assume it's keeping the old one (or updating text url, but we prioritize file).
+
+        $rules = [
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'excerpt' => 'nullable|string',
@@ -114,19 +123,33 @@ class ArticleController extends Controller
             'tags' => 'array',
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
-            'featured_image' => 'nullable|string',
-        ]);
+        ];
 
-        $article->update([
+        // Only validate as image if it IS a file upload
+        if ($request->hasFile('featured_image')) {
+            $rules['featured_image'] = 'nullable|image|max:5120';
+        }
+
+        $validated = $request->validate($rules);
+
+        $dataToUpdate = [
             'title' => $validated['title'],
             'content' => $validated['content'],
             'excerpt' => $validated['excerpt'],
             'status' => $validated['status'],
             'meta_title' => $validated['meta_title'],
             'meta_description' => $validated['meta_description'],
-            'featured_image' => $validated['featured_image'],
             'published_at' => ($validated['status'] === 'published' && !$article->published_at) ? now() : $article->published_at,
-        ]);
+        ];
+
+        if ($request->hasFile('featured_image')) {
+            $dataToUpdate['featured_image'] = $request->file('featured_image')->store('articles', 'public');
+        }
+        // If no file sent, we do NOT update 'featured_image', keeping the old one.
+        // Unless we want to support deleting the image? (Usually handled by sending null to specific endpoint or handled here if input is explictly null).
+        // For now, simple logic: Upload = Replace. No Upload = Keep.
+
+        $article->update($dataToUpdate);
 
         $article->categories()->sync($request->categories ?? []);
         $article->tags()->sync($request->tags ?? []);

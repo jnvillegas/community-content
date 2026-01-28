@@ -1,3 +1,6 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+import TipTapEditor from '@/components/TipTapEditor';
 import { Head, Link, useForm } from '@inertiajs/react';
 import {
     ChevronLeft,
@@ -63,12 +66,17 @@ interface Props {
 }
 
 export default function Edit({ article, categories, tags }: Props) {
+    const [localCategories, setLocalCategories] = useState(categories);
+    const [isCreatingCategory, setIsCreatingCategory] = useState(false);
+    const [newCategoryName, setNewCategoryName] = useState('');
+
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Articles', href: '/articles' },
         { title: 'Edit Article', href: `/articles/${article.id}/edit` },
     ];
 
-    const { data, setData, put, processing, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
+        _method: 'put',
         title: article.title || '',
         content: article.content || '',
         excerpt: article.excerpt || '',
@@ -77,12 +85,30 @@ export default function Edit({ article, categories, tags }: Props) {
         tags: article.tags.map(t => t.id),
         meta_title: article.meta_title || '',
         meta_description: article.meta_description || '',
-        featured_image: article.featured_image || '',
+        featured_image: null as File | null,
     });
+
+    const handleCreateCategory = async () => {
+        if (!newCategoryName.trim()) return;
+
+        try {
+            const response = await axios.post('/categories', { name: newCategoryName });
+            if (response.data && response.data.category) {
+                const newCat = response.data.category;
+                setLocalCategories([...localCategories, newCat]);
+                setData('categories', [...data.categories, newCat.id]);
+                setNewCategoryName('');
+                setIsCreatingCategory(false);
+            }
+        } catch (error) {
+            console.error('Failed to create category:', error);
+        }
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        put(`/articles/${article.id}`);
+        // We use POST with _method: 'put' to allow file uploads
+        post(`/articles/${article.id}`);
     };
 
     return (
@@ -140,23 +166,15 @@ export default function Edit({ article, categories, tags }: Props) {
                         <Card className="border-none shadow-sm overflow-hidden min-h-[500px]">
                             <CardHeader className="bg-gray-50/50 dark:bg-gray-900/50 border-b border-gray-100 dark:border-gray-800 p-3">
                                 <div className="flex items-center gap-1">
-                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-500 hover:text-blue-600"><Layout className="h-4 w-4" /></Button>
-                                    <div className="w-[1px] h-4 bg-gray-200 dark:bg-gray-700 mx-1" />
-                                    <Button variant="ghost" size="sm" className="h-8 text-gray-500 text-xs font-bold">Block</Button>
-                                    <Button variant="ghost" size="sm" className="h-8 text-gray-900 font-bold text-xs bg-white shadow-sm">Text</Button>
-                                    <div className="ml-auto flex items-center gap-2 pr-2">
-                                        <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest hidden sm:inline">Last modified: {new Date(article.created_at).toLocaleDateString()}</span>
-                                    </div>
+                                    <span className="text-xs font-bold uppercase tracking-wider text-gray-500">Rich Text Editor</span>
                                 </div>
                             </CardHeader>
-                            <CardContent className="p-0">
-                                <Textarea
-                                    placeholder="Start writing..."
-                                    className="min-h-[500px] border-none resize-none px-6 py-6 text-lg leading-relaxed focus-visible:ring-0"
-                                    value={data.content}
-                                    onChange={e => setData('content', e.target.value)}
-                                />
-                            </CardContent>
+                            <TipTapEditor
+                                content={data.content}
+                                onChange={(html) => setData('content', html)}
+                                placeholder="Start editing..."
+                            />
+                            {errors.content && <p className="text-sm text-red-500 p-6">{errors.content}</p>}
                         </Card>
 
                         {/* SEO Section */}
@@ -250,25 +268,58 @@ export default function Edit({ article, categories, tags }: Props) {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="p-6 pt-0">
-                                <div className="aspect-video w-full rounded-xl overflow-hidden border border-gray-100 bg-gray-50 flex items-center justify-center cursor-pointer mb-4">
+                                <div
+                                    className="aspect-video w-full rounded-xl border-2 border-dashed border-gray-100 bg-gray-50/50 flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/30 transition-all dark:border-gray-800 dark:bg-gray-950/50 overflow-hidden relative group"
+                                    onClick={() => document.getElementById('image-upload')?.click()}
+                                >
                                     {data.featured_image ? (
-                                        <img src={data.featured_image} className="w-full h-full object-cover" />
+                                        // New image selected for upload
+                                        <>
+                                            <img
+                                                src={URL.createObjectURL(data.featured_image as File)}
+                                                className="w-full h-full object-cover"
+                                                alt="New Preview"
+                                            />
+                                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <span className="text-white font-bold text-xs uppercase">Change Selection</span>
+                                            </div>
+                                        </>
+                                    ) : article.featured_image ? (
+                                        // Existing image from server
+                                        <>
+                                            <img
+                                                // Assuming backend returns relative path 'articles/xxx.jpg', we prepend /storage/
+                                                src={article.featured_image.startsWith('http') ? article.featured_image : `/storage/${article.featured_image}`}
+                                                className="w-full h-full object-cover"
+                                                alt="Current Featured"
+                                            />
+                                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <span className="text-white font-bold text-xs uppercase">Replace Image</span>
+                                            </div>
+                                        </>
                                     ) : (
+                                        // No image at all
                                         <div className="flex flex-col items-center">
-                                            <ImageIcon className="h-8 w-8 text-gray-300" />
-                                            <span className="text-[10px] font-bold text-gray-400 mt-2">NO IMAGE</span>
+                                            <ImageIcon className="h-8 w-8 text-gray-300 mb-2" />
+                                            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest leading-none">Upload Image</span>
                                         </div>
                                     )}
                                 </div>
-                                <Input
-                                    className="border-gray-100 bg-gray-50/30 text-xs h-8"
-                                    placeholder="Change Image URL..."
-                                    value={data.featured_image}
-                                    onChange={e => setData('featured_image', e.target.value)}
+                                <input
+                                    id="image-upload"
+                                    type="file"
+                                    className="hidden"
+                                    accept="image/*"
+                                    onChange={e => {
+                                        if (e.target.files && e.target.files[0]) {
+                                            setData('featured_image', e.target.files[0]);
+                                        }
+                                    }}
                                 />
                             </CardContent>
                         </Card>
 
+                        {/* Excerpt Section Removed */}
                         {/* Categories & Tags (Similar to Create...) */}
                         <Card className="border-none shadow-sm">
                             <CardHeader className="p-6">
@@ -277,7 +328,7 @@ export default function Edit({ article, categories, tags }: Props) {
                             <CardContent className="p-6 pt-0">
                                 <ScrollArea className="h-40">
                                     <div className="space-y-3">
-                                        {categories.map(cat => (
+                                        {localCategories.map(cat => (
                                             <div key={cat.id} className="flex items-center gap-2">
                                                 <input
                                                     type="checkbox"
@@ -294,6 +345,54 @@ export default function Edit({ article, categories, tags }: Props) {
                                         ))}
                                     </div>
                                 </ScrollArea>
+                                {isCreatingCategory ? (
+                                    <div className="mt-4 flex items-center gap-2">
+                                        <Input
+                                            autoFocus
+                                            className="h-8 text-xs"
+                                            placeholder="Category name..."
+                                            value={newCategoryName}
+                                            onChange={(e) => setNewCategoryName(e.target.value)}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    e.preventDefault();
+                                                    handleCreateCategory();
+                                                }
+                                            }}
+                                        />
+                                        <Button
+                                            type="button"
+                                            size="sm"
+                                            className="h-8 w-8 p-0 bg-blue-600 hover:bg-blue-700"
+                                            onClick={handleCreateCategory}
+                                            disabled={!newCategoryName.trim()}
+                                        >
+                                            <Save className="h-4 w-4" />
+                                        </Button>
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-8 w-8 p-0 text-red-500 hover:text-red-700"
+                                            onClick={() => {
+                                                setIsCreatingCategory(false);
+                                                setNewCategoryName('');
+                                            }}
+                                        >
+                                            <span className="text-xs font-bold">✕</span>
+                                        </Button>
+                                    </div>
+                                ) : (
+                                    <Button
+                                        type="button"
+                                        variant="link"
+                                        size="sm"
+                                        className="mt-4 h-auto p-0 text-blue-600 font-bold text-xs uppercase tracking-widest"
+                                        onClick={() => setIsCreatingCategory(true)}
+                                    >
+                                        + Add New Category
+                                    </Button>
+                                )}
                             </CardContent>
                         </Card>
                     </div>

@@ -4,8 +4,8 @@ import WebLayout from '../../layout';
 import { usePage } from '@inertiajs/react';
 
 const Wallpaper = () => {
-    const { wallpapers = [] } = usePage().props;
-    const items = wallpapers.data.length > 0 ? wallpapers.data : [];
+    const { wallpapers } = usePage().props;
+    const items = Array.isArray(wallpapers?.data) ? wallpapers.data : (Array.isArray(wallpapers) ? wallpapers : []);
 
     return (
         <div >

@@ -45,7 +45,7 @@ const Blog = () => {
                         return (
                             <Link href={`/blog/${item.id}`} key={item.id} className={cardClass}>
                                 <img
-                                    src={item.image}
+                                    src={item.image && (item.image.startsWith('http') || item.image.startsWith('/storage')) ? item.image : `/storage/${item.image}`}
                                     alt={item.title}
                                     className={styles.image}
                                 />

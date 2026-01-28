@@ -113,15 +113,20 @@ export default function Show({ article }: Props) {
                     {/* Featured Image */}
                     {article.featured_image && (
                         <div className="aspect-video w-full rounded-3xl overflow-hidden mb-12 shadow-2xl shadow-blue-500/10">
-                            <img src={article.featured_image} className="w-full h-full object-cover" alt={article.title} />
+                            <img
+                                src={article.featured_image.startsWith('http') || article.featured_image.startsWith('/storage') ? article.featured_image : `/storage/${article.featured_image}`}
+                                className="w-full h-full object-cover"
+                                alt={article.title}
+                            />
                         </div>
                     )}
 
                     {/* Content */}
                     <div className="prose prose-lg dark:prose-invert max-w-none prose-p:text-gray-600 dark:prose-p:text-gray-400 prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-black prose-a:text-blue-600 hover:prose-a:underline">
-                        <div className="whitespace-pre-wrap leading-relaxed text-lg text-gray-700 dark:text-gray-300">
-                            {article.content}
-                        </div>
+                        <div
+                            className="leading-relaxed text-lg text-gray-700 dark:text-gray-300"
+                            dangerouslySetInnerHTML={{ __html: article.content }}
+                        />
                     </div>
 
                     {/* Tags */}

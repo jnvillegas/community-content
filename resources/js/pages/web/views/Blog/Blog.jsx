@@ -38,7 +38,7 @@ const Blog = () => {
                                 <div
                                     className={styles.story_background}
                                     style={{
-                                        backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%), url('${item.featured_image}')`,
+                                        backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%), url('${item.featured_image && (item.featured_image.startsWith('http') || item.featured_image.startsWith('/storage')) ? item.featured_image : `/storage/${item.featured_image}`}')`,
                                     }}
                                 />
                                 <div className={styles.story_overlay}>

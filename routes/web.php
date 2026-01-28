@@ -55,6 +55,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Wallpapers
     Route::resource('wallpapers', \App\Http\Controllers\WallpaperController::class);
+
+    // Dynamic Categories (AJAX)
+    Route::post('/categories', [\App\Http\Controllers\CategoryController::class, 'store'])->name('categories.store');
 });
 
 require __DIR__ . '/settings.php';

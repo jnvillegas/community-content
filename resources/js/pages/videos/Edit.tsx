@@ -302,36 +302,7 @@ export default function Edit({ video, categories }: Props) {
                             </CardContent>
                         </Card>
 
-                        {/* Thumbnail Override */}
-                        <Card className="border-none shadow-sm">
-                            <CardHeader className="p-5 border-b border-gray-50">
-                                <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gray-900">
-                                    <ImageIcon className="h-4 w-4 text-purple-600" />
-                                    Cover Image
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-5 space-y-4">
-                                <div className="aspect-video w-full rounded-lg overflow-hidden border border-gray-100 bg-gray-50 flex items-center justify-center">
-                                    {data.thumbnail_url ? (
-                                        <img src={data.thumbnail_url} className="w-full h-full object-cover" alt="Cover" />
-                                    ) : (
-                                        <div className="text-center text-gray-400">
-                                            <ImageIcon className="h-8 w-8 mx-auto mb-1 opacity-50" />
-                                            <span className="text-[10px] font-bold uppercase">Auto-generated</span>
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="space-y-2">
-                                    <Label className="text-xs font-bold text-gray-500">Custom URL (Optional)</Label>
-                                    <Input
-                                        placeholder="https://..."
-                                        className="h-8 text-xs bg-gray-50/50"
-                                        value={data.thumbnail_url}
-                                        onChange={e => setData('thumbnail_url', e.target.value)}
-                                    />
-                                </div>
-                            </CardContent>
-                        </Card>
+                        {/* Cover Image Removed */}
 
                     </div>
                 </div>
