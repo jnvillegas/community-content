@@ -13,9 +13,9 @@ Route::get('/about', function () {
     return Inertia::render('web/views/About/About');
 })->name('about');
 
-// Route::get('/blog', function () {
-//     return Inertia::render('web/views/Blog/Blog');
-// })->name('blog');
+Route::get('/contact', function () {
+    return Inertia::render('web/views/Contact/Contact');
+})->name('contact');
 
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 
@@ -23,13 +23,6 @@ Route::get('/blog/{id}', [BlogController::class, 'show'])->name('blog.show');
 
 Route::get('/wallpaper', [WallpaperController::class, 'index'])->name('wallpaper');
 Route::get('/wallpaper/{wallpaper}/download', [WallpaperController::class, 'download'])->name('wallpaper.download');
-
-// Rutas pendientes de implementación real
-foreach (['community', 'contact'] as $route) {
-    Route::get('/' . $route, function () {
-        return Inertia::render('web/views/Home/Home');
-    })->name($route);
-}
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {

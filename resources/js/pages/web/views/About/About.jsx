@@ -2,18 +2,13 @@ import React from 'react';
 import styles from './About.module.css';
 import logo from '../../assets/bear.png'
 import WebLayout from '../../layout';
+import Banner from '../../components/Banner/Banner';
 
 const About = () => {
 
     return (
         <div>
-            <section className={styles.hero}>
-                <div className={styles.parallax_bg}></div>
-                <div className={styles.hero_content}>
-                    <h1 className={styles.hero_title}>Sobre Nós</h1>
-                </div>
-                <div className={styles.filter}></div>
-            </section>
+            <Banner title={'Sobre Nós'} />
 
             <section className={styles.section}>
                 <div className={styles.container}>

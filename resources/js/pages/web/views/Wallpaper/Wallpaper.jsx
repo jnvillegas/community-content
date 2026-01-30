@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './Wallpaper.module.css';
 import WebLayout from '../../layout';
 import { usePage } from '@inertiajs/react';
+import Banner from '../../components/Banner/Banner';
 
 const Wallpaper = () => {
     const { wallpapers } = usePage().props;
@@ -9,16 +10,7 @@ const Wallpaper = () => {
 
     return (
         <div >
-            <section className={styles.hero}>
-                <div className={styles.parallax_bg}></div>
-                <div className={styles.hero_content}>
-                    <h1 className={styles.hero_title}>Wallpaper</h1>
-                    <p className={styles.hero_subtitle}>
-                        Sinta a jornada em cada clique
-                    </p>
-                </div>
-                <div className={styles.filter}></div>
-            </section>
+            <Banner title={'Wallpapers'} />
 
             <section className={styles.intro_section}>
                 <h2 className={styles.intro_title}>Conecte-se com a Estrada</h2>

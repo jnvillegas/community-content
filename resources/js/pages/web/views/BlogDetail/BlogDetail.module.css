@@ -43,6 +43,58 @@
     }
 }
 
+.meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    color: var(--title);
+    margin-bottom: 32px;
+}
+
+.meta_content_author {
+    display: flex;
+    align-items: center;
+}
+
+.avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+    background-color: pink;
+}
+
+.author_name {
+    font-weight: bold;
+    margin: 0;
+    line-height: 1;
+}
+
+.author_role {
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.meta_info {
+    display: flex;
+    gap: 20px;
+}
+
+.meta_content {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.meta_date {
+    font-size: 0.875rem;
+}
+
 .content {
     max-width: 900px;
     margin: 2em auto;
@@ -50,4 +102,13 @@
     font-size: 1.125rem;
     line-height: 1.6;
     color: var(--text);
+}
+
+.post_text p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.post_text br {
+    line-height: 1.6;
 }

@@ -32,7 +32,7 @@ class BlogController extends Controller
                 'slug'            => $article->slug,
                 'content'         => $article->content,
                 'excerpt'         => $article->excerpt,
-                'featured_image'  => $article->featured_image ?? 'https://lh3.googleusercontent.com/aida-public/AB6AXuAOUHQsY59ST3MJ3pyj6dgxIM7x2Qhub5vCaPVJN2p52k405wzS48LhWRkc6KDAXOTBfyFTcR2yH40ZG8Rn6QO3wsBZph8PE-a71TM9JiZX0bkw3-sJ2C3EUXISaBnV20BY3K2uZSNBrSXmlAAOkX6Tfc2mvnq-aLGlANU-sqzmqO9y3Ox_EVGOynK21o4qcgN2e3jlXyEGWf6YkAcYGs6YH_YUqSK3yyC5pH-5GsK6ENP_FwQfs9W1zYbJpOz_7fda_qs6x1URMck',
+                'featured_image'  => $article->featured_image,
                 'published_at'    => $article->published_at?->format('d M Y'),
                 'author'          => [
                     'name'   => $article->author?->name ?? 'Anónimo',

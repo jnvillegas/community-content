@@ -1,0 +1,5 @@
+.main {
+    padding-top: 100px;
+    min-height: 50vh;
+    color: var(--title);
+}

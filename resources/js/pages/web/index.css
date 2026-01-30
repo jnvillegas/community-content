@@ -26,10 +26,6 @@
   --bg: #fff;
   --fg: #f6f8f6;
 
-  --nav-bg: #ffffff;
-  --nav-white: #fff;
-  --nav-black: #1f1f1f;
-
   --black: #000;
   --white: #fff;
   --white1: #e5e7eb;
@@ -49,10 +45,6 @@
 [data-theme=dark] {
   --bg: #121212;
   --fg: #1a1a1a;
-
-  --nav-bg: #121212;
-  --nav-white: #fff;
-  --nav-black: #fff;
 
   --black: #000;
   --white: #fff;

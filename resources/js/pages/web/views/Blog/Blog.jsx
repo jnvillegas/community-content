@@ -4,6 +4,7 @@ import WebLayout from '../../layout';
 import { Link } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
 import Newsletters from '../../components/Newsletter/Newsletter';
+import Banner from '../../components/Banner/Banner';
 
 const scrollToTop = () => {
     window.scrollTo(0, 0);
@@ -12,17 +13,14 @@ const scrollToTop = () => {
 const Blog = () => {
     const { articles = [] } = usePage().props;
 
+    console.log("articles", articles);
+
+
     const items = articles.data.length > 0 ? articles.data : [];
 
     return (
         <div>
-            <section className={styles.hero}>
-                <div className={styles.parallax_bg}></div>
-                <div className={styles.hero_content}>
-                    <h1 className={styles.hero_title}>Blog</h1>
-                </div>
-                <div className={styles.filter}></div>
-            </section>
+            <Banner title={'Blog'} />
 
             <Newsletters />
 
