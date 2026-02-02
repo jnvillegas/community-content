@@ -43,7 +43,7 @@ const About = () => {
                         <div className={styles.image_container}>
                             <div className={styles.polaroid}>
                                 <img
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhjTL-KRBNwJjiCbIv-lSuRUAU9Y-y4QPnaaqApGazRziLwgaV_YBLpPlBN-yffzUQCyElTmWqAD7JzeMhZbOO_KL_1JbMcJaZoMQbCRb9o7I0a1PVtDnp0AeO8129PICWzJlV5YcSXD5I10cfbmDvW9GGEEyNji_HldIcfwERwaEKcQqzf9A8-Jl-buZLaGoK1FcZz9ERAo2LR7gFx2prtQVreZ3LJ7G7elFGxKHDkOsH-Rs0lewdgXuk5wR06rFZCZiT15ydgY4"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDalBudIXT_YVVfXS0kp9NkNFg7jgHumMjZ-Bm9Xh7Pjy4b-xbTqSvxdCNxTtoj26-7AbxZ7BQY1AOyvl6e0JLMt7Jf2B6Zb_UuUtXybMsOmsc9NorCu32sL52EBVe08ONtiwd0dIa-JA_HsTpaYDKSAGR7LLTUgJBOZTyA8U5z9fWKI40FbU0YXgD_auQXq2mlUPeiKb00QZaPgHrZvOPjpwv5W7t-tU9eAZmzDkoX1QPtgRg7STiVsoh2urd3cAb0UKHHtSD-E0"
                                     alt="Deividi e Paula em uma de suas viagens"
                                     className={styles.main_photo}
                                 />
@@ -77,7 +77,7 @@ const About = () => {
                                     className={styles.gallery_image_tall}
                                 />
                                 <img
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuu_hE_28JNTnzBQ8ZJ9IPLYTuFGFYVXFIObUUyUxPdeSIvIIYGPJ5Oa42Lakc73DvO87m7penTLXB479-cNMIn09z-Hcz54qaRvi7KUMYeth9Nj3Ek00mj-tecdqieAJGoyzD5KNwI825EbKi8RqYTe3b_WaYWr1rPWJwF-Gg-DOGfoxCHU_lIepqgbal18hFS28qEGrm1287_L8VaQflprTIQ33dsbO7KNiRQDTowZnA9vScS5vXvKnqHonrkjRF8RK3m1ny2DQ"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDalBudIXT_YVVfXS0kp9NkNFg7jgHumMjZ-Bm9Xh7Pjy4b-xbTqSvxdCNxTtoj26-7AbxZ7BQY1AOyvl6e0JLMt7Jf2B6Zb_UuUtXybMsOmsc9NorCu32sL52EBVe08ONtiwd0dIa-JA_HsTpaYDKSAGR7LLTUgJBOZTyA8U5z9fWKI40FbU0YXgD_auQXq2mlUPeiKb00QZaPgHrZvOPjpwv5W7t-tU9eAZmzDkoX1QPtgRg7STiVsoh2urd3cAb0UKHHtSD-E0"
                                     alt="Floresta"
                                     className={styles.gallery_image}
                                 />
