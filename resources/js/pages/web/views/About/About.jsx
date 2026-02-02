@@ -129,21 +129,29 @@ const About = () => {
                     <div className={styles.video_wrapper}>
                         <div className={styles.video_container}>
                             <div className={styles.video_frame}>
-                                <img
+                                <iframe
+                                    className={styles.video_thumbnail}
+                                    src="https://www.youtube.com/embed/FYmBQg9KrHM"
+                                    title="YouTube video player"
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                ></iframe>
+                                {/* <img
                                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBqx0u2gxCeg9YqXsI8SThFWhfsAaSfnP-AUE1XOgKyykhBLpwD3PoyiZ6SRufuzFekS312wwAz6tE1WhEDbcsgM4L0dM1-nbe2nwG-6uGR8W8htSMvbLGRsLo0B4iLVyVy7OqUTqI2p1NRI_sefpsVBXC7K_rqtrF1GC2S3DYxThSF9X6jo8KZrL4YdT4VCkB9YuXrfV2QLmloecSHlTjTigv8zts8BsRYVG90-idl8zW6Z3qbZ7_xIeBREGs8Pts9NVx4nyFqq4"
                                     alt="Thumbnail do vídeo da comunidade"
                                     className={styles.video_thumbnail}
-                                />
-                                <div className={styles.play_overlay}>
+                                /> */}
+                                {/* <div className={styles.play_overlay}>
                                     <button className={styles.play_button}>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="36" viewBox="0 0 30 36" fill="none">
                                             <path d="M10 26.75V9.25L23.75 18L10 26.75ZM12.5 22.1875L19.0625 18L12.5 13.8125V22.1875Z" fill="white" />
                                         </svg>
                                     </button>
-                                </div>
-                                <div className={styles.video_title_overlay}>
+                                </div> */}
+                                {/* <div className={styles.video_title_overlay}>
                                     <h3>Por que se tornar um apoiador do Vivendo...</h3>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>

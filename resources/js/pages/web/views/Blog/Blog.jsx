@@ -22,8 +22,6 @@ const Blog = () => {
         <div>
             <Banner title={'Blog'} />
 
-            <Newsletters />
-
             <section className={styles.stories_section}>
                 <div className={styles.stories_header}>
                     <h2 className={styles.stories_title}>Nossas Histórias</h2>
@@ -48,6 +46,8 @@ const Blog = () => {
                     ))}
                 </div>
             </section>
+
+            <Newsletters />
         </div>
     );
 }

@@ -40,6 +40,7 @@
   --title: #1f1f1f;
   --border: #e7e7e7;
   --border2: #1f1f1f25;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 [data-theme=dark] {
@@ -49,7 +50,7 @@
   --black: #000;
   --white: #fff;
   --white1: #e5e7eb;
-  --primary: #0D2C24;
+  --primary: #61896f;
   --secondary: #7FD791;
   --green2: #2d4b333d;
   --green3: #025a4e18;
@@ -58,8 +59,9 @@
   --badge-text: #7FD791;
 
   --title: #fdfdfd;
-  --border: #1f1f1f;
+  --border: #313131;
   --border2: #1f1f1f25;
+  --shadow-sm: 0 1px 3px rgba(255, 255, 255, 0.04);
 }
 
 .web-layout {

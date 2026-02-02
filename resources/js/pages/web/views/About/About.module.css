@@ -198,9 +198,9 @@
     cursor: pointer;
 }
 
-.video_container:hover {
+/* .video_container:hover {
     transform: scale(1.01);
-}
+} */
 
 .video_frame {
     position: relative;
@@ -218,9 +218,9 @@
     transition: transform 0.7s ease;
 }
 
-.video_frame:hover .video_thumbnail {
+/* .video_frame:hover .video_thumbnail {
     transform: scale(1.1);
-}
+} */
 
 .play_overlay {
     position: absolute;
@@ -289,7 +289,7 @@
     text-decoration: none;
 }
 
-.cta_button:hover {
+/* .cta_button:hover {
     background-color: var(--primary);
     transform: translateY(-4px);
-}
+} */
