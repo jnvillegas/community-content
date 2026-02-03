@@ -13,6 +13,7 @@ const Navbar = () => {
 
     const closeModal = () => {
         setModal(false);
+        window.scrollTo(0, 0);
     }
 
     const scrollTop = () => {
@@ -70,11 +71,11 @@ const Navbar = () => {
 
             <div className={modal ? styles.modal_active : styles.modal}>
                 <div className={styles.link_content_mobile}>
-                    <Link className={styles.link_mobile} href={PATHROUTES.ABOUT}>Sobre Nós</Link>
+                    <Link className={styles.link_mobile} href={PATHROUTES.ABOUT} onClick={closeModal}>Sobre Nós</Link>
                     <Link className={styles.link_mobile} href='#'>Comunidade</Link>
-                    <Link className={styles.link_mobile} href={PATHROUTES.BLOG}>Blog</Link>
-                    <Link className={styles.link_mobile} href={PATHROUTES.WALLPAPER}>Wallpaper</Link>
-                    <Link className={styles.link_mobile} href={PATHROUTES.CONTACT}>Contato</Link>
+                    <Link className={styles.link_mobile} href={PATHROUTES.BLOG} onClick={closeModal}>Blog</Link>
+                    <Link className={styles.link_mobile} href={PATHROUTES.WALLPAPER} onClick={closeModal}>Wallpaper</Link>
+                    <Link className={styles.link_mobile} href={PATHROUTES.CONTACT} onClick={closeModal}>Contato</Link>
                 </div>
             </div>
 

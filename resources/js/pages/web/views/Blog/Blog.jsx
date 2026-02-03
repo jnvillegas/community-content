@@ -13,8 +13,6 @@ const scrollToTop = () => {
 const Blog = () => {
     const { articles = [] } = usePage().props;
 
-    console.log("articles", articles);
-
 
     const items = articles.data.length > 0 ? articles.data : [];
 

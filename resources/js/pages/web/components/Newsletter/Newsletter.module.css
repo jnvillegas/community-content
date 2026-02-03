@@ -113,9 +113,10 @@
 
 .input_wrapper {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     width: 100%;
-    height: 3.5rem;
+    /* height: 3.5rem; */
     background-color: #f0f4f2;
     border-radius: 0.5rem;
     border: 1px solid transparent;
@@ -131,7 +132,7 @@
     display: flex;
     background: transparent;
     border: none;
-    padding: 0 1rem;
+    padding: 1rem;
     font-size: 0.875rem;
     font-weight: 500;
     color: #1f1f1f;
@@ -148,16 +149,18 @@
 .subscribe_button {
     display: flex;
     align-items: center;
+    justify-content: center;
     background-color: var(--black);
     color: var(--white);
     font-weight: bold;
-    padding: 0 1.5rem;
+    padding: 1rem;
     margin: 0.25rem;
     border-radius: 0.5rem;
     transition: background-color 0.2s;
     white-space: nowrap;
     border: none;
     cursor: pointer;
+    flex-grow: 1;
 }
 
 .subscribe_button:hover {
