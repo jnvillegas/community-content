@@ -1,5 +1,6 @@
 import styles from "./About.module.css";
 import { Link } from '@inertiajs/react';
+import { PATHROUTES } from "../../helpers/PathRoutes";
 
 const About = () => {
     return (
@@ -61,7 +62,7 @@ const About = () => {
                         </div>
 
                         <div className={styles.cta}>
-                            <Link href="/about" className={styles.button}>
+                            <Link href={PATHROUTES.ABOUT} className={styles.button}>
                                 Historia Completa
                             </Link>
                         </div>

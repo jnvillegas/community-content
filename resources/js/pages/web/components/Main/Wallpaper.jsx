@@ -1,6 +1,6 @@
 import { Link } from "@inertiajs/react";
 import styles from "./Wallpaper.module.css";
-import PATHROUTES from "../../helpers/PathRoutes";
+import { PATHROUTES } from "../../helpers/PathRoutes";
 
 const Wallpaper = () => {
 
@@ -33,7 +33,7 @@ const Wallpaper = () => {
                                 className={styles.input}
                             /> */}
 
-                            <Link href="/wallpaper" onClick={scrollTop} className={styles.button}>
+                            <Link href={PATHROUTES.WALLPAPER} onClick={scrollTop} className={styles.button}>
                                 Obtenha Wallpapers
                             </Link>
                         </div>

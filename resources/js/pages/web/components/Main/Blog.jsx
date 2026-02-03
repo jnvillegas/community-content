@@ -1,6 +1,6 @@
 import { Link } from "@inertiajs/react";
 import styles from "./Blog.module.css";
-import PATHROUTES from "../../helpers/PathRoutes";
+import { PATHROUTES } from "../../helpers/PathRoutes";
 import { usePage } from '@inertiajs/react';
 
 const Blog = () => {
@@ -99,7 +99,7 @@ const Blog = () => {
                         );
                     })}
 
-                    <Link href="/blog" onClick={scrollTop} className={styles.cta}>
+                    <Link href={PATHROUTES.BLOG} onClick={scrollTop} className={styles.cta}>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="36"

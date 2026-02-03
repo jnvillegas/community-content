@@ -1,3 +1,4 @@
+import { SOCIAL } from "../../helpers/PathRoutes";
 import styles from "./Youtube.module.css";
 import { usePage } from '@inertiajs/react';
 
@@ -40,7 +41,7 @@ const Youtube = () => {
                         <h2 className={styles.title}>Melhores momentos</h2>
                     </div>
 
-                    <a href="https://www.youtube.com/@vivendoemviagem" target="_blank" className={styles.desktop_link}>
+                    <a href={SOCIAL.YOUTUBE} target="_blank" className={styles.desktop_link}>
                         Ver canal do YouTube
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="28" viewBox="0 0 25 28" fill="none">
                             <path className={styles.arrow} d="M16.069 14.9723H4.23224V13.0278H16.069L10.6246 7.58339L12.01 6.22228L19.7878 14.0001L12.01 21.7778L10.6246 20.4167L16.069 14.9723Z" fill="currentColor" />
