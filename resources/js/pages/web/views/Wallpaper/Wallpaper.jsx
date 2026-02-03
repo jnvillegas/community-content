@@ -8,6 +8,7 @@ const Wallpaper = () => {
     const { wallpapers } = usePage().props;
     const items = Array.isArray(wallpapers?.data) ? wallpapers.data : (Array.isArray(wallpapers) ? wallpapers : []);
 
+
     return (
         <div >
             <Banner title={'Wallpapers'} />

@@ -50,13 +50,14 @@ const BlogDetail = () => {
                 />
 
                 <div className={styles.hero_content}>
-                    <h1 className={styles.hero_title}>{article.title}</h1>
+                    <h1 className={styles.hero_title}>BLOG</h1>
                 </div>
 
                 <div className={styles.filter} />
             </section>
 
             <div className={styles.content}>
+                <h2 className={styles.article_title} >{article.title}</h2>
                 <div className={styles.meta}>
                     <div className={styles.meta_content_author}>
                         <div className={styles.avatar}>

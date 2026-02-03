@@ -128,6 +128,10 @@
     cursor: pointer;
 }
 
+.submit_button:hover {
+    background-color: var(--primary);
+}
+
 @media (min-width: 768px) {
     .submit_button {
         width: max-content;

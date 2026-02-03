@@ -13,6 +13,10 @@ Route::get('/about', function () {
     return Inertia::render('web/views/About/About');
 })->name('about');
 
+Route::get('/community', function () {
+    return Inertia::render('web/views/Community/Community');
+})->name('community');
+
 Route::get('/contact', function () {
     return Inertia::render('web/views/Contact/Contact');
 })->name('contact');
