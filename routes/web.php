@@ -32,6 +32,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('users', \App\Http\Controllers\UserController::class)->except(['create', 'edit', 'show']);
     Route::resource('roles', \App\Http\Controllers\RoleController::class)->except(['create', 'edit', 'show']);
     Route::resource('permissions', \App\Http\Controllers\PermissionController::class)->except(['create', 'edit', 'show']);
+    Route::get('/roles/{role}/permissions', [\App\Http\Controllers\RoleController::class, 'permissions'])->name('roles.permissions');
+    Route::post('/roles/{role}/permissions', [\App\Http\Controllers\RoleController::class, 'syncPermissions'])->name('roles.permissions.sync');
     Route::resource('posts', \App\Http\Controllers\PostController::class);
 
     // Notifications

@@ -6,7 +6,9 @@ export interface Auth {
     unread_notifications_count: number;
 }
 
-export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+export type PageProps<
+    T extends Record<string, unknown> = Record<string, unknown>,
+> = T & {
     auth: Auth;
     flash: {
         success: string | null;
@@ -44,6 +46,7 @@ export interface Role {
     guard_name: string;
     created_at: string;
     updated_at: string;
+    permissions?: Permission[];
 }
 
 export interface Permission {
@@ -100,4 +103,3 @@ export interface Wallpaper {
     updated_at: string;
     deleted_at: string | null;
 }
-

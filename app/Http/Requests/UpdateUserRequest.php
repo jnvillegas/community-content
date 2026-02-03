@@ -32,8 +32,9 @@ class UpdateUserRequest extends FormRequest
                 'max:255',
                 Rule::unique('users')->ignore($this->user->id),
             ],
-            'password' => ['nullable', 'string', 'min:8'],
+            'password' => ['nullable', 'string', 'min:8', 'regex:/[A-Z]/', 'regex:/[0-9]/'],
             'role' => ['required', 'string', 'exists:roles,name'],
+            'status' => ['nullable', 'string', 'in:active,suspended'],
         ];
     }
 }

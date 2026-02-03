@@ -3,19 +3,23 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Role;
-use Illuminate\Http\RedirectResponse;
+use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of resource.
      */
     public function index(): Response
     {
-        $roles = Role::orderBy('created_at', 'desc')->paginate(10);
+        $roles = Role::with('permissions')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
         return Inertia::render('roles/Index', [
             'roles' => $roles,
@@ -58,5 +62,33 @@ class RoleController extends Controller
         $role->delete();
 
         return redirect()->back()->with('success', 'Role deleted successfully.');
+    }
+
+    /**
+     * Show permissions for the specified role.
+     */
+    public function permissions(Role $role): Response
+    {
+        $role->load('permissions');
+
+        return Inertia::render('roles/Permissions', [
+            'role' => $role,
+            'permissions' => Permission::all(),
+        ]);
+    }
+
+    /**
+     * Sync permissions for the specified role.
+     */
+    public function syncPermissions(Request $request, Role $role): RedirectResponse
+    {
+        $request->validate([
+            'permissions' => 'array',
+            'permissions.*' => 'exists:permissions,id',
+        ]);
+
+        $role->syncPermissions($request->permissions ?? []);
+
+        return redirect()->back()->with('success', 'Permissions updated successfully.');
     }
 }

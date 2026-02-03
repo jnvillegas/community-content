@@ -18,8 +18,18 @@ class UserController extends Controller
      */
     public function index(): Response
     {
-        $users = User::with('roles')
-            ->orderBy('created_at', 'desc')
+        $search = request('search');
+        $sortBy = request('sort_by', 'created_at');
+        $sortOrder = request('sort_order', 'desc');
+
+        $query = User::with('roles');
+
+        if ($search) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+        }
+
+        $users = $query->orderBy($sortBy, $sortOrder)
             ->paginate(10);
 
         return Inertia::render('users/Index', [
@@ -52,6 +62,7 @@ class UserController extends Controller
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
+            'status' => $request->status ?? 'active',
         ]);
 
         if ($request->filled('password')) {

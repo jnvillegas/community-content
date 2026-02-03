@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -55,5 +56,81 @@ class UserFactory extends Factory
             'two_factor_recovery_codes' => encrypt(json_encode(['recovery-code-1'])),
             'two_factor_confirmed_at' => now(),
         ]);
+    }
+
+    /**
+     * Set the user status.
+     */
+    public function withStatus(string $status = 'active'): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => $status,
+        ]);
+    }
+
+    /**
+     * Assign a role to the user after creation.
+     */
+    public function withRole(string $roleName): static
+    {
+        return $this->afterCreating(function (User $user) use ($roleName) {
+            $user->assignRole($roleName);
+        });
+    }
+
+    /**
+     * Create an admin user.
+     */
+    public function asAdmin(): static
+    {
+        return $this->withRole('admin')->withStatus('active');
+    }
+
+    /**
+     * Create a standard user.
+     */
+    public function asStandard(): static
+    {
+        return $this->withRole('standard')->withStatus('active');
+    }
+
+    /**
+     * Create a creator user.
+     */
+    public function asCreator(): static
+    {
+        return $this->withRole('creator')->withStatus('active');
+    }
+
+    /**
+     * Create a mentor user.
+     */
+    public function asMentor(): static
+    {
+        return $this->withRole('mentor')->withStatus('active');
+    }
+
+    /**
+     * Create a suspended user.
+     */
+    public function asSuspended(): static
+    {
+        return $this->withRole('standard')->withStatus('suspended');
+    }
+
+    /**
+     * Create a moderator user.
+     */
+    public function asModerator(): static
+    {
+        return $this->withRole('moderator')->withStatus('active');
+    }
+
+    /**
+     * Create an editor user.
+     */
+    public function asEditor(): static
+    {
+        return $this->withRole('editor')->withStatus('active');
     }
 }

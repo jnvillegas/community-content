@@ -10,8 +10,9 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import { PageProps, Role } from '@/types';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { Edit, Plus, Trash2 } from 'lucide-react';
+import { Edit, Plus, Shield, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import RbacPermissionsModal from './RbacPermissionsModal';
 import RoleModal from './RoleModal';
 
 interface RolesPageProps extends PageProps {
@@ -24,6 +25,9 @@ interface RolesPageProps extends PageProps {
 export default function Index({ roles }: RolesPageProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingRole, setEditingRole] = useState<Role | null>(null);
+    const [isPermissionsModalOpen, setIsPermissionsModalOpen] = useState(false);
+    const [selectedRoleForPermissions, setSelectedRoleForPermissions] =
+        useState<Role | null>(null);
     const { flash } = usePage<any>().props;
 
     const handleCreate = () => {
@@ -42,6 +46,11 @@ export default function Index({ roles }: RolesPageProps) {
         }
     };
 
+    const handleManagePermissions = (role: Role) => {
+        setSelectedRoleForPermissions(role);
+        setIsPermissionsModalOpen(true);
+    };
+
     const breadcrumbs = [
         {
             title: 'Roles',
@@ -54,37 +63,43 @@ export default function Index({ roles }: RolesPageProps) {
             <Head title="Roles" />
 
             <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
+                <div className="mb-6 flex items-center justify-between">
                     <h1 className="text-2xl font-semibold">Role Management</h1>
                     <Button onClick={handleCreate}>
-                        <Plus className="w-4 h-4 mr-2" />
+                        <Plus className="mr-2 h-4 w-4" />
                         New Role
                     </Button>
                 </div>
 
                 {flash?.success && (
-                    <div className="mb-4 p-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-900/30 dark:text-green-400">
+                    <div className="mb-4 rounded-lg bg-green-100 p-4 text-sm text-green-700 dark:bg-green-900/30 dark:text-green-400">
                         {flash.success}
                     </div>
                 )}
 
-                <div className="border rounded-lg shadow-sm">
+                <div className="rounded-lg border shadow-sm">
                     <Table>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Guard Name</TableHead>
                                 <TableHead>Created At</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
+                                <TableHead className="text-right">
+                                    Actions
+                                </TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {roles.data.map((role) => (
                                 <TableRow key={role.id}>
-                                    <TableCell className="font-medium">{role.name}</TableCell>
+                                    <TableCell className="font-medium">
+                                        {role.name}
+                                    </TableCell>
                                     <TableCell>{role.guard_name}</TableCell>
                                     <TableCell>
-                                        {new Date(role.created_at).toLocaleDateString()}
+                                        {new Date(
+                                            role.created_at,
+                                        ).toLocaleDateString()}
                                     </TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">
@@ -93,15 +108,28 @@ export default function Index({ roles }: RolesPageProps) {
                                                 size="icon"
                                                 onClick={() => handleEdit(role)}
                                             >
-                                                <Edit className="w-4 h-4" />
+                                                <Edit className="h-4 w-4" />
                                             </Button>
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
-                                                onClick={() => handleDelete(role)}
+                                                onClick={() =>
+                                                    handleManagePermissions(
+                                                        role,
+                                                    )
+                                                }
                                             >
-                                                <Trash2 className="w-4 h-4" />
+                                                <Shield className="h-4 w-4" />
+                                            </Button>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="text-red-500 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900/20"
+                                                onClick={() =>
+                                                    handleDelete(role)
+                                                }
+                                            >
+                                                <Trash2 className="h-4 w-4" />
                                             </Button>
                                         </div>
                                     </TableCell>
@@ -112,17 +140,20 @@ export default function Index({ roles }: RolesPageProps) {
                 </div>
 
                 {roles.links && roles.links.length > 3 && (
-                    <div className="flex items-center justify-between mt-4">
+                    <div className="mt-4 flex items-center justify-between">
                         <div className="flex gap-1">
                             {roles.links.map((link, i) => (
                                 <Link
                                     key={i}
                                     href={link.url || '#'}
-                                    className={`px-3 py-1 text-sm rounded ${link.active
-                                        ? 'bg-blue-600 text-white'
-                                        : 'bg-white border text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300'
-                                        } ${!link.url ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                    dangerouslySetInnerHTML={{ __html: link.label }}
+                                    className={`rounded px-3 py-1 text-sm ${
+                                        link.active
+                                            ? 'bg-blue-600 text-white'
+                                            : 'border bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300'
+                                    } ${!link.url ? 'cursor-not-allowed opacity-50' : ''}`}
+                                    dangerouslySetInnerHTML={{
+                                        __html: link.label,
+                                    }}
                                 />
                             ))}
                         </div>
@@ -134,6 +165,11 @@ export default function Index({ roles }: RolesPageProps) {
                 open={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 role={editingRole}
+            />
+            <RbacPermissionsModal
+                open={isPermissionsModalOpen}
+                onClose={() => setIsPermissionsModalOpen(false)}
+                role={selectedRoleForPermissions}
             />
         </AppLayout>
     );

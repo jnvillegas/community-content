@@ -1,30 +1,33 @@
 import { Link } from '@inertiajs/react';
 import {
-    LayoutGrid,
-    Calendar,
-    BookOpen,
-    Users,
-    MessageCircle,
     Bookmark,
-    GraduationCap,
+    BookOpen,
+    Calendar,
     Crown,
     FileText,
+    GraduationCap,
+    Image,
+    Key,
+    LayoutGrid,
+    MessageCircle,
+    Shield,
+    Users,
     Play as VideoIcon,
-    Image
 } from 'lucide-react';
 
+import { NavGroupWithSub } from '@/components/nav-group-with-sub';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
+    SidebarGroup,
+    SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    SidebarGroup,
-    SidebarGroupLabel,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
@@ -39,14 +42,28 @@ const platformItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Members',
+        title: 'Save',
+        href: '#',
+        icon: Bookmark,
+    },
+];
+
+// Members Section
+const membersItems: NavItem[] = [
+    {
+        title: 'Users',
         href: '/users',
         icon: Users,
     },
     {
-        title: 'Save',
-        href: '#',
-        icon: Bookmark,
+        title: 'Roles',
+        href: '/roles',
+        icon: Shield,
+    },
+    {
+        title: 'Permissions',
+        href: '/permissions',
+        icon: Key,
     },
 ];
 
@@ -104,11 +121,18 @@ const membershipItems: NavItem[] = [
 
 export function AppSidebar() {
     return (
-        <Sidebar collapsible="icon" className="border-r border-gray-100 bg-white dark:bg-gray-950">
+        <Sidebar
+            collapsible="icon"
+            className="border-r border-gray-100 bg-white dark:bg-gray-950"
+        >
             <SidebarHeader className="p-4">
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild className="hover:bg-transparent">
+                        <SidebarMenuButton
+                            size="lg"
+                            asChild
+                            className="hover:bg-transparent"
+                        >
                             <Link href={dashboard()} prefetch>
                                 <AppLogo />
                             </Link>
@@ -120,15 +144,23 @@ export function AppSidebar() {
             <SidebarContent className="px-2">
                 {/* Platform Section */}
                 <SidebarGroup>
-                    <SidebarGroupLabel className="px-4 text-[11px] font-bold uppercase tracking-wider text-gray-400">
+                    <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
                         Platform
                     </SidebarGroupLabel>
                     <NavMain items={platformItems} />
                 </SidebarGroup>
 
+                {/* Members Section */}
+                <SidebarGroup>
+                    <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
+                        Members
+                    </SidebarGroupLabel>
+                    <NavGroupWithSub title="Members" items={membersItems} />
+                </SidebarGroup>
+
                 {/* Content Section */}
                 <SidebarGroup className="mt-4">
-                    <SidebarGroupLabel className="px-4 text-[11px] font-bold uppercase tracking-wider text-gray-400">
+                    <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
                         Content
                     </SidebarGroupLabel>
                     <NavMain items={contentItems} />
@@ -136,7 +168,7 @@ export function AppSidebar() {
 
                 {/* Community Section */}
                 <SidebarGroup className="mt-4">
-                    <SidebarGroupLabel className="px-4 text-[11px] font-bold uppercase tracking-wider text-gray-400">
+                    <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
                         Community
                     </SidebarGroupLabel>
                     <NavMain items={communityItems} />
@@ -144,14 +176,14 @@ export function AppSidebar() {
 
                 {/* Membership Section */}
                 <SidebarGroup className="mt-4">
-                    <SidebarGroupLabel className="px-4 text-[11px] font-bold uppercase tracking-wider text-gray-400">
+                    <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
                         Membership
                     </SidebarGroupLabel>
                     <NavMain items={membershipItems} />
                 </SidebarGroup>
             </SidebarContent>
 
-            <SidebarFooter className="p-4 border-t border-gray-50 dark:border-gray-900">
+            <SidebarFooter className="border-t border-gray-50 p-4 dark:border-gray-900">
                 <NavUser />
             </SidebarFooter>
         </Sidebar>
