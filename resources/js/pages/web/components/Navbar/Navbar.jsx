@@ -34,7 +34,7 @@ const Navbar = () => {
 
             <div className={styles.link_content}>
                 <Link className={styles.link} href={PATHROUTES.ABOUT} onClick={scrollTop}>Sobre Nós</Link>
-                <Link className={styles.link} href="#">Comunidade</Link>
+                <Link className={styles.link} href={PATHROUTES.COMMUNITY} onClick={scrollTop}>Comunidade</Link>
                 <Link className={styles.link} href={PATHROUTES.BLOG} onClick={scrollTop}>Blog</Link>
                 <Link className={styles.link} href={PATHROUTES.WALLPAPER} onClick={scrollTop}>Wallpaper</Link>
                 <Link className={styles.link} href={PATHROUTES.CONTACT} onClick={scrollTop}>Contato</Link>
@@ -72,7 +72,7 @@ const Navbar = () => {
             <div className={modal ? styles.modal_active : styles.modal}>
                 <div className={styles.link_content_mobile}>
                     <Link className={styles.link_mobile} href={PATHROUTES.ABOUT} onClick={closeModal}>Sobre Nós</Link>
-                    <Link className={styles.link_mobile} href='#'>Comunidade</Link>
+                    <Link className={styles.link_mobile} href={PATHROUTES.COMMUNITY} onClick={closeModal}>Comunidade</Link>
                     <Link className={styles.link_mobile} href={PATHROUTES.BLOG} onClick={closeModal}>Blog</Link>
                     <Link className={styles.link_mobile} href={PATHROUTES.WALLPAPER} onClick={closeModal}>Wallpaper</Link>
                     <Link className={styles.link_mobile} href={PATHROUTES.CONTACT} onClick={closeModal}>Contato</Link>

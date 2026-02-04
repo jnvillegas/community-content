@@ -49,7 +49,13 @@
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 20px;
-    color: var(--title);
+    color: var(--web-title);
+}
+
+.article_title {
+    font-size: 2rem;
+    color: var(--web-title);
+    margin: 16px 0 !important;
 }
 
 .meta_content_author {
@@ -104,7 +110,6 @@
     overflow: hidden;
     margin: 32px 0;
     border-radius: 16px;
-    background-color: red;
 }
 
 .featured_image {
@@ -114,12 +119,14 @@
 }
 
 .content {
+    display: flex;
+    flex-direction: column;
     max-width: 900px;
     margin: 2em auto;
     padding: 2rem;
     font-size: 1.125rem;
     line-height: 1.6;
-    color: var(--text);
+    color: var(--web-text);
 }
 
 .post_text p {
@@ -135,7 +142,7 @@
     display: flex;
     justify-content: space-between;
     margin: 32px 0;
-    background-color: var(--fg);
+    background-color: var(--web-fg);
     padding: 16px 24px;
     border-radius: 16px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

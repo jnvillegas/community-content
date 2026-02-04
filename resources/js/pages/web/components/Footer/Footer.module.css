@@ -13,7 +13,7 @@
     grid-template-columns: 1fr;
     gap: 3rem;
     padding-bottom: 4rem;
-    border-bottom: 1px solid var(--fg);
+    border-bottom: 1px solid var(--web-fg);
     margin-bottom: 2rem;
 }
 
@@ -30,20 +30,20 @@
 .brand_name {
     font-weight: 700;
     font-size: 1.125rem;
-    color: var(--title);
+    color: var(--web-title);
     display: block;
     margin-bottom: 1.5rem;
 }
 
 .brand_text {
     font-size: 0.875rem;
-    color: var(--text);
+    color: var(--web-text);
     line-height: 1.6;
 }
 
 .heading {
     font-weight: 700;
-    color: var(--title);
+    color: var(--web-title);
     margin-bottom: 1.5rem;
 }
 
@@ -59,13 +59,13 @@
 
 .list a {
     font-size: 0.875rem;
-    color: var(--text);
+    color: var(--web-text);
     text-decoration: none;
     transition: color 0.2s;
 }
 
 .list a:hover {
-    color: var(--primary);
+    color: var(--web-primary);
 }
 
 .socials {
@@ -77,11 +77,11 @@
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 999px;
-    background: var(--fg);
+    background: var(--web-fg);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text);
+    color: var(--web-text);
     transition: all 0.3s ease;
 }
 
@@ -91,8 +91,8 @@
 }
 
 .social:hover {
-    background: var(--primary);
-    color: var(--white);
+    background: var(--web-primary);
+    color: var(--web-white);
 }
 
 .bottom {
@@ -102,7 +102,7 @@
     align-items: center;
     justify-content: space-between;
     font-size: 0.75rem;
-    color: var(--text);
+    color: var(--web-text);
 }
 
 @media (min-width: 768px) {
@@ -117,11 +117,11 @@
 }
 
 .legal a {
-    color: var(--text);
+    color: var(--web-text);
     text-decoration: none;
     transition: color 0.2s;
 }
 
 .legal a:hover {
-    color: var(--primary);
+    color: var(--web-primary);
 }

@@ -1,6 +1,6 @@
 .section {
     padding: 6rem 0;
-    background: var(--fg);
+    background: var(--web-fg);
 }
 
 .container {
@@ -23,36 +23,36 @@
     text-transform: uppercase;
     letter-spacing: 0.15em;
     font-weight: 700;
-    color: var(--primary);
+    color: var(--web-primary);
     margin-bottom: 0.5rem;
 }
 
 .title {
     font-size: 2rem;
     font-weight: 700;
-    color: var(--title);
+    color: var(--web-title);
 }
 
 .desktop_link {
     display: none;
     align-items: center;
     gap: 0.5rem;
-    color: var(--title) !important;
+    color: var(--web-title) !important;
     text-decoration: none;
     transition: color 0.3s;
 }
 
 .arrow {
-    fill: var(--title);
+    fill: var(--web-title);
 }
 
 
 .desktop_link:hover {
-    color: var(--primary);
+    color: var(--web-primary);
 }
 
 .desktop_link:hover .arrow {
-    fill: var(--primary);
+    fill: var(--web-primary);
 }
 
 .grid {
@@ -61,17 +61,17 @@
 }
 
 .card {
-    background: var(--fg);
+    background: var(--web-fg);
     border-radius: 1rem;
     overflow: hidden;
-    border: 1px solid var(--border);
-    box-shadow: 0 1px 3px var(--shadow-sm);
+    border: 1px solid var(--web-border);
+    box-shadow: 0 1px 3px var(--web-shadow-sm);
     transition: all 0.3s;
     cursor: pointer;
 }
 
 .card:hover {
-    box-shadow: 0 10px 25px var(--shadow-sm);
+    box-shadow: 0 10px 25px var(--web-shadow-sm);
 }
 
 .image {
@@ -122,7 +122,7 @@
 }
 
 .card:hover .play_button {
-    background: var(--primary);
+    background: var(--web-primary);
     transform: scale(1.1);
 }
 
@@ -135,25 +135,25 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.75rem;
-    color: var(--text);
+    color: var(--web-text);
     margin-bottom: 0.75rem;
 }
 
 .card_title {
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--title);
+    color: var(--web-title);
     margin-bottom: 0.5rem;
     transition: color 0.3s;
 }
 
 .card:hover .card_title {
-    color: var(--primary);
+    color: var(--web-primary);
 }
 
 .card_text {
     font-size: 0.875rem;
-    color: var(--text);
+    color: var(--web-text);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -169,7 +169,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    color: var(--text) !important;
+    color: var(--web-text) !important;
     font-weight: 700;
     text-decoration: none;
 }

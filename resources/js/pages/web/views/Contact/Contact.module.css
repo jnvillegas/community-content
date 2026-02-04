@@ -59,7 +59,7 @@
 }
 
 .form_title {
-    color: var(--title);
+    color: var(--web-title);
     font-size: 1.875rem;
     font-weight: bold;
     line-height: 1.1;
@@ -67,7 +67,7 @@
 }
 
 .form_description {
-    color: var(--title);
+    color: var(--web-title);
     font-size: 1.125rem;
     max-width: 36rem;
 }
@@ -85,7 +85,7 @@
 }
 
 .input_label {
-    color: var(--title);
+    color: var(--web-title);
     font-size: 0.875rem;
     font-weight: 600;
 }
@@ -95,16 +95,16 @@
     height: 3.5rem;
     padding: 0 1rem;
     border-radius: 0.5rem;
-    border: 1px solid var(--border);
-    background-color: var(--fg);
+    border: 1px solid var(--web-border);
+    background-color: var(--web-fg);
     transition: all 0.2s;
     outline: none;
-    color: var(--title);
+    color: var(--web-title);
 }
 
 .input:focus,
 .textarea:focus {
-    border-color: var(--primary);
+    border-color: var(--web-primary);
     box-shadow: 0 0 0 1px #0D2C24;
 }
 
@@ -117,8 +117,8 @@
 .submit_button {
     height: 3.5rem;
     padding: 0 3rem;
-    background-color: var(--title);
-    color: var(--fg);
+    background-color: var(--web-title);
+    color: var(--web-fg);
     font-weight: bold;
     font-size: 1.125rem;
     border-radius: 0.5rem;
@@ -126,6 +126,10 @@
     box-shadow: 0 10px 15px -3px rgba(13, 44, 36, 0.2);
     width: 100%;
     cursor: pointer;
+}
+
+.submit_button:hover {
+    background-color: var(--web-primary);
 }
 
 @media (min-width: 768px) {
@@ -152,15 +156,15 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    background-color: var(--fg);
+    background-color: var(--web-fg);
     padding: 2rem;
     border-radius: 0.75rem;
-    border: 1px solid var(--border);
+    border: 1px solid var(--web-border);
     margin-top: 32px;
 }
 
 .sidebar_title {
-    color: var(--title);
+    color: var(--web-title);
     font-size: 1.25rem;
     font-weight: bold;
     margin-bottom: 1rem;
@@ -183,11 +187,11 @@
     width: 3rem;
     height: 3rem;
     border-radius: 9999px;
-    background-color: var(--bg);
+    background-color: var(--web-bg);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--title);
+    color: var(--web-title);
     font-size: 1.5rem;
 }
 
@@ -200,7 +204,7 @@
 }
 
 .connection_email {
-    color: var(--title);
+    color: var(--web-title);
     font-weight: 600;
 }
 
@@ -216,12 +220,12 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    background-color: var(--bg);
+    background-color: var(--web-bg);
     border-radius: 9999px;
     transition: background-color 0.2s;
     font-weight: bold;
     font-size: 0.875rem;
-    color: var(--title);
+    color: var(--web-title);
 }
 
 @media (max-width: 767px) {
