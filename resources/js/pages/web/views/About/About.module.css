@@ -278,12 +278,12 @@
 
 .cta_button {
     display: inline-block;
-    padding: 1.25rem 3rem;
+    padding: 0.75rem 2rem;
     background-color: var(--web-black);
     color: white;
     font-weight: bold;
     font-size: 1.125rem;
-    border-radius: 9999px;
+    border-radius: 0.75rem;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     text-decoration: none;

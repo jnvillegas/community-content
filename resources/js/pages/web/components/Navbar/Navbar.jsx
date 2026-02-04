@@ -7,6 +7,8 @@ const Navbar = () => {
     const [modal, setModal] = useState(false);
     const { url } = usePage();
 
+    const isCurrent = (path) => url === path;
+
     const handleModal = () => {
         setModal(!modal);
     }
@@ -24,6 +26,7 @@ const Navbar = () => {
         return null;
     }
 
+
     return (
         <nav className={styles.navbar}>
             <Link href={PATHROUTES.HOME} className={styles.logo_container}>
@@ -33,11 +36,51 @@ const Navbar = () => {
             </Link>
 
             <div className={styles.link_content}>
-                <Link className={styles.link} href={PATHROUTES.ABOUT} onClick={scrollTop}>Sobre Nós</Link>
+                {/* <Link className={styles.link} href={PATHROUTES.ABOUT} onClick={scrollTop}>Sobre Nós</Link>
                 <Link className={styles.link} href={PATHROUTES.COMMUNITY} onClick={scrollTop}>Comunidade</Link>
                 <Link className={styles.link} href={PATHROUTES.BLOG} onClick={scrollTop}>Blog</Link>
                 <Link className={styles.link} href={PATHROUTES.WALLPAPER} onClick={scrollTop}>Wallpaper</Link>
-                <Link className={styles.link} href={PATHROUTES.CONTACT} onClick={scrollTop}>Contato</Link>
+                <Link className={styles.link} href={PATHROUTES.CONTACT} onClick={scrollTop}>Contato</Link> */}
+
+                <Link
+                    className={`${styles.link} ${isCurrent(PATHROUTES.ABOUT) ? styles.link_current : ""}`}
+                    href={PATHROUTES.ABOUT}
+                    onClick={scrollTop}
+                >
+                    Sobre Nós
+                </Link>
+
+                <Link
+                    className={`${styles.link} ${isCurrent(PATHROUTES.COMMUNITY) ? styles.link_current : ""}`}
+                    href={PATHROUTES.COMMUNITY}
+                    onClick={scrollTop}
+                >
+                    Comunidade
+                </Link>
+
+                <Link
+                    className={`${styles.link} ${isCurrent(PATHROUTES.BLOG) ? styles.link_current : ""}`}
+                    href={PATHROUTES.BLOG}
+                    onClick={scrollTop}
+                >
+                    Blog
+                </Link>
+
+                <Link
+                    className={`${styles.link} ${isCurrent(PATHROUTES.WALLPAPER) ? styles.link_current : ""}`}
+                    href={PATHROUTES.WALLPAPER}
+                    onClick={scrollTop}
+                >
+                    Wallpaper
+                </Link>
+
+                <Link
+                    className={`${styles.link} ${isCurrent(PATHROUTES.CONTACT) ? styles.link_current : ""}`}
+                    href={PATHROUTES.CONTACT}
+                    onClick={scrollTop}
+                >
+                    Contato
+                </Link>
             </div>
 
             <div className={styles.svg_content}>

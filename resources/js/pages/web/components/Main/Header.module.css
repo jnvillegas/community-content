@@ -36,9 +36,9 @@
 
 .title_first,
 .title_second {
-    color: #fff !important;
+    color: #fff;
     text-align: center;
-    font-size: 90px !important;
+    font-size: 90px;
     line-height: 1.1;
     margin: 0 2%;
 }
@@ -49,8 +49,9 @@
 
 .subtitle {
     text-align: center;
-    color: #e5e7eb !important;
+    color: #e5e7eb;
     margin: 20px 2%;
+    max-width: 600px;
 
 }
 
@@ -59,9 +60,14 @@
     align-items: center;
     justify-content: center;
     gap: 5px;
-    background-color: #2D4B33;
+    background-color: var(--web-primary);
     padding: 8px 20px;
-    border-radius: 999999px;
+    border-radius: 0.75rem;
+    transition: .5s;
+}
+
+.link:hover {
+    background-color: var(--web-btn-hover);
 }
 
 @media (max-width: 1024px) {

@@ -37,7 +37,7 @@
     display: none;
     align-items: center;
     gap: 0.5rem;
-    color: var(--web-title) !important;
+    color: var(--web-title);
     text-decoration: none;
     transition: color 0.3s;
 }
@@ -61,7 +61,7 @@
 }
 
 .card {
-    background: var(--web-fg);
+    background: var(--web-bg);
     border-radius: 1rem;
     overflow: hidden;
     border: 1px solid var(--web-border);
@@ -155,6 +155,7 @@
     font-size: 0.875rem;
     color: var(--web-text);
     display: -webkit-box;
+    line-clamp: 2;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
@@ -169,7 +170,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    color: var(--web-text) !important;
+    color: var(--web-text);
     font-weight: 700;
     text-decoration: none;
 }

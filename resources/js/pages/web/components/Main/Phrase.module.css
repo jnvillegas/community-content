@@ -19,7 +19,7 @@
 .quote_icon {
     align-self: center;
     display: block;
-    fill: #025a4e;
+    fill: var(--web-primary);
 }
 
 @media (min-width: 768px) {

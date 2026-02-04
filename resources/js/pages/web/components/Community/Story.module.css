@@ -75,7 +75,7 @@
 
 .progress_fill {
     height: 100%;
-    background-color: #36ff2f;
+    background-color: var(--web-white);
     transition: width 0.3s;
 }
 
@@ -100,7 +100,7 @@
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 9999px;
-    border: 2px solid var(--web-primary);
+    border: 2px solid var(--web-green);
     background-size: cover;
     background-position: center;
 }
@@ -190,7 +190,7 @@
 }
 
 .message_input:focus {
-    border-color: #36ff2f;
+    border-color: var(--web-green);
     box-shadow: 0 0 0 2px rgba(13, 44, 36, 0.3);
 }
 
@@ -207,7 +207,7 @@
 }
 
 .action_icon_button:hover {
-    color: #36ff2f;
+    color: var(--web-green);
 }
 
 .nav_buttons {

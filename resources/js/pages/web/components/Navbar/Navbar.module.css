@@ -14,7 +14,7 @@
     background-color: var(--web-bg);
     z-index: 200;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 999999px;
+    border-radius: 16px;
     padding: 20px;
     box-sizing: border-box;
     /* overflow: hidden; */
@@ -55,8 +55,13 @@
     text-decoration: none;
     transition: .5s;
     padding: 5px 15px;
-    border-radius: 999999px;
+    border-radius: 10px;
     text-wrap: nowrap;
+}
+
+.link_current {
+    background-color: var(--web-title);
+    color: var(--web-bg);
 }
 
 .link:hover {
@@ -103,6 +108,16 @@
 
     .svg_content {
         display: none;
+    }
+
+    .navbar,
+    .navbar_active {
+        width: 100%;
+        border-radius: 0;
+        top: 0;
+        margin: 0;
+        /* width: 90%; */
+        /* padding: 10px 20px; */
     }
 
     .hamburgers {

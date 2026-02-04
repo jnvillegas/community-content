@@ -81,7 +81,7 @@
 
 .names {
     margin: 0;
-    color: var(--web-white) !important;
+    color: var(--web-white);
     font-size: 1.25rem;
     font-style: italic;
     font-family: serif;
@@ -89,7 +89,7 @@
 
 .role {
     margin: 0;
-    color: var(--web-primary) !important;
+    color: var(--web-secondary);
     font-size: 0.75rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
@@ -102,8 +102,8 @@
     right: -1.5rem;
     width: 8rem;
     height: 8rem;
-    border-right: 2px solid var(--web-green-two);
-    border-bottom: 2px solid var(--web-green-two);
+    border-right: 2px solid var(--web-border);
+    border-bottom: 2px solid var(--web-border);
     border-radius: 0 0 2rem 0;
     display: none;
 }
@@ -169,8 +169,8 @@
     align-items: center;
     justify-content: center;
     padding: 0.75rem 2rem;
-    background: var(--web-title);
-    color: var(--web-bg);
+    background: var(--web-primary);
+    color: var(--web-white);
     font-weight: 700;
     border-radius: 0.75rem;
     text-decoration: none;
@@ -179,5 +179,5 @@
 }
 
 .button:hover {
-    background: var(--web-primary);
+    background: var(--web-btn-hover);
 }
