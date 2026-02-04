@@ -3,7 +3,7 @@
     flex-direction: column;
     gap: 30px;
     width: 100%;
-    color: var(--title);
+    color: var(--web-title);
 }
 
 .title {
@@ -51,7 +51,7 @@
     width: 64px;
     height: 64px;
     border-radius: 9999px;
-    border: 2px solid var(--bg);
+    border: 2px solid var(--web-bg);
     background-size: cover;
     background-position: center;
 }

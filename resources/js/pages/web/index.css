@@ -23,51 +23,45 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --bg: #fff;
-  --fg: #f6f8f6;
+  --web-bg: #fff;
+  --web-fg: #f6f8f6;
 
-  --black: #000;
-  --white: #fff;
-  --white1: #e5e7eb;
-  --primary: #0D2C24;
-  --secondary: #7FD791;
-  --green2: #025a4e31;
-  --green3: #025a4e18;
-  --text: #494949;
-  --badge-bg: #dddfdd;
-  --badge-text: #2D4B33;
-
-  --title: #1f1f1f;
-  --border: #e7e7e7;
-  --border2: #1f1f1f25;
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --web-black: #000;
+  --web-white: #fff;
+  --web-primary: #0D2C24;
+  --web-secondary: #7FD791;
+  --web-green-two: #025a4e31;
+  --web-green-three: #025a4e18;
+  --web-text: #494949;
+  --web-badge-bg: #dddfdd;
+  --web-badge-text: #2D4B33;
+  --web-title: #1f1f1f;
+  --web-border: #e7e7e7;
+  --web-shadow-sm: 0 1px 3px #0000000d;
 }
 
 [data-theme=dark] {
-  --bg: #121212;
-  --fg: #1a1a1a;
-
-  --black: #000;
-  --white: #fff;
-  --white1: #e5e7eb;
-  --primary: #61896f;
-  --secondary: #7FD791;
-  --green2: #2d4b333d;
-  --green3: #025a4e18;
-  --text: #a7a5a5;
-  --badge-bg: #00000049;
-  --badge-text: #7FD791;
-
-  --title: #fdfdfd;
-  --border: #313131;
-  --border2: #1f1f1f25;
-  --shadow-sm: 0 1px 3px rgba(255, 255, 255, 0.04);
+  --web-bg: #121212;
+  --web-fg: #1a1a1a;
+  --web-black: #000;
+  --web-white: #fff;
+  --web-primary: #61896f;
+  --web-secondary: #7FD791;
+  --web-green-two: #2d4b333d;
+  --web-green-three: #025a4e18;
+  --web-text: #a7a5a5;
+  --web-badge-bg: #00000049;
+  --web-badge-text: #7FD791;
+  --web-title: #fdfdfd;
+  --web-border: #313131;
+  --web-shadow-sm: 0 1px 3px #ffffff0a;
 }
+
 
 .web-layout {
   margin: 0;
   padding: 0;
-  background-color: var(--bg);
+  background-color: var(--web-bg);
 }
 
 .web-layout button {

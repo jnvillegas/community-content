@@ -31,7 +31,7 @@
 .quote {
     font-family: Georgia, 'Times New Roman', Times, serif;
     font-weight: 300;
-    color: var(--title);
+    color: var(--web-title);
     line-height: 1.25;
     font-size: 1.875rem;
 }
@@ -43,9 +43,9 @@
 }
 
 .highlight {
-    color: var(--primary);
+    color: var(--web-primary);
     text-decoration: underline;
-    text-decoration-color: var(--secondary);
+    text-decoration-color: var(--web-primary);
     text-underline-offset: 8px;
 }
 
@@ -55,6 +55,6 @@
     font-size: 0.75rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--text);
+    color: var(--web-text);
     font-style: normal;
 }

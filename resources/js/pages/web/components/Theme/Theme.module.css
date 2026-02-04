@@ -11,8 +11,8 @@
     border-radius: 999999px;
     border: none;
     cursor: pointer;
-    background-color: var(--bg);
+    background-color: var(--web-bg);
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    color: var(--title);
-    border: 1px solid var(--border2);
+    color: var(--web-title);
+    border: 1px solid var(--web-border2);
 }

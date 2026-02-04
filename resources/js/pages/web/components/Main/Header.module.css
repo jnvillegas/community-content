@@ -1,7 +1,7 @@
 .main_content {
     display: flex;
     overflow: hidden;
-    background-color: var(--black);
+    background-color: var(--web-black);
 }
 
 .video {

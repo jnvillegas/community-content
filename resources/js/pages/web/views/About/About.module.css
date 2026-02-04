@@ -17,7 +17,7 @@
 }
 
 .border_top {
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--web-border);
 }
 
 .grid_two_columns {
@@ -43,13 +43,13 @@
 .section_title {
     font-size: 2.5rem;
     font-weight: 700;
-    color: var(--title);
+    color: var(--web-title);
     line-height: 1.1;
 }
 
 .section_subtitle {
     font-size: 1.25rem;
-    color: var(--text);
+    color: var(--web-text);
     font-weight: 300;
 }
 
@@ -62,7 +62,7 @@
 .text_content {
     font-size: 1.125rem;
     line-height: 1.75;
-    color: var(--text);
+    color: var(--web-text);
     display: flex;
     flex-direction: column;
     gap: 1em;
@@ -159,7 +159,7 @@
     font-weight: 800;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    /* color: var(--title); */
+    /* color: var(--web-title); */
     color: #1f1f1f;
     text-align: center;
     margin-bottom: 1rem;
@@ -175,7 +175,7 @@
     max-width: 32rem;
     margin-left: auto;
     margin-right: auto;
-    /* color: var(--title); */
+    /* color: var(--web-title); */
     color: #1f1f1f;
     font-size: 1.125rem;
     text-align: center;
@@ -206,7 +206,7 @@
     position: relative;
     border-radius: 1.5rem;
     overflow: hidden;
-    background: var(--title);
+    background: var(--web-title);
     aspect-ratio: 16 / 9;
 }
 
@@ -279,7 +279,7 @@
 .cta_button {
     display: inline-block;
     padding: 1.25rem 3rem;
-    background-color: var(--black);
+    background-color: var(--web-black);
     color: white;
     font-weight: bold;
     font-size: 1.125rem;
@@ -290,6 +290,6 @@
 }
 
 /* .cta_button:hover {
-    background-color: var(--primary);
+    background-color: var(--web-primary);
     transform: translateY(-4px);
 } */

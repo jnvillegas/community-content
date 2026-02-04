@@ -16,7 +16,7 @@
     font-size: 1.875rem;
     font-weight: 900;
     letter-spacing: -0.025em;
-    color: var(--title);
+    color: var(--web-title);
 }
 
 .stories_grid {
@@ -73,7 +73,7 @@
     font-weight: bold;
     letter-spacing: 0.125em;
     text-transform: uppercase;
-    color: var(--secondary);
+    color: var(--web-primary);
     background-color: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(4px);
     padding: 0.25rem 0.5rem;

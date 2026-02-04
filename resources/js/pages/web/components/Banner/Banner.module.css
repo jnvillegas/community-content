@@ -43,7 +43,7 @@
     letter-spacing: 0.3em;
     text-transform: uppercase;
     opacity: .9;
-    color: var(--white);
+    color: var(--web-white);
 }
 
 @media (min-width: 768px) {

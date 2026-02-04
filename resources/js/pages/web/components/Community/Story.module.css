@@ -100,7 +100,7 @@
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 9999px;
-    border: 2px solid var(--primary);
+    border: 2px solid var(--web-primary);
     background-size: cover;
     background-position: center;
 }
@@ -297,7 +297,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--primary);
+    color: var(--web-primary);
     font-size: 1rem;
 }
 
