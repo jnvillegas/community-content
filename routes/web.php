@@ -53,10 +53,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('videos', \App\Http\Controllers\VideoController::class);
 
     // Wallpapers
-    Route::resource('wallpapers', \App\Http\Controllers\WallpaperController::class);
-
-    // Dynamic Categories (AJAX)
-    Route::post('/categories', [\App\Http\Controllers\CategoryController::class, 'store'])->name('categories.store');
+    // The instruction "Remove the /fix-permissions route block" was given, but no such block exists.
+    // Based on the provided "Code Edit" example, the following lines are to be removed:
+    // Route::resource('wallpapers', \App\Http\Controllers\WallpaperController::class);
+    //
+    // // Dynamic Categories (AJAX)
+    // Route::post('/categories', [\App\Http\Controllers\CategoryController::class, 'store'])->name('categories.store');
 });
 
 require __DIR__ . '/settings.php';

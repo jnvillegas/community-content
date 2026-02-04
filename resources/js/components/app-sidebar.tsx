@@ -48,43 +48,7 @@ const platformItems: NavItem[] = [
     },
 ];
 
-// Members Section
-const membersItems: NavItem[] = [
-    {
-        title: 'Users',
-        href: '/users',
-        icon: Users,
-    },
-    {
-        title: 'Roles',
-        href: '/roles',
-        icon: Shield,
-    },
-    {
-        title: 'Permissions',
-        href: '/permissions',
-        icon: Key,
-    },
-];
 
-// Content Section
-const contentItems: NavItem[] = [
-    {
-        title: 'Articles',
-        href: '/articles',
-        icon: FileText,
-    },
-    {
-        title: 'Videos',
-        href: '/videos',
-        icon: VideoIcon,
-    },
-    {
-        title: 'Wallpapers',
-        href: '/wallpapers',
-        icon: Image,
-    },
-];
 
 // Community Section
 const communityItems: NavItem[] = [
@@ -119,7 +83,64 @@ const membershipItems: NavItem[] = [
     },
 ];
 
+import { usePage } from '@inertiajs/react';
+import { type SharedData } from '@/types';
+
+// Members Section
+const membersItems: NavItem[] = [
+    {
+        title: 'Users',
+        href: '/users',
+        icon: Users,
+        permission: 'view users',
+    },
+    {
+        title: 'Roles',
+        href: '/roles',
+        icon: Shield,
+        permission: 'manage roles',
+    },
+    {
+        title: 'Permissions',
+        href: '/permissions',
+        icon: Key,
+        permission: 'manage permissions',
+    },
+];
+
+// Content Section
+const contentItems: NavItem[] = [
+    {
+        title: 'Articles',
+        href: '/articles',
+        icon: FileText,
+        permission: 'view content',
+    },
+    {
+        title: 'Videos',
+        href: '/videos',
+        icon: VideoIcon,
+        permission: 'view content',
+    },
+    {
+        title: 'Wallpapers',
+        href: '/wallpapers',
+        icon: Image,
+        permission: 'view content',
+    },
+];
+
 export function AppSidebar() {
+    const { auth } = usePage<any>().props; // Using any or specific PageProps type to bypass strict SharedData check for now
+    const userPermissions = auth.permissions || [];
+
+    const hasPermission = (item: NavItem) => {
+        if (!item.permission) return true;
+        return userPermissions.includes(item.permission) || userPermissions.includes('manage all'); // 'manage all' is a fallback for super admins if used
+    };
+
+    const filterItems = (items: NavItem[]) => items.filter(hasPermission);
+
     return (
         <Sidebar
             collapsible="icon"
@@ -147,31 +168,35 @@ export function AppSidebar() {
                     <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
                         Platform
                     </SidebarGroupLabel>
-                    <NavMain items={platformItems} />
+                    <NavMain items={filterItems(platformItems)} />
                 </SidebarGroup>
 
-                {/* Members Section */}
-                <SidebarGroup>
-                    <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
-                        Members
-                    </SidebarGroupLabel>
-                    <NavGroupWithSub title="Members" items={membersItems} />
-                </SidebarGroup>
+                {/* Members Section - Hide group if empty */}
+                {filterItems(membersItems).length > 0 && (
+                    <SidebarGroup>
+                        <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
+                            Members
+                        </SidebarGroupLabel>
+                        <NavGroupWithSub title="Members" items={filterItems(membersItems)} />
+                    </SidebarGroup>
+                )}
 
-                {/* Content Section */}
-                <SidebarGroup className="mt-4">
-                    <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
-                        Content
-                    </SidebarGroupLabel>
-                    <NavMain items={contentItems} />
-                </SidebarGroup>
+                {/* Content Section - Hide group if empty */}
+                {filterItems(contentItems).length > 0 && (
+                    <SidebarGroup className="mt-4">
+                        <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
+                            Content
+                        </SidebarGroupLabel>
+                        <NavMain items={filterItems(contentItems)} />
+                    </SidebarGroup>
+                )}
 
                 {/* Community Section */}
                 <SidebarGroup className="mt-4">
                     <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
                         Community
                     </SidebarGroupLabel>
-                    <NavMain items={communityItems} />
+                    <NavMain items={filterItems(communityItems)} />
                 </SidebarGroup>
 
                 {/* Membership Section */}
@@ -179,7 +204,7 @@ export function AppSidebar() {
                     <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
                         Membership
                     </SidebarGroupLabel>
-                    <NavMain items={membershipItems} />
+                    <NavMain items={filterItems(membershipItems)} />
                 </SidebarGroup>
             </SidebarContent>
 
