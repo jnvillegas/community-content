@@ -18,12 +18,20 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // Create permissions
         $permissions = [
+            // Users & RBAC
             'manage users',
             'manage roles',
+            'manage permissions',
+            // Posts
             'create posts',
             'edit posts',
             'delete posts',
             'publish posts',
+            // Content modules
+            'manage articles',
+            'manage videos',
+            'manage wallpapers',
+            // Others
             'manage events',
             'manage courses',
         ];
@@ -40,11 +48,11 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // Creator
         $role = Role::findOrCreate('creator');
-        $role->givePermissionTo(['create posts', 'edit posts', 'publish posts', 'manage events']);
+        $role->givePermissionTo(['create posts', 'edit posts', 'publish posts', 'manage events', 'manage articles', 'manage videos']);
 
         // Mentor
         $role = Role::findOrCreate('mentor');
-        $role->givePermissionTo(['create posts', 'edit posts', 'publish posts', 'manage events', 'manage courses']);
+        $role->givePermissionTo(['create posts', 'edit posts', 'publish posts', 'manage events', 'manage courses', 'manage articles', 'manage videos', 'manage wallpapers']);
 
         // Admin
         $role = Role::findOrCreate('admin');
