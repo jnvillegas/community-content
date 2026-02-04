@@ -112,7 +112,7 @@
 }
 
 .action_button.liked:hover {
-    color: #ef4444;
+    color: var(--web-red);
 }
 
 .action_icon {

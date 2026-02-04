@@ -154,7 +154,7 @@ const Story = ({ handleModal }) => {
 
 
                         <div className={styles.main_content}>
-                            <h2 className={styles.story_title}>{currentStory.title}</h2>
+                            {/* <h2 className={styles.story_title}>{currentStory.title}</h2> */}
                             {/* <p className={styles.story_text}>{currentStory.text}</p> */}
                         </div>
 
@@ -165,12 +165,12 @@ const Story = ({ handleModal }) => {
                                 type="text"
                             />
                             <div className={styles.action_buttons}>
-                                <button className={styles.action_icon_button}>
+                                <button className={`${styles.action_button} ${styles.liked}`}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M11.993 5.09691C11.0387 4.25883 9.78328 3.75 8.40796 3.75C5.42122 3.75 3 6.1497 3 9.10988C3 10.473 3.50639 11.7242 4.35199 12.67L12 20.25L19.4216 12.8944L19.641 12.6631C20.4866 11.7172 21 10.473 21 9.10988C21 6.1497 18.5788 3.75 15.592 3.75C14.2167 3.75 12.9613 4.25883 12.007 5.09692L12 5.08998L11.993 5.09691ZM12 7.09938L12.0549 7.14755L12.9079 6.30208L12.9968 6.22399C13.6868 5.61806 14.5932 5.25 15.592 5.25C17.763 5.25 19.5 6.99073 19.5 9.10988C19.5 10.0813 19.1385 10.9674 18.5363 11.6481L18.3492 11.8453L12 18.1381L5.44274 11.6391C4.85393 10.9658 4.5 10.0809 4.5 9.10988C4.5 6.99073 6.23699 5.25 8.40796 5.25C9.40675 5.25 10.3132 5.61806 11.0032 6.22398L11.0921 6.30203L11.9452 7.14752L12 7.09938Z" fill="currentColor" />
                                     </svg>
                                 </button>
-                                <button className={styles.action_icon_button}>
+                                <button className={styles.action_button}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                         <path d="M11.5003 12H5.41872M5.24634 12.7972L4.24158 15.7986C3.69128 17.4424 3.41613 18.2643 3.61359 18.7704C3.78506 19.21 4.15335 19.5432 4.6078 19.6701C5.13111 19.8161 5.92151 19.4604 7.50231 18.7491L17.6367 14.1886C19.1797 13.4942 19.9512 13.1471 20.1896 12.6648C20.3968 12.2458 20.3968 11.7541 20.1896 11.3351C19.9512 10.8529 19.1797 10.5057 17.6367 9.81135L7.48483 5.24303C5.90879 4.53382 5.12078 4.17921 4.59799 4.32468C4.14397 4.45101 3.77572 4.78336 3.60365 5.22209C3.40551 5.72728 3.67772 6.54741 4.22215 8.18767L5.24829 11.2793C5.34179 11.561 5.38855 11.7019 5.407 11.8459C5.42338 11.9738 5.42321 12.1032 5.40651 12.231C5.38768 12.375 5.34057 12.5157 5.24634 12.7972Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
@@ -179,29 +179,6 @@ const Story = ({ handleModal }) => {
                         </div>
                     </div>
                 </div>
-
-                {/* <div className={styles.sidebar_info}>
-                    <div className={styles.sidebar_card}>
-                        <h3 className={styles.sidebar_title}>Vivendo em Viagem</h3>
-                        <p className={styles.sidebar_text}>
-                            Stories let you share moments from your travels with your community in real-time.
-                        </p>
-                        <div className="mt-4 flex flex-col gap-2">
-                            <div className={styles.sidebar_item}>
-                                <div className={styles.sidebar_icon}>
-                                    <span className="material-symbols-outlined text-sm">public</span>
-                                </div>
-                                <span className={styles.sidebar_label}>Public Story</span>
-                            </div>
-                            <div className={styles.sidebar_item}>
-                                <div className={styles.sidebar_icon}>
-                                    <span className="material-symbols-outlined text-sm">location_on</span>
-                                </div>
-                                <span className={styles.sidebar_label}>Cusco, Peru</span>
-                            </div>
-                        </div>
-                    </div>
-                </div> */}
             </div>
         </>
     );

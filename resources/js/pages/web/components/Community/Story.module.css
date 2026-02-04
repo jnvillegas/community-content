@@ -17,6 +17,7 @@
     filter: blur(20px);
     pointer-events: none;
     transform: scale(1.1);
+    background-color: var(--web-black);
 }
 
 .blur_bg_image {
@@ -99,8 +100,8 @@
 .profile_avatar {
     width: 2.5rem;
     height: 2.5rem;
-    border-radius: 9999px;
-    border: 2px solid var(--web-green);
+    border-radius: .75rem;
+    /* border: 2px solid var(--web-green); */
     background-size: cover;
     background-position: center;
 }
@@ -200,14 +201,18 @@
     gap: 0.25rem;
 }
 
-.action_icon_button {
+.action_button {
     padding: 0.5rem;
     color: white;
     transition: color 0.2s;
 }
 
-.action_icon_button:hover {
+.action_button:hover {
     color: var(--web-green);
+}
+
+.action_button.liked:hover {
+    color: var(--web-red);
 }
 
 .nav_buttons {
@@ -243,65 +248,4 @@
 .nav_arrow:hover {
     background-color: rgba(0, 0, 0, 0.3);
     color: white;
-}
-
-.sidebar_info {
-    display: none;
-    position: fixed;
-    right: 2.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    flex-direction: column;
-    gap: 1rem;
-    z-index: 60;
-}
-
-@media (min-width: 1280px) {
-    .sidebar_info {
-        display: flex;
-    }
-}
-
-.sidebar_card {
-    background-color: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(12px);
-    padding: 1rem;
-    border-radius: 0.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    width: 16rem;
-}
-
-.sidebar_title {
-    color: white;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-}
-
-.sidebar_text {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.75rem;
-}
-
-.sidebar_item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-top: 0.5rem;
-}
-
-.sidebar_icon {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 9999px;
-    background-color: rgba(13, 44, 36, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--web-primary);
-    font-size: 1rem;
-}
-
-.sidebar_label {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.75rem;
 }
