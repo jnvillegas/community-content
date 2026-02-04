@@ -16,39 +16,85 @@ class RolesAndPermissionsSeeder extends Seeder
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Create permissions
+        // 1. Define Permissions
         $permissions = [
-            'manage users',
+            // Platform
+            'view dashboard',
+
+            // Members (Security)
+            'manage users', // Create/Edit/Delete Users
+            'view users',   // Read-only access to users list
             'manage roles',
-            'create posts',
-            'edit posts',
-            'delete posts',
-            'publish posts',
+            'manage permissions',
+
+            // Content
+            'manage articles',
+            'manage videos',
+            'manage wallpapers',
+            'view content', // For simple users to consume
+
+            // Community
             'manage events',
             'manage courses',
+            'manage messages',
+            'participate community', // Comment, join events
+
+            // Membership
+            'manage plans',
+            'view my membership',
         ];
 
         foreach ($permissions as $permission) {
             Permission::findOrCreate($permission);
         }
 
-        // Create roles and assign created permissions
+        // 2. Define Roles & Assign Permissions
 
-        // Standard User
-        $role = Role::findOrCreate('standard');
-        $role->givePermissionTo(['create posts', 'edit posts']);
+        // --- ADMIN ---
+        // All Access
+        $admin = Role::findOrCreate('admin');
+        $admin->givePermissionTo(Permission::all());
 
-        // Creator
-        $role = Role::findOrCreate('creator');
-        $role->givePermissionTo(['create posts', 'edit posts', 'publish posts', 'manage events']);
+        // --- CREATOR (Owner) ---
+        // Content + Community + Membership + View Users (No Technical Security)
+        $creator = Role::findOrCreate('creator');
+        $creator->givePermissionTo([
+            'view dashboard',
+            'view users',
+            'manage articles',
+            'manage videos',
+            'manage wallpapers',
+            'manage events',
+            'manage courses',
+            'manage messages',
+            'manage plans',
+        ]);
 
-        // Mentor
-        $role = Role::findOrCreate('mentor');
-        $role->givePermissionTo(['create posts', 'edit posts', 'publish posts', 'manage events', 'manage courses']);
+        // --- EDITOR (Content Manager) ---
+        // Content Management Only
+        $editor = Role::findOrCreate('editor'); // Renamed from "Auditor" concept
+        $editor->givePermissionTo([
+            'view dashboard',
+            'manage articles',
+            'manage videos',
+            'manage wallpapers',
+            'view content',
+            'participate community' // Originally "view community"
+        ]);
 
-        // Admin
-        $role = Role::findOrCreate('admin');
-        $role->givePermissionTo(Permission::all());
+        // --- USER (Standard) ---
+        // Consumption & Participation
+        $standard = Role::findOrCreate('standard');
+        $standard->givePermissionTo([
+            'view dashboard', // Their own dashboard
+            'view content',
+            'participate community',
+            'view my membership',
+        ]);
+
+        // Ensure legacy roles have some permissions or are handled if needed
+        $mentor = Role::findOrCreate('mentor');
+        $mentor->givePermissionTo(['view content', 'participate community']);
     }
 
     public function run(): void

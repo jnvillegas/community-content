@@ -6,20 +6,40 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Role;
 
-class UserController extends Controller
+class UserController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:view users', only: ['index']),
+            new Middleware('permission:manage users', except: ['index']),
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index(): Response
     {
-        $users = User::with('roles')
-            ->orderBy('created_at', 'desc')
+        $search = request('search');
+        $sortBy = request('sort_by', 'created_at');
+        $sortOrder = request('sort_order', 'desc');
+
+        $query = User::with('roles');
+
+        if ($search) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+        }
+
+        $users = $query->orderBy($sortBy, $sortOrder)
             ->paginate(10);
 
         return Inertia::render('users/Index', [
@@ -52,6 +72,7 @@ class UserController extends Controller
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
+            'status' => $request->status ?? 'active',
         ]);
 
         if ($request->filled('password')) {

@@ -18,6 +18,7 @@
 
 .border_top {
     border-top: 1px solid var(--web-border);
+    border-top: 1px solid var(--web-border);
 }
 
 .grid_two_columns {
@@ -44,11 +45,13 @@
     font-size: 2.5rem;
     font-weight: 700;
     color: var(--web-title);
+    color: var(--web-title);
     line-height: 1.1;
 }
 
 .section_subtitle {
     font-size: 1.25rem;
+    color: var(--web-text);
     color: var(--web-text);
     font-weight: 300;
 }
@@ -62,6 +65,7 @@
 .text_content {
     font-size: 1.125rem;
     line-height: 1.75;
+    color: var(--web-text);
     color: var(--web-text);
     display: flex;
     flex-direction: column;
@@ -160,6 +164,7 @@
     letter-spacing: 0.05em;
     text-transform: uppercase;
     /* color: var(--web-title); */
+    /* color: var(--web-title); */
     color: #1f1f1f;
     text-align: center;
     margin-bottom: 1rem;
@@ -175,6 +180,7 @@
     max-width: 32rem;
     margin-left: auto;
     margin-right: auto;
+    /* color: var(--web-title); */
     /* color: var(--web-title); */
     color: #1f1f1f;
     font-size: 1.125rem;
@@ -206,6 +212,7 @@
     position: relative;
     border-radius: 1.5rem;
     overflow: hidden;
+    background: var(--web-title);
     background: var(--web-title);
     aspect-ratio: 16 / 9;
 }

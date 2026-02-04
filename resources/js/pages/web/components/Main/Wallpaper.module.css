@@ -11,8 +11,10 @@
 .card {
     position: relative;
     background: var(--web-fg);
+    background: var(--web-fg);
     border-radius: 1.75rem;
     padding: 2rem;
+    border: 1px solid var(--web-border);
     border: 1px solid var(--web-border);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 
@@ -71,6 +73,7 @@
     font-size: 2rem;
     font-weight: 700;
     color: var(--web-title);
+    color: var(--web-title);
     margin-bottom: 1rem;
 }
 
@@ -82,6 +85,7 @@
 
 .description {
     font-size: 1.125rem;
+    color: var(--web-text);
     color: var(--web-text);
     margin-bottom: 2rem;
 }
@@ -105,13 +109,16 @@
     padding: 0 1.25rem;
     border-radius: 0.75rem;
     border: 1px solid var(--web-border);
+    border: 1px solid var(--web-border);
     font-size: 0.875rem;
+    color: var(--web-title);
     color: var(--web-title);
     min-width: 280px;
 }
 
 .input:focus {
     outline: none;
+    border-color: var(--web-primary);
     border-color: var(--web-primary);
     box-shadow: 0 0 0 2px hsla(132, 25%, 24%, 0.3);
 }
@@ -140,6 +147,7 @@
 .disclaimer {
     font-size: 0.75rem;
     color: var(--web-text);
+    color: var(--web-text);
     margin-top: 1rem;
 }
 
@@ -166,7 +174,9 @@
     width: 16rem;
     height: 24rem;
     background: var(--web-white);
+    background: var(--web-white);
     border-radius: 1.5rem;
+    border: 4px solid var(--web-white);
     border: 4px solid var(--web-white);
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
     overflow: hidden;

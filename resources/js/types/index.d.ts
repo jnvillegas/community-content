@@ -3,10 +3,13 @@ import { LucideIcon } from 'lucide-react';
 
 export interface Auth {
     user: User;
+    permissions: string[]; // Added permissions list
     unread_notifications_count: number;
 }
 
-export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+export type PageProps<
+    T extends Record<string, unknown> = Record<string, unknown>,
+> = T & {
     auth: Auth;
     flash: {
         success: string | null;
@@ -29,6 +32,7 @@ export interface NavItem {
     href: NonNullable<InertiaLinkProps['href']>;
     icon?: LucideIcon | null;
     isActive?: boolean;
+    permission?: string; // Added permission requirement
 }
 
 export interface SharedData {
@@ -44,6 +48,7 @@ export interface Role {
     guard_name: string;
     created_at: string;
     updated_at: string;
+    permissions?: Permission[];
 }
 
 export interface Permission {
@@ -100,4 +105,3 @@ export interface Wallpaper {
     updated_at: string;
     deleted_at: string | null;
 }
-

@@ -59,9 +59,11 @@
 }
 
 
+
 .web-layout {
   margin: 0;
   padding: 0;
+  background-color: var(--web-bg);
   background-color: var(--web-bg);
 }
 

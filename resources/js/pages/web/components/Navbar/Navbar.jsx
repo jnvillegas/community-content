@@ -116,6 +116,7 @@ const Navbar = () => {
                 <div className={styles.link_content_mobile}>
                     <Link className={styles.link_mobile} href={PATHROUTES.ABOUT} onClick={closeModal}>Sobre Nós</Link>
                     <Link className={styles.link_mobile} href={PATHROUTES.COMMUNITY} onClick={closeModal}>Comunidade</Link>
+                    <Link className={styles.link_mobile} href={PATHROUTES.COMMUNITY} onClick={closeModal}>Comunidade</Link>
                     <Link className={styles.link_mobile} href={PATHROUTES.BLOG} onClick={closeModal}>Blog</Link>
                     <Link className={styles.link_mobile} href={PATHROUTES.WALLPAPER} onClick={closeModal}>Wallpaper</Link>
                     <Link className={styles.link_mobile} href={PATHROUTES.CONTACT} onClick={closeModal}>Contato</Link>

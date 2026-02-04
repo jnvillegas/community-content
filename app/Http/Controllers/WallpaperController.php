@@ -4,12 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\Wallpaper;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 
-class WallpaperController extends Controller
+class WallpaperController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:manage wallpapers', except: ['index', 'show', 'download']),
+        ];
+    }
+
     /**
      * Display a listing of wallpapers for admin panel.
      */

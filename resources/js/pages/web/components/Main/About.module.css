@@ -1,6 +1,7 @@
 .section {
     padding: 6rem 0;
     /* background: var(--web-fg); */
+    /* background: var(--web-fg); */
     position: relative;
     overflow: hidden;
 }
@@ -52,6 +53,7 @@
     aspect-ratio: 4 / 5;
     border-radius: 1.5rem;
     overflow: hidden;
+    border: 1px solid var(--web-border);
     border: 1px solid var(--web-border);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
@@ -128,6 +130,7 @@
     font-size: 2.5rem;
     font-weight: 700;
     color: var(--web-title);
+    color: var(--web-title);
     line-height: 1.2;
     margin-bottom: 2rem;
 }
@@ -140,6 +143,7 @@
 
 .highlight {
     color: var(--web-primary);
+    color: var(--web-primary);
     font-style: italic;
     font-family: serif;
 }
@@ -149,13 +153,16 @@
     flex-direction: column;
     gap: 1.5rem;
     color: var(--web-text);
+    color: var(--web-text);
     font-size: 1.125rem;
     line-height: 1.7;
 }
 
 .quote {
     border-left: 4px solid var(--web-primary);
+    border-left: 4px solid var(--web-primary);
     padding-left: 1.5rem;
+    color: var(--web-title);
     color: var(--web-title);
     font-weight: 500;
 }

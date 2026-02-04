@@ -60,6 +60,7 @@
 
 .form_title {
     color: var(--web-title);
+    color: var(--web-title);
     font-size: 1.875rem;
     font-weight: bold;
     line-height: 1.1;
@@ -67,6 +68,7 @@
 }
 
 .form_description {
+    color: var(--web-title);
     color: var(--web-title);
     font-size: 1.125rem;
     max-width: 36rem;
@@ -86,6 +88,7 @@
 
 .input_label {
     color: var(--web-title);
+    color: var(--web-title);
     font-size: 0.875rem;
     font-weight: 600;
 }
@@ -97,13 +100,17 @@
     border-radius: 0.5rem;
     border: 1px solid var(--web-border);
     background-color: var(--web-fg);
+    border: 1px solid var(--web-border);
+    background-color: var(--web-fg);
     transition: all 0.2s;
     outline: none;
+    color: var(--web-title);
     color: var(--web-title);
 }
 
 .input:focus,
 .textarea:focus {
+    border-color: var(--web-primary);
     border-color: var(--web-primary);
     box-shadow: 0 0 0 1px #0D2C24;
 }
@@ -157,13 +164,16 @@
     flex-direction: column;
     gap: 2rem;
     background-color: var(--web-fg);
+    background-color: var(--web-fg);
     padding: 2rem;
     border-radius: 0.75rem;
+    border: 1px solid var(--web-border);
     border: 1px solid var(--web-border);
     margin-top: 32px;
 }
 
 .sidebar_title {
+    color: var(--web-title);
     color: var(--web-title);
     font-size: 1.25rem;
     font-weight: bold;
@@ -188,9 +198,11 @@
     height: 3rem;
     border-radius: 9999px;
     background-color: var(--web-bg);
+    background-color: var(--web-bg);
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--web-title);
     color: var(--web-title);
     font-size: 1.5rem;
 }
@@ -204,6 +216,7 @@
 }
 
 .connection_email {
+    color: var(--web-title);
     color: var(--web-title);
     font-weight: 600;
 }
@@ -221,10 +234,12 @@
     gap: 0.5rem;
     padding: 0.5rem 1rem;
     background-color: var(--web-bg);
+    background-color: var(--web-bg);
     border-radius: 9999px;
     transition: background-color 0.2s;
     font-weight: bold;
     font-size: 0.875rem;
+    color: var(--web-title);
     color: var(--web-title);
 }
 

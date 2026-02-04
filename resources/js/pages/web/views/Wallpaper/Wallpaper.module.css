@@ -10,6 +10,7 @@
     font-family: serif;
     font-size: 2.5rem;
     color: var(--web-title);
+    color: var(--web-title);
     margin-bottom: 2rem;
     font-style: italic;
 }
@@ -23,6 +24,7 @@
 .intro_text {
     font-size: 1.125rem;
     line-height: 1.75;
+    color: var(--web-text);
     color: var(--web-text);
     font-weight: 300;
     margin-bottom: 3rem;
@@ -82,6 +84,7 @@
     aspect-ratio: 9 / 16;
     overflow: hidden;
     border-radius: 1rem;
+    background-color: var(--web-bg);
     background-color: var(--web-bg);
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     cursor: pointer;
@@ -150,6 +153,7 @@
     font-weight: 500;
     letter-spacing: 0.125em;
     opacity: 0.8;
+    color: var(--web-white);
     color: var(--web-white);
 }
 

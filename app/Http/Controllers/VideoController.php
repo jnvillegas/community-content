@@ -5,12 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Video;
 use App\Models\VideoCategory;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 
-class VideoController extends Controller
+class VideoController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:manage videos', except: ['index', 'show']),
+        ];
+    }
+
     public function index(Request $request): Response
     {
         $query = Video::with(['categories', 'author']);

@@ -13,6 +13,8 @@
     margin: 20px auto;
     background-color: var(--web-bg);
     z-index: 200;
+    background-color: var(--web-bg);
+    z-index: 200;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 16px;
     padding: 20px;
@@ -31,6 +33,7 @@
 .logo {
     width: 40px;
     height: 40px;
+    fill: var(--web-title);
     fill: var(--web-title);
     animation: text-scroll linear both;
     animation-timeline: scroll(root);
@@ -51,6 +54,7 @@
 }
 
 .link {
+    color: var(--web-title);
     color: var(--web-title);
     text-decoration: none;
     transition: .5s;
@@ -81,12 +85,14 @@
 
 .svg_yt_text {
     fill: var(--web-title);
+    fill: var(--web-title);
     animation: text-scroll linear both;
     animation-timeline: scroll(root);
     animation-range: 0 50px;
 }
 
 .svg_path {
+    stroke: var(--web-title);
     stroke: var(--web-title);
     animation: svg-scroll linear both;
     animation-timeline: scroll(root);
@@ -153,6 +159,7 @@
             opacity 0.3s ease,
             background-color 0s;
         background-color: var(--web-title);
+        background-color: var(--web-title);
     }
 
     .hamburger_input:checked~.bar:nth-child(2) {
@@ -187,6 +194,7 @@
         width: 100%;
         display: flex;
         background-color: var(--web-bg);
+        background-color: var(--web-bg);
         border-radius: 25px;
         transition: 1s;
         overflow: hidden;
@@ -207,6 +215,7 @@
 
     .link_mobile {
         font-size: 24px;
+        color: var(--web-title);
         color: var(--web-title);
     }
 }
