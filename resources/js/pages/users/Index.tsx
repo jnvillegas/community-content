@@ -75,7 +75,7 @@ export default function Index({ auth, users, roles }: UsersPageProps) {
                             <TableRow>
                                 <TableHead>Name</TableHead>
                                 <TableHead>Email</TableHead>
-                                <TableHead>Role</TableHead>
+                                <TableHead>Roles</TableHead>
                                 <TableHead>Created At</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
