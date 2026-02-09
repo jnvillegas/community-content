@@ -6,6 +6,8 @@ import { Link, usePage } from "@inertiajs/react"
 const Navbar = () => {
     const [modal, setModal] = useState(false);
     const { url } = usePage();
+    const auth = usePage().props.auth;
+
 
     const isCurrent = (path) => url === path;
 
@@ -36,11 +38,6 @@ const Navbar = () => {
             </Link>
 
             <div className={styles.link_content}>
-                {/* <Link className={styles.link} href={PATHROUTES.ABOUT} onClick={scrollTop}>Sobre Nós</Link>
-                <Link className={styles.link} href={PATHROUTES.COMMUNITY} onClick={scrollTop}>Comunidade</Link>
-                <Link className={styles.link} href={PATHROUTES.BLOG} onClick={scrollTop}>Blog</Link>
-                <Link className={styles.link} href={PATHROUTES.WALLPAPER} onClick={scrollTop}>Wallpaper</Link>
-                <Link className={styles.link} href={PATHROUTES.CONTACT} onClick={scrollTop}>Contato</Link> */}
 
                 <Link
                     className={`${styles.link} ${isCurrent(PATHROUTES.ABOUT) ? styles.link_current : ""}`}
@@ -92,10 +89,16 @@ const Navbar = () => {
                 </a>
 
                 <Link className={styles.svg_link} href={PATHROUTES.LOGIN}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path className={styles.svg_path} d="M17.25 7C17.25 4.10051 14.8995 1.75 12 1.75C9.10051 1.75 6.75 4.10051 6.75 7C6.75 9.8995 9.10051 12.25 12 12.25C14.8995 12.25 17.25 9.8995 17.25 7Z" stroke="currentColor" />
-                        <path className={styles.svg_path} d="M22 22C22 20 22 19.5 21 18C20.2 16.8 17 16.167 16.5 16C16 15.833 13.5 15.5 12 15.5C10.5 15.5 8 15.833 7.5 16C7 16.167 3.8 16.8 3 18C2 19.5 2 20 2 22" stroke="currentColor" strokeLinecap="round" />
-                    </svg>
+                    {auth.user ? (
+                        <div className={styles.avatar}>
+                            {auth.user.name ? auth.user.name.charAt(0) : 'A'}
+                        </div>
+                    ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path className={styles.svg_path} d="M17.25 7C17.25 4.10051 14.8995 1.75 12 1.75C9.10051 1.75 6.75 4.10051 6.75 7C6.75 9.8995 9.10051 12.25 12 12.25C14.8995 12.25 17.25 9.8995 17.25 7Z" stroke="currentColor" />
+                            <path className={styles.svg_path} d="M22 22C22 20 22 19.5 21 18C20.2 16.8 17 16.167 16.5 16C16 15.833 13.5 15.5 12 15.5C10.5 15.5 8 15.833 7.5 16C7 16.167 3.8 16.8 3 18C2 19.5 2 20 2 22" stroke="currentColor" strokeLinecap="round" />
+                        </svg>
+                    )}
                 </Link>
 
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">

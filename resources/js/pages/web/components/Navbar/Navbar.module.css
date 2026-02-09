@@ -99,6 +99,18 @@
     animation-range: 0 50px;
 }
 
+.avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: var(--web-title);
+    color: var(--web-bg);
+}
+
 .hamburgers {
     display: none;
 }

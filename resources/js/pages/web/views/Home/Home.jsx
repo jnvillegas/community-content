@@ -6,14 +6,9 @@ import Blog from "../../components/Main/Blog";
 import Wallpaper from "../../components/Main/Wallpaper";
 import { useAppearance } from "@/hooks/use-appearance";
 import WebLayout from "../../layout";
+import { usePage } from "@inertiajs/react";
 
 const Home = () => {
-    // const { appearance, updateAppearance } = useAppearance();
-    // const darkMode = appearance === 'dark';
-
-    // const toggleTheme = () => {
-    //     updateAppearance(darkMode ? 'light' : 'dark');
-    // };
 
     return (
         <>

@@ -4,8 +4,14 @@ import WebLayout from "../../layout";
 import Banner from "../../components/Banner/Banner";
 import Events from "../../components/Community/Events";
 import Products from "../../components/Community/Products";
+import { usePage } from "@inertiajs/react";
 
 const Community = () => {
+    const auth = usePage().props.auth;
+
+    // console.log(auth ? "Usuario autenticado" : "Usuario no autenticado");
+
+
     return (
         <div>
             <Banner title={"Bienvenidos!"} />
