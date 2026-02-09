@@ -36,9 +36,7 @@ Route::get('/events', [EventController::class, 'index'])->name('events.index');
 Route::get('/events/{slug}', [EventController::class, 'show'])->name('events.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+    Route::get('dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('users', \App\Http\Controllers\UserController::class)->except(['create', 'edit', 'show']);
     Route::resource('roles', \App\Http\Controllers\RoleController::class)->except(['create', 'edit', 'show']);
@@ -77,6 +75,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/events/{slug}/stats', [AdminEventController::class, 'stats'])->name('events.stats');
     Route::get('/events/{slug}/attendees', [AdminEventController::class, 'attendees'])->name('events.attendees');
     Route::post('/events/{slug}/attendees/{user}/mark', [AdminEventController::class, 'markAttendance'])->name('events.mark-attendance');
+    Route::resource('event-categories', \App\Http\Controllers\Admin\EventCategoryController::class);
 });
 
 require __DIR__ . '/settings.php';

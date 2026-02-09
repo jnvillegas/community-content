@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
+use App\Traits\RecordsActivity;
+
 class Video extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, RecordsActivity;
 
     protected $fillable = [
         'title',
@@ -54,5 +56,18 @@ class Video extends Model
     public function getEmbedUrlAttribute(): string
     {
         return "https://www.youtube.com/embed/{$this->youtube_id}?rel=0&showinfo=0&autoplay=0";
+    }
+
+    public function shouldRecordActivity(string $eventName): bool
+    {
+        if ($eventName === 'created') {
+            return $this->status === 'published';
+        }
+
+        if ($eventName === 'updated') {
+            return $this->wasChanged('status') && $this->status === 'published';
+        }
+
+        return false;
     }
 }

@@ -13,6 +13,7 @@ import {
     Shield,
     Users,
     Play as VideoIcon,
+    Tags,
 } from 'lucide-react';
 
 import { NavGroupWithSub } from '@/components/nav-group-with-sub';
@@ -52,11 +53,6 @@ const platformItems: NavItem[] = [
 
 // Community Section
 const communityItems: NavItem[] = [
-    {
-        title: 'Events',
-        href: '/events',
-        icon: Calendar,
-    },
     {
         title: 'Courses',
         href: '#',
@@ -128,6 +124,28 @@ const contentItems: NavItem[] = [
         icon: Image,
         permission: 'view content',
     },
+
+];
+
+// Event Management Section
+const eventManagementItems: NavItem[] = [
+    {
+        title: 'Events',
+        href: '/events',
+        icon: Calendar,
+    },
+    {
+        title: 'Dashboard',
+        href: '/admin/events',
+        icon: LayoutGrid,
+        permission: 'manage events',
+    },
+    {
+        title: 'Categories',
+        href: '/admin/event-categories',
+        icon: Tags,
+        permission: 'manage events',
+    },
 ];
 
 export function AppSidebar() {
@@ -178,6 +196,16 @@ export function AppSidebar() {
                             Members
                         </SidebarGroupLabel>
                         <NavGroupWithSub title="Members" items={filterItems(membersItems)} />
+                    </SidebarGroup>
+                )}
+
+                {/* Event Management Section */}
+                {filterItems(eventManagementItems).length > 0 && (
+                    <SidebarGroup className="mt-4">
+                        <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
+                            Event Management
+                        </SidebarGroupLabel>
+                        <NavMain items={filterItems(eventManagementItems)} />
                     </SidebarGroup>
                 )}
 

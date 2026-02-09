@@ -49,9 +49,11 @@ use Illuminate\Database\Eloquent\Builder;
  * @method static Builder|Event published()
  * @method static Builder|Event past()
  */
+use App\Traits\RecordsActivity;
+
 class Event extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, RecordsActivity;
 
     // Type Enums
     // Type Enums
@@ -195,5 +197,18 @@ class Event extends Model
         }
 
         return true;
+    }
+
+    public function shouldRecordActivity(string $eventName): bool
+    {
+        if ($eventName === 'created') {
+            return $this->status === self::STATUS_PUBLISHED;
+        }
+
+        if ($eventName === 'updated') {
+            return $this->wasChanged('status') && $this->status === self::STATUS_PUBLISHED;
+        }
+
+        return false;
     }
 }
