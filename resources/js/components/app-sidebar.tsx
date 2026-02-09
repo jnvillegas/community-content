@@ -54,7 +54,7 @@ const platformItems: NavItem[] = [
 const communityItems: NavItem[] = [
     {
         title: 'Events',
-        href: '#',
+        href: '/events',
         icon: Calendar,
     },
     {

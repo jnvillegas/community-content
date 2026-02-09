@@ -105,3 +105,43 @@ export interface Wallpaper {
     updated_at: string;
     deleted_at: string | null;
 }
+
+export interface EventCategory {
+    id: number;
+    name: string;
+    slug: string;
+    description?: string;
+    color?: string;
+    icon?: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Event {
+    id: number;
+    title: string;
+    slug: string;
+    description: string;
+    type: 'WORKSHOP' | 'MEETUP' | 'WEBINAR' | 'TRIP';
+    status: 'DRAFT' | 'PUBLISHED' | 'COMPLETED' | 'CANCELLED';
+    start_date: string;
+    end_date: string;
+    registration_deadline: string | null;
+    max_participants: number | null;
+    requires_subscription: boolean;
+    location: string | null;
+    location_url: string | null;
+    address: string | null;
+    latitude: number | null;
+    longitude: number | null;
+    virtual_url: string | null;
+    cover_image: string | null;
+    created_by: number;
+    created_at: string;
+    updated_at: string;
+    deleted_at: string | null;
+    categories?: EventCategory[];
+    creator?: User;
+    registrations?: any[]; // Define deeper if needed
+    is_registered?: boolean; // For frontend helper
+}

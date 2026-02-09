@@ -6,6 +6,9 @@ use Laravel\Fortify\Features;
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\BlogController;
 use App\Http\Controllers\Web\WallpaperController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventRegistrationController;
+use App\Http\Controllers\Admin\EventController as AdminEventController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -27,6 +30,10 @@ Route::get('/blog/{id}', [BlogController::class, 'show'])->name('blog.show');
 
 Route::get('/wallpaper', [WallpaperController::class, 'index'])->name('wallpaper');
 Route::get('/wallpaper/{wallpaper}/download', [WallpaperController::class, 'download'])->name('wallpaper.download');
+
+// Events (Public)
+Route::get('/events', [EventController::class, 'index'])->name('events.index');
+Route::get('/events/{slug}', [EventController::class, 'show'])->name('events.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
@@ -53,12 +60,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('videos', \App\Http\Controllers\VideoController::class);
 
     // Wallpapers
-    // The instruction "Remove the /fix-permissions route block" was given, but no such block exists.
-    // Based on the provided "Code Edit" example, the following lines are to be removed:
-    // Route::resource('wallpapers', \App\Http\Controllers\WallpaperController::class);
+    Route::resource('wallpapers', \App\Http\Controllers\WallpaperController::class);
     //
     // // Dynamic Categories (AJAX)
     // Route::post('/categories', [\App\Http\Controllers\CategoryController::class, 'store'])->name('categories.store');
+
+    // Events (User)
+    Route::get('/my-events', [EventController::class, 'myEvents'])->name('events.my');
+    Route::post('/events/{event}/register', [EventRegistrationController::class, 'store'])->name('events.register');
+    Route::delete('/events/{event}/unregister', [EventRegistrationController::class, 'destroy'])->name('events.unregister');
+});
+
+// Admin Routes
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('events', AdminEventController::class)->except(['show']);
+    Route::get('/events/{slug}/stats', [AdminEventController::class, 'stats'])->name('events.stats');
+    Route::get('/events/{slug}/attendees', [AdminEventController::class, 'attendees'])->name('events.attendees');
+    Route::post('/events/{slug}/attendees/{user}/mark', [AdminEventController::class, 'markAttendance'])->name('events.mark-attendance');
 });
 
 require __DIR__ . '/settings.php';

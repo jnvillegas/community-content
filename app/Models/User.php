@@ -53,4 +53,23 @@ class User extends Authenticatable
             'two_factor_confirmed_at' => 'datetime',
         ];
     }
+    /**
+     * Get the event registrations for the user.
+     */
+    public function eventRegistrations(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(EventRegistration::class);
+    }
+
+    /**
+     * Check if the user has an active subscription.
+     * 
+     * @return bool
+     */
+    public function hasActiveSubscription(): bool
+    {
+        // TODO: Implement actual subscription logic when subscription system is ready
+        // For now, return true to allow all users to register for events
+        return true;
+    }
 }

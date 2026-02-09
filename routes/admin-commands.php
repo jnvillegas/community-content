@@ -17,10 +17,12 @@ use Illuminate\Support\Facades\Artisan;
 */
 
 // Helper para verificar token
-function verifyAdminToken()
-{
-    if (request('token') !== env('ADMIN_SECRET_TOKEN')) {
-        abort(403, 'Unauthorized - Invalid token');
+if (!function_exists('verifyAdminToken')) {
+    function verifyAdminToken()
+    {
+        if (request('token') !== env('ADMIN_SECRET_TOKEN')) {
+            abort(403, 'Unauthorized - Invalid token');
+        }
     }
 }
 
