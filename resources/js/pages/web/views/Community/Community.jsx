@@ -8,9 +8,7 @@ import { usePage } from "@inertiajs/react";
 
 const Community = () => {
     const auth = usePage().props.auth;
-
-    // console.log(auth ? "Usuario autenticado" : "Usuario no autenticado");
-
+    const { events } = usePage().props;
 
     return (
         <div>
@@ -18,7 +16,7 @@ const Community = () => {
             <div className={styles.main}>
                 <Stories />
                 <Events />
-                <Products />
+                {/* <Products /> */}
             </div>
         </div>
     )

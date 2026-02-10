@@ -9,6 +9,7 @@ use App\Http\Controllers\Web\WallpaperController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventRegistrationController;
 use App\Http\Controllers\Admin\EventController as AdminEventController;
+use App\Http\Controllers\Web\EventsController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -16,9 +17,7 @@ Route::get('/about', function () {
     return Inertia::render('web/views/About/About');
 })->name('about');
 
-Route::get('/community', function () {
-    return Inertia::render('web/views/Community/Community');
-})->name('community');
+Route::get('/community', [EventsController::class, 'index'])->name('community');
 
 Route::get('/contact', function () {
     return Inertia::render('web/views/Contact/Contact');

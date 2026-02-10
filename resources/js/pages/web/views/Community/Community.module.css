@@ -1,9 +1,6 @@
 .main {
     display: flex;
     flex-direction: column;
-    /* align-items: center; */
-    padding: 100px 5%;
-    gap: 80px;
+    align-items: center;
     margin: 0 auto;
-    max-width: 1024px;
 }

@@ -16,9 +16,8 @@
     }
 }
 
-.border_top {
-    border-top: 1px solid var(--web-border);
-    border-top: 1px solid var(--web-border);
+.background_light {
+    background-color: var(--web-fg);
 }
 
 .grid_two_columns {
@@ -149,7 +148,6 @@
 .community_section {
     background-color: #F8B959;
     padding: 6rem 0;
-    margin-top: 2.5rem;
 }
 
 .logo_container {

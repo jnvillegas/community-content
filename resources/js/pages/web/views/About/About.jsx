@@ -54,7 +54,7 @@ const About = () => {
                 </div>
             </section>
 
-            <section className={`${styles.section} ${styles.border_top}`}>
+            <section className={`${styles.section} ${styles.background_light}`}>
                 <div className={styles.container}>
                     <div className={styles.grid_two_columns}>
                         <div className={styles.gallery_grid}>

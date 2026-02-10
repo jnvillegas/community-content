@@ -1,185 +1,191 @@
-.events_section {
+.events_container {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    padding: 50px 5%;
+    width: 100%;
+    background-color: var(--web-fg);
 }
 
 .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 0.5rem;
+    padding: 3rem 1.5rem;
+    max-width: 80rem;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
 
-.section_title {
-    font-size: 1.5rem;
-    font-weight: 800;
+.title {
+    font-size: 2.25rem;
+    font-weight: bold;
     letter-spacing: -0.025em;
-    color: var(--web-title);
-}
-
-/* .view_all {
-    color: var(--web-primary);
-    font-weight: bold;
-    font-size: 0.875rem;
-    transition: color 0.2s;
-}
-
-.view_all:hover {
-    color: var(--web-primary-dark);
-    text-decoration: underline;
-} */
-
-.post_card {
-    background-color: var(--web-bg);
-    border-radius: 0.75rem;
-    border: 1px solid var(--web-border);
-    overflow: hidden;
-    box-shadow: 0 1px 3px var(--web-shadow-sm);
-}
-
-.post_header {
-    padding: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.avatar {
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 9999px;
-    background-size: cover;
-    background-position: center;
-}
-
-.user_info {
-    flex: 1;
-}
-
-.username {
-    font-weight: bold;
-    font-size: 0.875rem;
-    color: var(--web-title);
-}
-
-.location {
-    font-size: 0.75rem;
-    color: #6b7280;
-}
-
-.more_button {
-    color: #9ca3af;
-    transition: color 0.2s;
-}
-
-.more_button:hover {
-    color: var(--web-title);
-}
-
-.post_image {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    background-size: cover;
-    background-position: center;
-}
-
-.actions_bar {
-    padding: 1rem;
-}
-
-.actions_list {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
     margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+    .title {
+        font-size: 3rem;
+    }
+}
+
+.masonry_grid {
+    column-count: 1;
+    column-gap: 1.5rem;
+    padding-bottom: 6rem;
+    max-width: 80rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .masonry_grid {
+        column-count: 2;
+    }
+}
+
+@media (min-width: 1024px) {
+    .masonry_grid {
+        column-count: 3;
+    }
+}
+
+.masonry_item {
+    break-inside: avoid;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.5rem;
+    box-shadow: 0 20px 25px -5px var(--web-shadow-sm), 0 10px 10px -5px var(--web-shadow-sm);
+    transition: transform 0.5s ease;
+}
+
+.masonry_item:hover {
+    transform: scale(1.02);
+}
+
+.event_image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+    min-height: 350px;
+}
+
+.glass_overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    color: white;
+}
+
+.actions_column {
+    position: absolute;
+    right: 1rem;
+    bottom: 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .action_button {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0.375rem;
-    color: var(--web-title);
-    transition: color 0.2s;
-    background: none;
-    border: none;
-    padding: 0;
+    transition: transform 0.2s;
     cursor: pointer;
 }
 
 .action_button:hover {
-    color: var(--web-primary);
-}
-
-.action_button.liked:hover {
-    color: var(--web-red);
+    transform: scale(1.05);
 }
 
 .action_icon {
-    font-size: 1.75rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    padding: 0.5rem;
+    border-radius: 9999px;
+    width: 24px;
+    height: 24px;
+}
+
+.liked {
+    color: #ef4444;
 }
 
 .action_count {
-    font-size: 0.875rem;
-    font-weight: bold;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 0.25rem;
 }
 
-.content {
-    margin-bottom: 1rem;
-}
-
-.caption {
-    font-size: 0.875rem;
-    line-height: 1.5;
-    color: #4b5563;
-}
-
-.comment {
-    font-size: 0.875rem;
-    color: #4b5563;
-}
-
-.comment_username {
-    font-weight: bold;
-    color: var(--web-title);
-    margin-right: 0.5rem;
-}
-
-.comment_preview {
-    display: flex;
-    margin-top: 5px;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.comment_input_container {
+.author_row {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--web-border);
+    margin-bottom: 1rem;
 }
 
-.comment_input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    font-size: 0.875rem;
-    padding: 0.25rem 0;
-    color: var(--web-title);
+.author_avatar {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 9999px;
+    border: 2px solid var(--primary);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
 }
 
-.comment_input::placeholder {
-    color: #9ca3af;
+.author_info {
+    display: flex;
+    flex-direction: column;
 }
 
-.post_button {
-    color: var(--web-primary);
+.author_name {
     font-weight: bold;
+    line-height: 1;
+}
+
+.author_handle {
     font-size: 0.875rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
+    opacity: 0.8;
+}
+
+.event_title {
+    font-size: 1.125rem;
+    font-weight: 500;
+    line-height: 1.3;
+    margin-bottom: 1rem;
+    margin-right: 20px;
+}
+
+.event_meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.date {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.location_tag {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
 }

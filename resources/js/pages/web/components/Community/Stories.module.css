@@ -4,6 +4,8 @@
     gap: 30px;
     width: 100%;
     color: var(--web-title);
+    padding: 50px 5%;
+    max-width: 80rem;
 }
 
 .title {
@@ -14,6 +16,7 @@
 
 .stories_container {
     display: flex;
+    flex-wrap: wrap;
     gap: 1.5rem;
     overflow-x: auto;
     padding-bottom: 1rem;

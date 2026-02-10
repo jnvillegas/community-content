@@ -4,9 +4,7 @@ import About from "../../components/Main/About";
 import Phrase from "../../components/Main/Phrase";
 import Blog from "../../components/Main/Blog";
 import Wallpaper from "../../components/Main/Wallpaper";
-import { useAppearance } from "@/hooks/use-appearance";
 import WebLayout from "../../layout";
-import { usePage } from "@inertiajs/react";
 
 const Home = () => {
 
