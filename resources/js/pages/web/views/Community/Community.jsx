@@ -10,6 +10,9 @@ const Community = () => {
     const auth = usePage().props.auth;
     const { events } = usePage().props;
 
+    console.log(events);
+
+
     return (
         <div>
             <Banner title={"Bienvenidos!"} />
