@@ -130,10 +130,10 @@ export default function Edit({ event, categories, types }: Props) {
                                             <SelectValue placeholder="Select status" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="DRAFT">Draft</SelectItem>
-                                            <SelectItem value="PUBLISHED">Published</SelectItem>
-                                            <SelectItem value="COMPLETED">Completed</SelectItem>
-                                            <SelectItem value="CANCELLED">Cancelled</SelectItem>
+                                            <SelectItem value="draft">Draft</SelectItem>
+                                            <SelectItem value="published">Published</SelectItem>
+                                            <SelectItem value="completed">Completed</SelectItem>
+                                            <SelectItem value="cancelled">Cancelled</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     {errors.status && <p className="text-sm text-red-500">{errors.status}</p>}

@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
+use App\Traits\RecordsActivity;
+
 class Article extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, RecordsActivity;
 
     protected $fillable = [
         'title',
@@ -56,5 +58,18 @@ class Article extends Model
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(ArticleTag::class, 'article_tag_pivot', 'article_id', 'tag_id');
+    }
+
+    public function shouldRecordActivity(string $eventName): bool
+    {
+        if ($eventName === 'created') {
+            return $this->status === 'published';
+        }
+
+        if ($eventName === 'updated') {
+            return $this->wasChanged('status') && $this->status === 'published';
+        }
+
+        return false;
     }
 }

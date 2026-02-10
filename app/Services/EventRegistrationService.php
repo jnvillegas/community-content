@@ -3,8 +3,9 @@
 namespace App\Services;
 
 use App\Models\Event;
-use App\Models\EventRegistration;
 use App\Models\EventReminder;
+use App\Models\EventRegistration;
+
 use App\Models\User;
 use App\Repositories\EventRegistrationRepository;
 use Illuminate\Support\Facades\Log;
@@ -44,10 +45,8 @@ class EventRegistrationService
             // 2. Create Registration
             $registration = $this->registrationRepository->registerUser($user->id, $event->id, []);
 
-            // 3. Schedule Reminders (Logic)
-            // Typically executed by a job or here directly for specific user
-            // For now, assume a background job does batch scheduling, 
-            // OR we create individual reminders here.
+            // 3. Schedule Reminders
+            $this->scheduleRemindersForUser($event, $user);
 
             // 4. Send Confirmation Email (Logging)
             Log::info("Email sent: Confirmation for event {$event->title} to user {$user->email}");
@@ -112,21 +111,21 @@ class EventRegistrationService
     }
 
     /**
-     * Schedule reminders for an event (Batch).
+     * Schedule reminders for a specific user and event.
      *
      * @param Event $event
+     * @param User $user
      * @return void
      */
-    public function scheduleReminders(Event $event): void
+    public function scheduleRemindersForUser(Event $event, User $user): void
     {
-        // This method would be called by a Scheduler or Observer
-
         $types = [
-            EventReminder::TYPE_24H => 24 * 60,
-            EventReminder::TYPE_1H => 60,
-            EventReminder::TYPE_15MIN => 15,
+            '24h' => 24 * 60,
+            '1h' => 60,
+            '15min' => 15,
         ];
 
+        $insertData = [];
         foreach ($types as $type => $minutesBefore) {
             $scheduledTime = $event->start_date->copy()->subMinutes($minutesBefore);
 
@@ -134,31 +133,19 @@ class EventRegistrationService
                 continue;
             }
 
-            // Ideally fetch users who don't have this reminder yet
-            // Logic simplified for purpose of service demonstration
-            $registrations = $event->registrations()
-                ->where('status', EventRegistration::STATUS_CONFIRMED)
-                ->get();
+            $insertData[] = [
+                'event_id' => $event->id,
+                'user_id' => $user->id,
+                'reminder_type' => $type,
+                'scheduled_at' => $scheduledTime,
+                'channel' => 'email',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
 
-            $insertData = [];
-            foreach ($registrations as $reg) {
-                // Check if reminder exists to avoid duplicates
-                // Omitted for performance in bulk insert example
-
-                $insertData[] = [
-                    'event_id' => $event->id,
-                    'user_id' => $reg->user_id,
-                    'reminder_type' => $type,
-                    'scheduled_at' => $scheduledTime,
-                    'channel' => 'email', // Default
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-            }
-
-            if (!empty($insertData)) {
-                EventReminder::insert($insertData);
-            }
+        if (!empty($insertData)) {
+            EventReminder::insert($insertData);
         }
     }
 }

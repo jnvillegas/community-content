@@ -71,6 +71,17 @@ class UpdateEventRequest extends FormRequest
             'location' => ['nullable', 'string'],
             'location_url' => ['nullable', 'url'],
             'virtual_url' => ['nullable', 'url'],
+            'status' => [
+                'sometimes',
+                'required',
+                'string',
+                Rule::in([
+                    Event::STATUS_DRAFT,
+                    Event::STATUS_PUBLISHED,
+                    Event::STATUS_COMPLETED,
+                    Event::STATUS_CANCELLED
+                ])
+            ],
         ];
     }
 
