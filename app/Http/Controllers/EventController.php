@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 
 class EventController extends Controller
 {
@@ -102,5 +103,33 @@ class EventController extends Controller
         return Inertia::render('Events/MyEvents', [
             'registrations' => $registrations,
         ]);
+    }
+
+    public function toggleLike(Event $event): RedirectResponse
+    {
+        $user = Auth::user();
+        $like = $event->likes()->where('user_id', $user->id)->first();
+
+        if ($like) {
+            $like->delete();
+        } else {
+            $event->likes()->create(['user_id' => $user->id]);
+        }
+
+        return back();
+    }
+
+    public function storeComment(Event $event, Request $request): RedirectResponse
+    {
+        $request->validate([
+            'content' => 'required|string|max:1000',
+        ]);
+
+        $event->comments()->create([
+            'user_id' => Auth::id(),
+            'content' => $request->input('content'),
+        ]);
+
+        return back();
     }
 }

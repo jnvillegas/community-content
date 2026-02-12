@@ -1,6 +1,7 @@
 import styles from './Events.module.css';
 import { useState } from 'react';
 import EventsModal from './EventsModal';
+import { Heart, MessageCircle, Share2, Calendar, MapPin } from 'lucide-react';
 
 // Datos de eventos en array
 const eventsData = [

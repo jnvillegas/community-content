@@ -66,6 +66,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/my-events', [EventController::class, 'myEvents'])->name('events.my');
     Route::post('/events/{event}/register', [EventRegistrationController::class, 'store'])->name('events.register');
     Route::delete('/events/{event}/unregister', [EventRegistrationController::class, 'destroy'])->name('events.unregister');
+
+    // Event Interactions
+    Route::post('/events/{event}/like', [EventController::class, 'toggleLike'])->name('events.like');
+    Route::post('/events/{event}/comments', [EventController::class, 'storeComment'])->name('events.comment');
 });
 
 // Admin Routes

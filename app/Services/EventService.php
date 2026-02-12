@@ -32,7 +32,7 @@ class EventService
      */
     public function createEvent(User $creator, array $data): Event
     {
-        
+
 
         // 1. Validations
         if (isset($data['start_date']) && now()->utc()->gt($data['start_date'])) {
@@ -199,6 +199,7 @@ class EventService
             'attended_count' => $attended,
             'cancelled_count' => $cancelled,
             'no_show_count' => $noShow,
+            'likes_count' => $event->likes()->count(),
             'attendance_rate' => round($attendanceRate, 2),
             'available_slots' => $availableSlots
         ];

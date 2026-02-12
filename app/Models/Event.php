@@ -113,6 +113,21 @@ class Event extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function likes(): HasMany
+    {
+        return $this->hasMany(EventLike::class);
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(EventComment::class)->latest();
+    }
+
+    public function isLikedBy(User $user): bool
+    {
+        return $this->likes()->where('user_id', $user->id)->exists();
+    }
+
     public function registrations(): HasMany
     {
         return $this->hasMany(EventRegistration::class);
