@@ -4,7 +4,6 @@ import styles from './EventsModal.module.css';
 const EventsModal = ({ event, onClose, formatLikes, toggleLike }) => {
     const [newComment, setNewComment] = useState('');
 
-    // Simulación de comentarios (puedes venir como prop o del estado padre)
     const [comments, setComments] = useState(event.commentList || []);
 
     const handleSendComment = () => {
@@ -94,7 +93,7 @@ const EventsModal = ({ event, onClose, formatLikes, toggleLike }) => {
                                     </div>
                                 ))
                             ) : (
-                                <p className={styles.no_comments}>Sé el primero en comentar</p>
+                                <p className={styles.no_comments}>Sem comentários</p>
                             )}
                         </div>
 
@@ -136,7 +135,7 @@ const EventsModal = ({ event, onClose, formatLikes, toggleLike }) => {
                             <input
                                 type="text"
                                 className={styles.comment_input}
-                                placeholder="Añade un comentario..."
+                                placeholder="Adicione um comentário..."
                                 value={newComment}
                                 onChange={(e) => setNewComment(e.target.value)}
                                 onKeyDown={handleKeyDown}
