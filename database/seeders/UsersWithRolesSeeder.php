@@ -9,41 +9,93 @@ class UsersWithRolesSeeder extends Seeder
 {
     public function run(): void
     {
-        User::factory()->asAdmin()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-        ]);
+        // Admin
+        $admin = User::updateOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Admin User',
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                'email_verified_at' => now(),
+                'status' => 'active'
+            ]
+        );
+        $admin->assignRole('admin');
 
-        User::factory()->asCreator()->create([
-            'name' => 'Content Manager',
-            'email' => 'manager@example.com',
-        ]);
+        // Creator
+        $creator = User::updateOrCreate(
+            ['email' => 'manager@example.com'],
+            [
+                'name' => 'Content Manager',
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                'email_verified_at' => now(),
+                'status' => 'active'
+            ]
+        );
+        $creator->assignRole('creator');
 
-        User::factory()->asMentor()->create([
-            'name' => 'Mentor User',
-            'email' => 'mentor@example.com',
-        ]);
+        // Mentor
+        $mentor = User::updateOrCreate(
+            ['email' => 'mentor@example.com'],
+            [
+                'name' => 'Mentor User',
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                'email_verified_at' => now(),
+                'status' => 'active'
+            ]
+        );
+        $mentor->assignRole('mentor');
 
-        User::factory()->asStandard()->create([
-            'name' => 'Regular User',
-            'email' => 'user@example.com',
-        ]);
+        // Standard
+        $standard = User::updateOrCreate(
+            ['email' => 'user@example.com'],
+            [
+                'name' => 'Regular User',
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                'email_verified_at' => now(),
+                'status' => 'active'
+            ]
+        );
+        $standard->assignRole('standard');
 
-        User::factory()->asSuspended()->create([
-            'name' => 'Suspended User',
-            'email' => 'suspended@example.com',
-        ]);
+        // Suspended
+        $suspended = User::updateOrCreate(
+            ['email' => 'suspended@example.com'],
+            [
+                'name' => 'Suspended User',
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                'email_verified_at' => now(),
+                'status' => 'suspended'
+            ]
+        );
+        $suspended->assignRole('standard');
 
-        User::factory()->asModerator()->create([
-            'name' => 'Moderator User',
-            'email' => 'moderator@example.com',
-        ]);
+        // Moderator
+        $moderator = User::updateOrCreate(
+            ['email' => 'moderator@example.com'],
+            [
+                'name' => 'Moderator User',
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                'email_verified_at' => now(),
+                'status' => 'active'
+            ]
+        );
+        $moderator->assignRole('moderator');
 
-        User::factory()->asEditor()->create([
-            'name' => 'Editor User',
-            'email' => 'editor@example.com',
-        ]);
+        // Editor
+        $editor = User::updateOrCreate(
+            ['email' => 'editor@example.com'],
+            [
+                'name' => 'Editor User',
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                'email_verified_at' => now(),
+                'status' => 'active'
+            ]
+        );
+        $editor->assignRole('editor');
 
-        User::factory(15)->asStandard()->create();
+        // Solo crear adicionales si no hay suficientes
+        if (User::count() < 10) {
+            User::factory(10)->asStandard()->create();
+        }
     }
 }

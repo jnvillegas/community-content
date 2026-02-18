@@ -37,6 +37,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'manage events',
             'manage courses',
             'manage messages',
+            'manage community', // Moderation, reports
             'participate community', // Comment, join events
 
             // Membership
@@ -90,6 +91,17 @@ class RolesAndPermissionsSeeder extends Seeder
             'view content',
             'participate community',
             'view my membership',
+        ]);
+
+        // --- MODERATOR ---
+        // Community Management
+        $moderator = Role::findOrCreate('moderator');
+        $moderator->givePermissionTo([
+            'view dashboard',
+            'view users',
+            'manage messages',
+            'manage community',
+            'participate community'
         ]);
 
         // Ensure legacy roles have some permissions or are handled if needed
