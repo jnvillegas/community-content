@@ -66,6 +66,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/my-events', [EventController::class, 'myEvents'])->name('events.my');
     Route::post('/events/{event}/register', [EventRegistrationController::class, 'store'])->name('events.register');
     Route::delete('/events/{event}/unregister', [EventRegistrationController::class, 'destroy'])->name('events.unregister');
+
+    // Event Interactions
+    Route::post('/events/{event}/like', [EventController::class, 'toggleLike'])->name('events.like');
+    Route::post('/events/{event}/comments', [EventController::class, 'storeComment'])->name('events.comment');
+
+    // Stories
+    Route::get('/stories', [\App\Http\Controllers\StoryController::class, 'index'])->name('stories.index');
+    Route::post('/stories', [\App\Http\Controllers\StoryController::class, 'store'])->name('stories.store');
+    Route::post('/stories/{story}/like', [\App\Http\Controllers\StoryController::class, 'like'])->name('stories.like');
+    Route::post('/stories/{story}/comments', [\App\Http\Controllers\StoryController::class, 'comment'])->name('stories.comment');
+
+    // Academy (Courses)
+    Route::get('/academy', [\App\Http\Controllers\CourseController::class, 'index'])->name('academy.index');
+    Route::get('/academy/{slug}', [\App\Http\Controllers\CourseController::class, 'show'])->name('academy.show');
+    Route::get('/academy/{courseSlug}/lessons/{lessonSlug}', [\App\Http\Controllers\CourseController::class, 'lesson'])->name('academy.lesson');
+    Route::post('/academy/lessons/{lesson}/progress', [\App\Http\Controllers\CourseProgressController::class, 'toggleComplete'])->name('academy.progress');
 });
 
 // Admin Routes
@@ -75,6 +91,15 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/events/{slug}/attendees', [AdminEventController::class, 'attendees'])->name('events.attendees');
     Route::post('/events/{slug}/attendees/{user}/mark', [AdminEventController::class, 'markAttendance'])->name('events.mark-attendance');
     Route::resource('event-categories', \App\Http\Controllers\Admin\EventCategoryController::class);
+    Route::get('/stories', [\App\Http\Controllers\Admin\StoryDashboardController::class, 'index'])->name('stories.index');
+
+    // Academy Dashboard
+    Route::group(['prefix' => 'academy', 'as' => 'academy.'], function () {
+        Route::get('/', [\App\Http\Controllers\Admin\AcademyDashboardController::class, 'index'])->name('dashboard');
+        Route::resource('courses', \App\Http\Controllers\Admin\CourseController::class);
+        Route::resource('courses.modules', \App\Http\Controllers\Admin\ModuleController::class);
+        Route::resource('modules.lessons', \App\Http\Controllers\Admin\LessonController::class);
+    });
 });
 
 require __DIR__ . '/settings.php';

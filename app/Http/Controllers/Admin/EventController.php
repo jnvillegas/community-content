@@ -159,6 +159,7 @@ class EventController extends Controller
     public function stats(string $slug): Response
     {
         $event = Event::where('slug', $slug)->firstOrFail();
+        $event->load(['comments.user']);
         $stats = $this->eventService->getEventStats($event);
 
         return Inertia::render('Admin/Events/Stats', [

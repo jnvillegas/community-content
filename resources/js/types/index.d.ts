@@ -33,6 +33,7 @@ export interface NavItem {
     icon?: LucideIcon | null;
     isActive?: boolean;
     permission?: string; // Added permission requirement
+    onClick?: () => void;
 }
 
 export interface SharedData {

@@ -16,7 +16,7 @@ import {
     Share2,
     ArrowLeft
 } from 'lucide-react';
-import { toast } from 'sonner'; // Assuming sonner or generic toast
+
 import { useState } from 'react';
 
 interface Props extends PageProps {
