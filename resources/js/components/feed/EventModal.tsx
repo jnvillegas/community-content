@@ -12,8 +12,10 @@ import { es } from "date-fns/locale";
 
 interface Comment {
     id: number;
-    user: string;
-    avatar: string;
+    user: {
+        name: string;
+        avatar: string;
+    };
     content: string;
     created_at: string;
 }
@@ -196,12 +198,12 @@ export default function EventModal({ event, isOpen, onClose }: EventModalProps) 
                                     event.comments.map((comment) => (
                                         <div key={comment.id} className="flex gap-3 items-start">
                                             <Avatar className="w-8 h-8 shrink-0">
-                                                <AvatarImage src={comment.avatar} />
-                                                <AvatarFallback>{comment.user.substring(0, 2).toUpperCase()}</AvatarFallback>
+                                                <AvatarImage src={comment.user.avatar} />
+                                                <AvatarFallback>{comment.user.name.substring(0, 2).toUpperCase()}</AvatarFallback>
                                             </Avatar>
                                             <div className="flex flex-col text-sm">
                                                 <div className="flex items-baseline gap-2">
-                                                    <span className="font-bold text-gray-900 dark:text-gray-100">{comment.user}</span>
+                                                    <span className="font-bold text-gray-900 dark:text-gray-100">{comment.user.name}</span>
                                                     <span className="text-xs text-gray-400">{comment.created_at}</span>
                                                 </div>
                                                 <p className="text-gray-700 dark:text-gray-300 leading-snug">{comment.content}</p>

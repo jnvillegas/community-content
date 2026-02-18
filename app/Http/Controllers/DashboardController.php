@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Activity;
 use App\Models\Event;
+use App\Models\Story;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -43,9 +44,11 @@ class DashboardController extends Controller
                     'comments' => $event->comments->map(function ($comment) {
                         return [
                             'id' => $comment->id,
-                            'user' => $comment->user->name,
-                            'avatar' => $comment->user->profile_photo_url,
                             'content' => $comment->content,
+                            'user' => [
+                                'name' => $comment->user->name,
+                                'avatar' => $comment->user->profile_photo_url,
+                            ],
                             'created_at' => $comment->created_at->diffForHumans(),
                         ];
                     }),
@@ -56,9 +59,109 @@ class DashboardController extends Controller
             ->latest()
             ->paginate(10);
 
+        $activities->loadMorph('subject', [
+            Event::class => ['likes', 'comments.user', 'createdBy'],
+            Story::class => ['likes', 'comments.user', 'user', 'images'],
+        ]);
+
+        // Map activities to include likes data and relations for subjects
+        $activities->getCollection()->transform(function ($activity) {
+            $subject = $activity->subject;
+            if ($subject) {
+                if ($subject instanceof \App\Models\Event) {
+                    $subject->likes_count = $subject->likes->count();
+                    $subject->is_liked = Auth::check() ? $subject->isLikedBy(Auth::user()) : false;
+
+                    if (!isset($subject->author)) {
+                        $subject->author = [
+                            'name' => $subject->createdBy->name,
+                            'avatar' => $subject->createdBy->profile_photo_url,
+                        ];
+                    }
+
+                    if ($subject->comments->isNotEmpty() && $subject->comments->first() instanceof \Illuminate\Database\Eloquent\Model) {
+                        $subject->comments = $subject->comments->map(function ($comment) {
+                            return [
+                                'id' => $comment->id,
+                                'content' => $comment->content,
+                                'user' => [
+                                    'name' => $comment->user->name,
+                                    'avatar' => $comment->user->profile_photo_url,
+                                ],
+                                'created_at' => $comment->created_at->diffForHumans(),
+                            ];
+                        });
+                    }
+                } elseif ($subject instanceof \App\Models\Story) {
+                    $subject->likes_count = $subject->likes->count();
+                    $subject->is_liked = Auth::check() ? $subject->isLikedBy(Auth::user()) : false;
+
+                    if (!isset($subject->author)) {
+                        $subject->author = [
+                            'name' => $subject->user->name,
+                            'avatar' => $subject->user->profile_photo_url ?? 'https://api.dicebear.com/7.x/avataaars/svg?seed=' . $subject->user->name,
+                        ];
+                    }
+
+                    if ($subject->comments->isNotEmpty() && $subject->comments->first() instanceof \Illuminate\Database\Eloquent\Model) {
+                        $subject->comments = $subject->comments->map(function ($comment) {
+                            return [
+                                'id' => $comment->id,
+                                'content' => $comment->content,
+                                'user' => [
+                                    'name' => $comment->user->name,
+                                    'avatar' => $comment->user->profile_photo_url ?? 'https://api.dicebear.com/7.x/avataaars/svg?seed=' . $comment->user->name,
+                                ],
+                                'created_at' => $comment->created_at->diffForHumans(),
+                            ];
+                        });
+                    }
+                    if ($subject->created_at instanceof \Carbon\Carbon) {
+                        $subject->created_at = $subject->created_at->diffForHumans();
+                    }
+                } else {
+                    $subject->likes_count = 0;
+                    $subject->is_liked = false;
+                }
+            }
+            return $activity;
+        });
+
+        $stories = Story::with(['user', 'likes', 'comments.user', 'images'])
+            ->latest()
+            ->get()
+            ->map(function ($story) {
+                return [
+                    'id' => $story->id,
+                    'title' => $story->title,
+                    'description' => $story->description,
+                    'content_url' => $story->content_url,
+                    'images' => $story->images->map(fn($img) => $img->image_url),
+                    'likes_count' => $story->likes->count(),
+                    'is_liked' => auth()->check() ? $story->isLikedBy(auth()->user()) : false,
+                    'comments' => $story->comments->map(function ($comment) {
+                        return [
+                            'id' => $comment->id,
+                            'content' => $comment->content,
+                            'user' => [
+                                'name' => $comment->user->name,
+                                'avatar' => $comment->user->avatar ?? 'https://api.dicebear.com/7.x/avataaars/svg?seed=' . $comment->user->name,
+                            ],
+                            'created_at' => $comment->created_at->diffForHumans(),
+                        ];
+                    }),
+                    'author' => [
+                        'name' => $story->user->name,
+                        'avatar' => $story->user->avatar ?? 'https://api.dicebear.com/7.x/avataaars/svg?seed=' . $story->user->name,
+                    ],
+                    'created_at' => $story->created_at->diffForHumans(),
+                ];
+            });
+
         return Inertia::render('dashboard', [
             'upcomingEvents' => $upcomingEvents,
             'activities' => $activities,
+            'stories' => $stories,
         ]);
     }
 

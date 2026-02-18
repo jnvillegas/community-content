@@ -1,40 +1,38 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, router } from '@inertiajs/react';
-import { Plus, Heart, Calendar, MessageCircle, Share2, MapPin, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Plus, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import EventModal from './EventModal';
+import StoryModal from './StoryModal';
+import CreateStoryModal from './CreateStoryModal';
 
-interface EventStory {
+interface Story {
     id: number;
     title: string;
     description: string;
-    location: string;
-    start_date: string;
-    end_date: string;
-    formatted_date?: string;
-    slug: string;
-    cover_image?: string;
-    color: string;
+    content_url: string;
+    images: string[];
     likes_count: number;
     is_liked: boolean;
     comments: any[];
-    author?: {
+    author: {
         name: string;
         avatar: string;
     };
+    created_at: string;
 }
 
 interface StoriesBarProps {
-    events: EventStory[];
+    stories: Story[];
 }
 
-export default function StoriesBar({ events }: StoriesBarProps) {
-    const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
+export default function StoriesBar({ stories }: StoriesBarProps) {
+    const [selectedStoryId, setSelectedStoryId] = useState<number | null>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
     const [startX, setStartX] = useState(0);
     const [scrollLeft, setScrollLeft] = useState(0);
     const [draggedDistance, setDraggedDistance] = useState(0);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const velocityRef = useRef(0);
@@ -43,7 +41,7 @@ export default function StoriesBar({ events }: StoriesBarProps) {
     const lastTimeRef = useRef(0);
     const animationFrameRef = useRef<number | null>(null);
 
-    const selectedEvent = events.find(e => e.id === selectedEventId) || null;
+    const selectedStory = stories.find(s => s.id === selectedStoryId) || null;
 
     const stopInertia = () => {
         if (animationFrameRef.current !== null) {
@@ -57,7 +55,7 @@ export default function StoriesBar({ events }: StoriesBarProps) {
         if (!scrollContainerRef.current) return;
 
         setIsAnimating(true);
-        const friction = 0.992; // Fricción muy baja para planeo suave
+        const friction = 0.992;
         let lastTimestamp = performance.now();
 
         const step = (now: number) => {
@@ -77,7 +75,6 @@ export default function StoriesBar({ events }: StoriesBarProps) {
         animationFrameRef.current = requestAnimationFrame(step);
     };
 
-    // Mover listeners a window durante el drag para mayor precisión y evitar bloqueos
     useEffect(() => {
         if (!isDragging) return;
 
@@ -92,12 +89,11 @@ export default function StoriesBar({ events }: StoriesBarProps) {
                 const currentVelocity = dx / dt;
 
                 velocitySamplesRef.current.push(currentVelocity);
-                if (velocitySamplesRef.current.length > 8) { // Más samples para estabilidad
+                if (velocitySamplesRef.current.length > 8) {
                     velocitySamplesRef.current.shift();
                 }
             }
 
-            // Sensibilidad 1:1 para que siga exactamente la mano sin saltos
             const walk = (x - startX);
             scrollContainerRef.current.scrollLeft = scrollLeft - walk;
             setDraggedDistance(Math.abs(x - startX));
@@ -111,7 +107,7 @@ export default function StoriesBar({ events }: StoriesBarProps) {
 
             if (velocitySamplesRef.current.length > 0) {
                 const sum = velocitySamplesRef.current.reduce((a, b) => a + b, 0);
-                velocityRef.current = (sum / velocitySamplesRef.current.length) * 1.6; // Boost de inercia
+                velocityRef.current = (sum / velocitySamplesRef.current.length) * 1.6;
             }
 
             if (Math.abs(velocityRef.current) > 0.1) {
@@ -131,16 +127,8 @@ export default function StoriesBar({ events }: StoriesBarProps) {
 
     const handleCardClick = (id: number) => {
         if (draggedDistance < 6 && !isAnimating) {
-            setSelectedEventId(id);
+            setSelectedStoryId(id);
         }
-    };
-
-    const handleLike = (e: React.MouseEvent, eventId: number) => {
-        e.stopPropagation();
-        router.post(`/events/${eventId}/like`, {}, {
-            preserveScroll: true,
-            preserveState: true,
-        });
     };
 
     const handleMouseDown = (e: React.MouseEvent) => {
@@ -158,26 +146,10 @@ export default function StoriesBar({ events }: StoriesBarProps) {
         velocitySamplesRef.current = [];
     };
 
-    const handleShare = (e: React.MouseEvent, event: EventStory) => {
-        e.stopPropagation();
-        const shareData = {
-            title: event.title,
-            text: `Check out this event: ${event.title}!`,
-            url: `${window.location.origin}/events/${event.slug}`,
-        };
-
-        if (navigator.share) {
-            navigator.share(shareData).catch(() => { });
-        } else {
-            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareData.text + " " + shareData.url)}`;
-            window.open(whatsappUrl, '_blank');
-        }
-    };
-
     const scroll = (direction: 'left' | 'right') => {
         if (scrollContainerRef.current) {
-            stopInertia(); // IMPORTANTE: Detener inercia para que las flechas funcionen
-            const scrollAmount = 370; // 350px card + 20px gap
+            stopInertia();
+            const scrollAmount = 370;
             scrollContainerRef.current.scrollBy({
                 left: direction === 'left' ? -scrollAmount : scrollAmount,
                 behavior: 'smooth'
@@ -186,8 +158,7 @@ export default function StoriesBar({ events }: StoriesBarProps) {
     };
 
     return (
-        <div className="group relative mb-10 w-full overflow-hidden">
-            {/* Navigation Buttons */}
+        <div className="group relative mb-10 w-full max-w-[780px] mx-auto overflow-hidden">
             <div className="absolute inset-y-0 left-0 z-30 flex items-center bg-gradient-to-r from-[#F8F9FA] via-[#F8F9FA]/50 to-transparent pr-12 opacity-0 transition-opacity group-hover:opacity-100 dark:from-gray-950 dark:via-gray-950/50">
                 <Button
                     variant="ghost"
@@ -199,7 +170,7 @@ export default function StoriesBar({ events }: StoriesBarProps) {
                 </Button>
             </div>
 
-            <div className="absolute inset-y-0 right-0 z-30 flex items-center bg-gradient-to-l from-[#F8F9FA] via-[#F8F9FA]/50 to-transparent pl-12 opacity-0 transition-opacity group-hover:opacity-100 dark:from-gray-950 dark:via-gray-950/50">
+            <div className="absolute inset-y-0 right-0 z-30 flex items-center bg-gradient-l from-[#F8F9FA] via-[#F8F9FA]/50 to-transparent pl-12 opacity-0 transition-opacity group-hover:opacity-100 dark:from-gray-950 dark:via-gray-950/50">
                 <Button
                     variant="ghost"
                     size="icon"
@@ -210,7 +181,6 @@ export default function StoriesBar({ events }: StoriesBarProps) {
                 </Button>
             </div>
 
-            {/* Scroll Container */}
             <div
                 ref={scrollContainerRef}
                 onMouseDown={handleMouseDown}
@@ -222,124 +192,82 @@ export default function StoriesBar({ events }: StoriesBarProps) {
                     scrollBehavior: (isDragging || isAnimating) ? 'auto' : 'smooth'
                 }}
             >
-                {/* CSS to hide scrollbar in Chrome/Safari */}
                 <style>{`
                     .scrollbar-hide::-webkit-scrollbar {
                         display: none;
                     }
+                    @keyframes progress {
+                        from { width: 0; }
+                        to { width: 100%; }
+                    }
+                    .animate-progress {
+                        animation: progress 5s linear forwards;
+                    }
                 `}</style>
 
-                {/* Add Event */}
                 <div className="snap-start">
-                    <Link href="/admin/events/create" className="group/card relative flex h-[350px] w-[350px] shrink-0 cursor-pointer flex-col overflow-hidden rounded-3xl bg-white border border-gray-100 shadow-sm transition-all hover:scale-[1.01] dark:bg-gray-900 dark:border-gray-800">
-                        <div className="absolute inset-x-0 bottom-0 top-1/2 bg-gradient-to-t from-gray-900/10 to-transparent"></div>
-                        <div className="flex h-full flex-col items-center justify-center gap-3">
-                            <div className="flex size-14 items-center justify-center rounded-full bg-blue-50 text-blue-600 transition-transform group-hover/card:scale-110 dark:bg-blue-900/30">
-                                <Plus className="h-8 w-8" />
-                            </div>
-                            <span className="text-lg font-bold text-gray-900 dark:text-gray-100">Add Event</span>
+                    <div
+                        onClick={() => setIsCreateModalOpen(true)}
+                        className="group/card relative flex h-[280px] w-[180px] shrink-0 cursor-pointer flex-col overflow-hidden rounded-3xl bg-gray-100 border border-gray-200 shadow-sm transition-all hover:scale-[1.02] dark:bg-gray-900 dark:border-gray-800"
+                    >
+                        <div className="h-[70%] bg-gray-200 dark:bg-gray-800 flex items-center justify-center overflow-hidden">
+                            <img
+                                src="https://api.dicebear.com/7.x/avataaars/svg?seed=creator"
+                                className="w-full h-full object-cover"
+                                alt="Creator"
+                            />
                         </div>
-                    </Link>
+                        <div className="absolute top-[60%] left-1/2 -translate-x-1/2 flex size-10 items-center justify-center rounded-full bg-blue-600 text-white border-4 border-white dark:border-gray-900 transition-transform group-hover/card:scale-110">
+                            <Plus className="h-6 w-6" />
+                        </div>
+                        <div className="flex flex-1 flex-col items-center justify-end pb-4 bg-white dark:bg-gray-900">
+                            <span className="text-sm font-bold text-gray-900 dark:text-gray-100">Crear historia</span>
+                        </div>
+                    </div>
                 </div>
 
-                {events.map((event) => (
+                {stories.map((story) => (
                     <div
-                        key={event.id}
-                        className="snap-start relative h-[350px] w-[350px] shrink-0 cursor-pointer overflow-hidden rounded-3xl shadow-md transition-all hover:scale-[1.01]"
-                        onClick={() => handleCardClick(event.id)}
+                        key={story.id}
+                        className="snap-start relative h-[280px] w-[180px] shrink-0 cursor-pointer overflow-hidden rounded-3xl shadow-md transition-all hover:scale-[1.02]"
+                        onClick={() => handleCardClick(story.id)}
                     >
-                        {/* Background Image */}
                         <img
-                            src={event.cover_image || `https://picsum.photos/seed/event${event.id}/400/400`}
+                            src={story.content_url}
                             className="absolute h-full w-full object-cover transition-transform duration-700 hover:scale-110"
-                            alt={event.title}
+                            alt={story.title}
                         />
-                        {/* Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/20 opacity-80 transition-opacity hover:opacity-95"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
 
-                        {/* Top Left: Author Info */}
-                        <div className="absolute top-5 left-5 z-20 flex items-center gap-3">
-                            <div className="h-12 w-12 rounded-full border-2 border-white/80 overflow-hidden shadow-sm bg-gray-500">
+                        <div className="absolute top-3 left-3 z-20">
+                            <div className="h-10 w-10 rounded-full border-2 border-blue-500 overflow-hidden shadow-sm bg-gray-100 p-0.5">
                                 <img
-                                    src={event.author?.avatar}
-                                    alt={event.author?.name}
-                                    className="h-full w-full object-cover"
+                                    src={story.author.avatar}
+                                    alt={story.author.name}
+                                    className="h-full w-full object-cover rounded-full"
                                 />
                             </div>
-                            <div className="flex flex-col text-white shadow-black drop-shadow-md">
-                                <span className="text-base font-bold leading-tight">{event.author?.name}</span>
-                                <span className="text-xs text-center text-white/80">{event.location}</span>
-                            </div>
                         </div>
 
-                        {/* Right Column: Actions */}
-                        <div className="absolute right-5 top-8 z-20 flex flex-col items-center gap-4">
-                            {/* Like Button */}
-                            <button
-                                className="flex flex-col items-center group/btn focus:outline-none"
-                                onClick={(e) => handleLike(e, event.id)}
-                            >
-                                <Heart className={`w-6 h-6 mb-1 filter drop-shadow-lg transition-transform group-hover/btn:scale-110 ${event.is_liked ? 'fill-red-500 text-red-500' : 'text-white'}`} />
-                                <span className="text-xs font-bold text-white drop-shadow-md">{event.likes_count}</span>
-                            </button>
-
-                            {/* Comment Button */}
-                            <button className="flex flex-col items-center group/btn focus:outline-none">
-                                <MessageCircle className="w-6 h-6 mb-1 text-white filter drop-shadow-lg transition-transform group-hover/btn:scale-110" />
-                                <span className="text-xs font-bold text-white drop-shadow-md">{event.comments?.length || 100}</span>
-                            </button>
-
-                            {/* Share Button */}
-                            <button
-                                className="flex flex-col items-center group/btn focus:outline-none"
-                                onClick={(e) => handleShare(e, event)}
-                            >
-                                <Share2 className="w-6 h-6 text-white filter drop-shadow-lg transition-transform group-hover/btn:scale-110" />
-                            </button>
-                        </div>
-
-                        {/* Bottom Content */}
-                        <div className="absolute bottom-0 left-0 right-0 p-6 z-20 pointer-events-none">
-                            <div className="w-[220px] whitespace-normal">
-                                <h3 className="text-xl font-bold text-white leading-tight mb-4 drop-shadow-md pointer-events-auto">
-                                    {event.title}
-                                </h3>
-                            </div>
-
-                            {/* Meta Bar */}
-                            <div className="flex items-center justify-between border-t border-white/20 pt-4">
-                                <div className="flex items-center gap-2 text-sm font-medium text-white/90">
-                                    <Calendar className="w-4 h-4" />
-                                    <span>{event.formatted_date}</span>
-                                </div>
-
-                                <a
-                                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="flex items-center justify-center w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white transition-all hover:bg-white/30 hover:scale-110 pointer-events-auto"
-                                    onClick={(e) => e.stopPropagation()}
-                                >
-                                    <MapPin className="w-4 h-4" />
-                                </a>
-                            </div>
+                        <div className="absolute bottom-4 left-3 right-3 z-20 pointer-events-none">
+                            <span className="text-xs font-bold text-white leading-tight drop-shadow-md">
+                                {story.author.name}
+                            </span>
                         </div>
                     </div>
                 ))}
-
-                {events.length === 0 && (
-                    <div className="flex h-[350px] w-[350px] items-center justify-center rounded-3xl border-2 border-dashed border-gray-200 bg-gray-50 text-gray-400">
-                        <span className="text-sm">No upcoming events</span>
-                    </div>
-                )}
             </div>
 
-            <EventModal
-                event={selectedEvent as any}
-                isOpen={!!selectedEventId}
-                onClose={() => setSelectedEventId(null)}
+            <StoryModal
+                story={selectedStory}
+                isOpen={!!selectedStoryId}
+                onClose={() => setSelectedStoryId(null)}
+            />
+
+            <CreateStoryModal
+                isOpen={isCreateModalOpen}
+                onClose={() => setIsCreateModalOpen(false)}
             />
         </div>
     );
 }
-

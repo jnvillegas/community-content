@@ -51,13 +51,14 @@ interface DashboardProps {
         data: any[];
         links: any[];
     };
+    stories: any[];
     auth: any;
 }
 
 import StoriesBar from '@/components/feed/stories-bar';
 import ActivityFeed from '@/components/feed/activity-feed';
 
-export default function Dashboard({ upcomingEvents, activities, auth }: DashboardProps) {
+export default function Dashboard({ upcomingEvents, activities, stories, auth }: DashboardProps) {
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [sidebarTab, setSidebarTab] = useState<'upcoming' | 'calendar'>('upcoming');
 
@@ -109,7 +110,7 @@ export default function Dashboard({ upcomingEvents, activities, auth }: Dashboar
         <AppLayout breadcrumbs={breadcrumbs} header={DashboardHeader}>
             <Head title="Creator Connect - Dashboard" />
 
-            <main className="grid flex-1 grid-cols-1 gap-0 lg:grid-cols-[1fr_330px]">
+            <main className="grid flex-1 grid-cols-1 gap-0 lg:grid-cols-[1fr_355px]">
                 {/* Center Column - Feed */}
                 <div className="min-h-screen min-w-0 bg-[#F8F9FA] p-4 md:p-8 dark:bg-gray-950/40">
                     <div className="mb-8">
@@ -120,7 +121,7 @@ export default function Dashboard({ upcomingEvents, activities, auth }: Dashboar
                     </div>
 
                     {/* Stories */}
-                    <StoriesBar events={upcomingEvents} />
+                    <StoriesBar stories={stories} />
 
                     {/* Feed */}
                     <div className="mb-8">
