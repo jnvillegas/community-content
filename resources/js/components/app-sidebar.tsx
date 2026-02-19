@@ -15,35 +15,28 @@ import {
     Play as VideoIcon,
     Tags,
     Plus,
+    Home,
 } from 'lucide-react';
 
-import { NavGroupWithSub } from '@/components/nav-group-with-sub';
 import { NavMain } from '@/components/nav-main';
-import { NavUser } from '@/components/nav-user';
 import {
     Sidebar,
     SidebarContent,
-    SidebarFooter,
     SidebarGroup,
     SidebarGroupLabel,
-    SidebarHeader,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 
-import AppLogo from './app-logo';
 import CreateStoryModal from './feed/CreateStoryModal';
 import { useState } from 'react';
 
 // Platform Section
 const platformItems: NavItem[] = [
     {
-        title: 'Dashboard',
+        title: 'Home',
         href: dashboard(),
-        icon: LayoutGrid,
+        icon: Home,
     },
     {
         title: 'Save',
@@ -183,7 +176,7 @@ export function AppSidebar() {
         },
         {
             title: 'Crear Historia',
-            href: '#',
+            href: '/admin/stories',
             icon: Plus,
             onClick: () => setIsCreateStoryOpen(true),
         },
@@ -199,46 +192,31 @@ export function AppSidebar() {
     return (
         <Sidebar
             collapsible="icon"
-            className="border-r border-gray-100 bg-white dark:bg-gray-950"
+            className="bg-white dark:bg-gray-950 mt-[64px] pb-[64px] [&>[data-slot=sidebar]]:!top-16 [&>[data-slot=sidebar]]:!h-[calc(100vh-64px)]"
         >
-            <SidebarHeader className="p-4">
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton
-                            size="lg"
-                            asChild
-                            className="hover:bg-transparent"
-                        >
-                            <Link href={dashboard()} prefetch>
-                                <AppLogo />
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarHeader>
 
-            <SidebarContent className="px-2">
+            <SidebarContent className="px-2 pt-4">
                 {/* Platform Section */}
                 <SidebarGroup>
-                    <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
+                    {/* <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
                         Platform
-                    </SidebarGroupLabel>
+                    </SidebarGroupLabel> */}
                     <NavMain items={filterItems(platformItems)} />
                 </SidebarGroup>
 
-                {/* Members Section - Hide group if empty */}
+                {/* Members Section - Hide group if empty (render as regular nav) */}
                 {filterItems(membersItems).length > 0 && (
-                    <SidebarGroup className="mt-4">
-                        <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
+                    <SidebarGroup className="border-t border-gray-200 dark:border-neutral-700">
+                        <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
                             Members
                         </SidebarGroupLabel>
-                        <NavGroupWithSub title="Members" items={filterItems(membersItems)} />
+                        <NavMain items={filterItems(membersItems)} />
                     </SidebarGroup>
                 )}
 
                 {/* Stories Section */}
-                <SidebarGroup className="mt-4">
-                    <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
+                <SidebarGroup className="border-t border-gray-200 dark:border-neutral-700">
+                    <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
                         Stories
                     </SidebarGroupLabel>
                     <NavMain items={filterItems(storiesItems)} />
@@ -246,8 +224,8 @@ export function AppSidebar() {
 
                 {/* Event Management Section */}
                 {filterItems(eventManagementItems).length > 0 && (
-                    <SidebarGroup className="mt-4">
-                        <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
+                    <SidebarGroup className="border-t border-gray-200 dark:border-neutral-700">
+                        <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
                             Event Management
                         </SidebarGroupLabel>
                         <NavMain items={filterItems(eventManagementItems)} />
@@ -256,8 +234,8 @@ export function AppSidebar() {
 
                 {/* Academy Section */}
                 {filterItems(academyItems).length > 0 && (
-                    <SidebarGroup className="mt-4">
-                        <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
+                    <SidebarGroup className="border-t border-gray-200 dark:border-neutral-700">
+                        <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
                             Academy
                         </SidebarGroupLabel>
                         <NavMain items={filterItems(academyItems)} />
@@ -266,8 +244,8 @@ export function AppSidebar() {
 
                 {/* Content Section - Hide group if empty */}
                 {filterItems(contentItems).length > 0 && (
-                    <SidebarGroup className="mt-4">
-                        <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
+                    <SidebarGroup className="border-t border-gray-200 dark:border-neutral-700">
+                        <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
                             Content
                         </SidebarGroupLabel>
                         <NavMain items={filterItems(contentItems)} />
@@ -275,8 +253,8 @@ export function AppSidebar() {
                 )}
 
                 {/* Community Section */}
-                <SidebarGroup className="mt-4">
-                    <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
+                <SidebarGroup className="border-t border-gray-200 dark:border-neutral-700">
+                    <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
                         Community
                     </SidebarGroupLabel>
                     <NavMain items={filterItems(communityItems)} />
@@ -284,18 +262,14 @@ export function AppSidebar() {
 
                 {/* Membership Section */}
                 {filterItems(membershipItems).length > 0 && (
-                    <SidebarGroup className="mt-4">
-                        <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase">
+                    <SidebarGroup className="border-t border-gray-200 dark:border-neutral-700">
+                        <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
                             Membership
                         </SidebarGroupLabel>
                         <NavMain items={filterItems(membershipItems)} />
                     </SidebarGroup>
                 )}
             </SidebarContent>
-
-            <SidebarFooter className="border-t border-gray-50 p-4 dark:border-gray-900">
-                <NavUser />
-            </SidebarFooter>
 
             <CreateStoryModal
                 isOpen={isCreateStoryOpen}

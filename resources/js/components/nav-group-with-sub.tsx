@@ -7,6 +7,7 @@ import {
     SidebarMenuSub,
     SidebarMenuSubButton,
     SidebarMenuSubItem,
+    useSidebar,
 } from '@/components/ui/sidebar';
 import { useActiveUrl } from '@/hooks/use-active-url';
 import { type NavItem } from '@/types';
@@ -19,13 +20,15 @@ interface NavGroupWithSubProps {
 
 export function NavGroupWithSub({ title, items = [] }: NavGroupWithSubProps) {
     const { urlIsActive } = useActiveUrl();
+    const { state } = useSidebar();
 
     return (
         <SidebarMenu>
             <SidebarMenuItem>
-                <SidebarMenuButton>
-                    <span>{title}</span>
-                    <ChevronRight className="ml-auto h-4 w-4" />
+                <SidebarMenuButton className={state === 'collapsed' ? 'justify-center' : ''}>
+                    {state !== 'collapsed' && <span>{title}</span>}
+                    {state !== 'collapsed' && <ChevronRight className="ml-auto h-4 w-4" />}
+                    {state === 'collapsed' && <ChevronRight className="h-4 w-4" />}
                 </SidebarMenuButton>
                 <SidebarMenuSub>
                     {items.map((item) => (
@@ -36,7 +39,7 @@ export function NavGroupWithSub({ title, items = [] }: NavGroupWithSubProps) {
                             >
                                 <Link href={item.href} prefetch>
                                     {item.icon && <item.icon />}
-                                    <span>{item.title}</span>
+                                    {state !== 'collapsed' && <span>{item.title}</span>}
                                 </Link>
                             </SidebarMenuSubButton>
                         </SidebarMenuSubItem>

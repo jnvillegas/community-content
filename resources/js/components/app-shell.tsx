@@ -1,7 +1,7 @@
 import { usePage } from '@inertiajs/react';
 
 import { SidebarProvider } from '@/components/ui/sidebar';
-import { SharedData } from '@/types';
+import { type SharedData } from '@/types';
 
 interface AppShellProps {
     children: React.ReactNode;
@@ -9,7 +9,7 @@ interface AppShellProps {
 }
 
 export function AppShell({ children, variant = 'header' }: AppShellProps) {
-    const isOpen = usePage<SharedData>().props.sidebarOpen;
+    const sidebarOpen = usePage<SharedData>().props.sidebarOpen;
 
     if (variant === 'header') {
         return (
@@ -17,5 +17,12 @@ export function AppShell({ children, variant = 'header' }: AppShellProps) {
         );
     }
 
-    return <SidebarProvider defaultOpen={isOpen}>{children}</SidebarProvider>;
+    // Sidebar layout: estructura completa con header fijo y sidebar fijo
+    return (
+        <SidebarProvider defaultOpen={sidebarOpen}>
+            <div className="flex h-screen w-full flex-col">
+                {children}
+            </div>
+        </SidebarProvider>
+    );
 }

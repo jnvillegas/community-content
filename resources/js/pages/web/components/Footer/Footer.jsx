@@ -1,11 +1,17 @@
 import { Link } from "@inertiajs/react";
 import styles from "./Footer.module.css";
 import { SOCIAL } from "../../helpers/PathRoutes";
+import { usePage } from "@inertiajs/react";
 
 const Footer = () => {
+    const { url } = usePage();
 
     const scrollTop = () => {
         window.scrollTo(0, 0);
+    }
+
+    if (url === '/community') {
+        return null;
     }
 
     return (

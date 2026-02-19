@@ -69,45 +69,45 @@ export default function Dashboard({ upcomingEvents, activities, stories, auth }:
         },
     ];
 
-    const DashboardHeader = (
-        <div className="sticky top-0 z-30 flex h-20 w-full items-center justify-between border-b border-gray-100 bg-white/80 px-4 backdrop-blur-md dark:border-gray-800 dark:bg-gray-950/80 md:px-8">
-            <div className="flex items-center gap-4 flex-1">
-                <SidebarTrigger className="-ml-1 lg:hidden" />
-                <div className="relative w-full max-w-md group hidden md:block">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 transition-colors group-focus-within:text-blue-600" />
-                    <Input
-                        placeholder="Search for courses, events..."
-                        className="w-full border-gray-100 bg-gray-50/50 pl-10 focus:bg-white dark:border-gray-800 dark:bg-gray-900/50"
-                    />
-                </div>
-            </div>
+    // const DashboardHeader = (
+    //     <div className="sticky top-0 z-30 flex h-20 w-full items-center justify-between border-b border-gray-100 bg-white/80 px-4 backdrop-blur-md dark:border-gray-800 dark:bg-gray-950/80 md:px-8">
+    //         <div className="flex items-center gap-4 flex-1">
+    //             <SidebarTrigger className="-ml-1 lg:hidden" />
+    //             <div className="relative w-full max-w-md group hidden md:block">
+    //                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 transition-colors group-focus-within:text-blue-600" />
+    //                 <Input
+    //                     placeholder="Search for courses, events..."
+    //                     className="w-full border-gray-100 bg-gray-50/50 pl-10 focus:bg-white dark:border-gray-800 dark:bg-gray-900/50"
+    //                 />
+    //             </div>
+    //         </div>
 
-            <div className="flex items-center gap-3 md:gap-6">
-                <Button className="h-10 bg-blue-600 font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-700">
-                    <Video className="md:mr-2 h-4 w-4" />
-                    <span className="hidden md:inline text-xs">Go live</span>
-                </Button>
+    //         <div className="flex items-center gap-3 md:gap-6">
+    //             <Button className="h-10 bg-blue-600 font-bold shadow-lg shadow-blue-500/20 hover:bg-blue-700">
+    //                 <Video className="md:mr-2 h-4 w-4" />
+    //                 <span className="hidden md:inline text-xs">Go live</span>
+    //             </Button>
 
-                <div className="flex items-center gap-2 md:gap-4 border-l border-gray-100 pl-3 md:pl-6 dark:border-gray-800">
-                    <NotificationDropdown />
+    //             <div className="flex items-center gap-2 md:gap-4 border-l border-gray-100 pl-3 md:pl-6 dark:border-gray-800">
+    //                 <NotificationDropdown />
 
-                    <div className="flex items-center gap-3">
-                        <Avatar className="h-9 w-9 md:h-10 md:w-10 border-2 border-blue-100 dark:border-gray-800">
-                            <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${auth.user.name}`} />
-                            <AvatarFallback>NV</AvatarFallback>
-                        </Avatar>
-                        <div className="hidden flex-col leading-none lg:flex">
-                            <span className="text-sm font-bold text-gray-900 dark:text-gray-100">{auth.user.name}</span>
-                            <span className="text-[11px] font-medium text-gray-500">Creator Account</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+    //                 <div className="flex items-center gap-3">
+    //                     <Avatar className="h-9 w-9 md:h-10 md:w-10 border-2 border-blue-100 dark:border-gray-800">
+    //                         <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${auth.user.name}`} />
+    //                         <AvatarFallback>NV</AvatarFallback>
+    //                     </Avatar>
+    //                     <div className="hidden flex-col leading-none lg:flex">
+    //                         <span className="text-sm font-bold text-gray-900 dark:text-gray-100">{auth.user.name}</span>
+    //                         <span className="text-[11px] font-medium text-gray-500">Creator Account</span>
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     </div>
+    // );
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs} header={DashboardHeader}>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Creator Connect - Dashboard" />
 
             <main className="grid flex-1 grid-cols-1 gap-0 lg:grid-cols-[1fr_355px]">

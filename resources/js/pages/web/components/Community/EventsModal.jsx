@@ -1,32 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import styles from './EventsModal.module.css';
 
-const EventsModal = ({ event, onClose, formatLikes, toggleLike }) => {
-    const [newComment, setNewComment] = useState('');
+const EventsModal = ({ event, onClose, formatDate }) => {
+    // const [newComment, setNewComment] = useState('');
 
-    const [comments, setComments] = useState(event.commentList || []);
+    // const [comments, setComments] = useState(event.commentList || []);
 
-    const handleSendComment = () => {
-        if (!newComment.trim()) return;
+    // const handleSendComment = () => {
+    //     if (!newComment.trim()) return;
 
-        const newCommentObj = {
-            id: Date.now(),
-            user: 'Tú',
-            text: newComment.trim(),
-        };
+    //     const newCommentObj = {
+    //         id: Date.now(),
+    //         user: 'Tú',
+    //         text: newComment.trim(),
+    //     };
 
-        setComments((prev) => [...prev, newCommentObj]);
-        setNewComment('');
-    };
+    //     setComments((prev) => [...prev, newCommentObj]);
+    //     setNewComment('');
+    // };
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            handleSendComment();
+            // handleSendComment();
         }
     };
 
-    useEffect(() => { console.log(event); }, [event]);
+    // useEffect(() => { console.log(event); }, [event]);
 
 
 
@@ -44,7 +44,7 @@ const EventsModal = ({ event, onClose, formatLikes, toggleLike }) => {
                 <div className={styles.modal_inner}>
                     <div className={styles.image_section}>
                         <img
-                            src={event.image}
+                            src={event.cover_image}
                             alt={event.title}
                             className={styles.event_image_full}
                         />
@@ -52,39 +52,44 @@ const EventsModal = ({ event, onClose, formatLikes, toggleLike }) => {
 
                     <div className={styles.info_section}>
                         <div className={styles.author_header}>
-                            <img
+                            {/* <img
                                 src={event.author.avatar}
                                 alt={event.author.name}
                                 className={styles.avatar}
-                            />
+                            /> */}
+
+                            <div className={styles.avatar}>
+                                {event.created_by.name ? event.created_by.name.charAt(0) : 'A'}
+                            </div>
 
                             <div className={styles.author_info}>
-                                <h3 className={styles.author_name}>{event.author.name}</h3>
+                                <h3 className={styles.author_name}>{event.created_by.name}</h3>
                                 <span className={styles.author_handle}>{event.location}</span>
                             </div>
                         </div>
 
                         <div className={styles.post_content}>
                             <h2 className={styles.post_title}>{event.title}</h2>
+                            <p className={styles.post_description}>{event.description}</p>
                             <div className={styles.post_details}>
                                 <p className={styles.post_date}>
                                     <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z" />
                                     </svg>
-                                    {event.date}
+                                    {formatDate(event.start_date)}
                                 </p>
-                                {event.hasMap && (
-                                    <p className={styles.post_location}>
+                                {event.location_url && (
+                                    <a className={styles.post_location} href={event.location_url} target="_blank" rel="noopener noreferrer">
                                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                                             <path fill-rule="evenodd" d="M11.906 1.994a8.002 8.002 0 0 1 8.09 8.421 7.996 7.996 0 0 1-1.297 3.957.996.996 0 0 1-.133.204l-.108.129c-.178.243-.37.477-.573.699l-5.112 6.224a1 1 0 0 1-1.545 0L5.982 15.26l-.002-.002a18.146 18.146 0 0 1-.309-.38l-.133-.163a.999.999 0 0 1-.13-.202 7.995 7.995 0 0 1 6.498-12.518ZM15 9.997a3 3 0 1 1-5.999 0 3 3 0 0 1 5.999 0Z" clip-rule="evenodd" />
                                         </svg>
                                         Como chegar lá
-                                    </p>
+                                    </a>
                                 )}
                             </div>
                         </div>
 
-                        <div className={styles.comments_list}>
+                        {/* <div className={styles.comments_list}>
                             {comments.length > 0 ? (
                                 comments.map((comment) => (
                                     <div key={comment.id} className={styles.comment_item}>
@@ -95,9 +100,9 @@ const EventsModal = ({ event, onClose, formatLikes, toggleLike }) => {
                             ) : (
                                 <p className={styles.no_comments}>Sem comentários</p>
                             )}
-                        </div>
+                        </div> */}
 
-                        <div className={styles.actions_bar}>
+                        {/* <div className={styles.actions_bar}>
                             <div className={styles.like_section}>
                                 <button className={styles.like_button} onClick={() => toggleLike(event.id)}>
                                     {event.liked ? (
@@ -125,13 +130,11 @@ const EventsModal = ({ event, onClose, formatLikes, toggleLike }) => {
                                     <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M7.926 10.898 15 7.727m-7.074 5.39L15 16.29M8 12a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm12 5.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Zm0-11a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z" />
                                     </svg>
-                                    {/* <span>{event.shares || 0}</span> */}
                                 </button>
                             </div>
-                        </div>
+                        </div> */}
 
-                        {/* Input para nuevo comentario */}
-                        <div className={styles.comment_input_container}>
+                        {/* <div className={styles.comment_input_container}>
                             <input
                                 type="text"
                                 className={styles.comment_input}
@@ -147,7 +150,7 @@ const EventsModal = ({ event, onClose, formatLikes, toggleLike }) => {
                             >
                                 Enviar
                             </button>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

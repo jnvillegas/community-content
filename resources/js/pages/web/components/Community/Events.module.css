@@ -157,14 +157,27 @@
     margin-right: 2rem;
 }
 
-.author_avatar {
+/* .author_avatar {
     width: 3rem;
     height: 3rem;
     border-radius: 9999px;
     border: 2px solid var(--primary);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     object-fit: cover;
+} */
+
+.avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: white;
+    color: #1f1f1f;
 }
+
 
 .author_info {
     display: flex;
