@@ -48,8 +48,9 @@ EXPOSE 8080
 
 # Start command - Ejecuta comandos que necesitan DB en runtime
 CMD php artisan migrate --force --no-interaction && \
+    php artisan db:seed --class=RolesAndPermissionsSeeder --force && \
     php artisan config:cache && \
     php artisan route:cache && \
     php artisan view:cache && \
     php artisan storage:link && \
-    php artisan serve --host=0.0.0.0 --port=8080
+    php artisan serve --host=0.0.0.0 --port=${PORT:-8080}

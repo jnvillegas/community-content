@@ -24,17 +24,17 @@ php artisan view:clear
 php artisan route:clear
 
 # Run migrations
-echo "🗄️ Running database migrations..."
-php artisan migrate --force --no-interaction
+# echo "🗄️ Running database migrations..."
+# php artisan migrate --force --no-interaction
 
 # Optimize for production
-echo "⚡ Optimizing for production..."
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+# echo "⚡ Optimizing for production..."
+# php artisan config:cache
+# php artisan route:cache
+# php artisan view:cache
 
 # Create storage link
-echo "🔗 Creating storage link..."
-php artisan storage:link
+# echo "🔗 Creating storage link..."
+# php artisan storage:link
 
 echo "✅ Build completed successfully!"

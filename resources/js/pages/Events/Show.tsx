@@ -86,7 +86,7 @@ export default function Show({ event, registrations_count, can_register, is_regi
                         <Button variant="ghost" className="text-white hover:bg-white/20 gap-2" asChild>
                             <Link href="/events">
                                 <ArrowLeft className="w-4 h-4" />
-                                Back to Events
+                                Back to Eventos
                             </Link>
                         </Button>
                     </div>
