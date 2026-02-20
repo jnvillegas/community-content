@@ -99,8 +99,8 @@ export default function Index({ events, categories, filters, auth }: Props) {
                 </div>
 
                 {/* Filters */}
-                <div className="bg-card rounded-xl border border-border p-4 mb-8 shadow-sm flex flex-col md:flex-row gap-4 items-center">
-                    <div className="relative w-full md:w-1/3">
+                <div className="bg-card rounded-xl border border-border p-4 mb-8 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+                    <div className="relative w-full">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                             placeholder="Search events..."
@@ -110,37 +110,39 @@ export default function Index({ events, categories, filters, auth }: Props) {
                         />
                     </div>
 
-                    <Select value={category} onValueChange={handleCategoryChange}>
-                        <SelectTrigger className="w-full md:w-[200px]">
-                            <SelectValue placeholder="Category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">All Categories</SelectItem>
-                            {categories.map((cat) => (
-                                <SelectItem key={cat.id} value={String(cat.id)}>
-                                    {cat.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                    <div className="flex gap-4 grow w-full justify-end min-w-[300px]">
+                        <Select value={category} onValueChange={handleCategoryChange}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Category" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Categories</SelectItem>
+                                {categories.map((cat) => (
+                                    <SelectItem key={cat.id} value={String(cat.id)}>
+                                        {cat.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
 
-                    <Select value={type} onValueChange={handleTypeChange}>
-                        <SelectTrigger className="w-full md:w-[180px]">
-                            <SelectValue placeholder="Event Type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">All Types</SelectItem>
-                            <SelectItem value="WORKSHOP">Workshop</SelectItem>
-                            <SelectItem value="MEETUP">Meetup</SelectItem>
-                            <SelectItem value="WEBINAR">Webinar</SelectItem>
-                            <SelectItem value="TRIP">Trip</SelectItem>
-                        </SelectContent>
-                    </Select>
+                        <Select value={type} onValueChange={handleTypeChange}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Event Type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Types</SelectItem>
+                                <SelectItem value="WORKSHOP">Workshop</SelectItem>
+                                <SelectItem value="MEETUP">Meetup</SelectItem>
+                                <SelectItem value="WEBINAR">Webinar</SelectItem>
+                                <SelectItem value="TRIP">Trip</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
                 </div>
 
                 {/* Grid */}
                 {events.data.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div className="flex flex-wrap gap-6">
                         {events.data.map((event) => (
                             <EventCard key={event.id} event={event} />
                         ))}

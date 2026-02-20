@@ -24,7 +24,9 @@ import {
     SidebarContent,
     SidebarGroup,
     SidebarGroupLabel,
+    SidebarTrigger,
 } from '@/components/ui/sidebar';
+import AppLogo from '@/components/app-logo';
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 
@@ -192,8 +194,16 @@ export function AppSidebar() {
     return (
         <Sidebar
             collapsible="icon"
-            className="bg-white dark:bg-gray-950 mt-[64px] pb-[64px] [&>[data-slot=sidebar]]:!top-16 [&>[data-slot=sidebar]]:!h-[calc(100vh-64px)]"
+            className="bg-transparent dark:bg-transparent mt-[64px] pb-[64px] [&>[data-slot=sidebar]]:!top-16 [&>[data-slot=sidebar]]:!h-[calc(100vh-64px)]"
         >
+
+            {/* Mobile header inside the Sheet: logo + trigger */}
+            <div className="flex items-center gap-2 px-4 py-3 md:hidden">
+                <SidebarTrigger />
+                <Link href={dashboard()} prefetch className="shrink-0 hover:opacity-80 transition-opacity">
+                    <AppLogo />
+                </Link>
+            </div>
 
             <SidebarContent className="px-2 pt-4">
                 {/* Platform Section */}

@@ -11,7 +11,8 @@ import { type NavItem } from '@/types';
 
 export function NavMain({ items = [] }: { items: NavItem[] }) {
     const { urlIsActive } = useActiveUrl();
-    const { state } = useSidebar();
+    const { state, isMobile } = useSidebar();
+    const showLabels = state !== 'collapsed' || isMobile;
 
     return (
         <SidebarMenu>
@@ -22,17 +23,17 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                         isActive={urlIsActive(item.href)}
                         tooltip={{ children: item.title }}
                         onClick={item.onClick}
-                        className={state === "collapsed" ? "justify-center" : ""}
+                        className={state === 'collapsed' && !isMobile ? 'justify-center' : ''}
                     >
                         {item.onClick ? (
                             <div className={` flex items-center gap-1 ${state === "collapsed" ? "justify-center" : ""}`}>
                                 {item.icon && <item.icon className='w-4 h-4 m-0' />}
-                                {state !== "collapsed" && <span>{item.title}</span>}
+                                {showLabels && <span>{item.title}</span>}
                             </div>
                         ) : (
                             <Link href={item.href} prefetch>
                                 {item.icon && <item.icon />}
-                                {state !== "collapsed" && <span>{item.title}</span>}
+                                {showLabels && <span>{item.title}</span>}
                             </Link>
                         )}
                     </SidebarMenuButton>

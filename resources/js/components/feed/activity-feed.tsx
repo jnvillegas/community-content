@@ -1,5 +1,7 @@
 
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import FeedItem from './feed-item';
+import { Button } from '@/components/ui/button';
 
 interface ActivityFeedProps {
     activities: {
@@ -19,11 +21,13 @@ export default function ActivityFeed({ activities }: ActivityFeedProps) {
 
     return (
         <div className="space-y-6">
-            {activities.data.map((activity) => (
-                <FeedItem key={activity.id} activity={activity} />
-            ))}
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Próximos Eventos</h3>
 
-            {/* Pagination Loading / Infinite Scroll trigger could go here */}
+            <div className='flex flex-col items-center gap-6'>
+                {activities.data.map((activity) => (
+                    <FeedItem key={activity.id} activity={activity} />
+                ))}
+            </div>
         </div>
     );
 }

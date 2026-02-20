@@ -158,33 +158,33 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
     };
 
     return (
-        <div className="group relative mb-10 w-full max-w-[780px] mx-auto overflow-hidden">
-            <div className="absolute inset-y-0 left-0 z-30 flex items-center bg-gradient-to-r from-[#F8F9FA] via-[#F8F9FA]/50 to-transparent pr-12 opacity-0 transition-opacity group-hover:opacity-100 dark:from-gray-950 dark:via-gray-950/50">
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-10 w-10 rounded-full bg-white shadow-md hover:bg-gray-50 dark:bg-gray-900"
-                    onClick={() => scroll('left')}
-                >
-                    <ChevronLeft className="h-6 w-6 text-gray-600 dark:text-gray-300" />
-                </Button>
-            </div>
-
-            <div className="absolute inset-y-0 right-0 z-30 flex items-center bg-gradient-l from-[#F8F9FA] via-[#F8F9FA]/50 to-transparent pl-12 opacity-0 transition-opacity group-hover:opacity-100 dark:from-gray-950 dark:via-gray-950/50">
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-10 w-10 rounded-full bg-white shadow-md hover:bg-gray-50 dark:bg-gray-900"
-                    onClick={() => scroll('right')}
-                >
-                    <ChevronRight className="h-6 w-6 text-gray-600 dark:text-gray-300" />
-                </Button>
+        <div className="group relative mb-10 w-full mx-auto overflow-hidden">
+            <div className="flex items-center justify-between mb-4">
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Historias</h3>
+                <div className="flex items-center gap-2">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-10 w-10 rounded-full bg-white shadow-md hover:bg-gray-50 dark:bg-background cursor-pointer"
+                        onClick={() => scroll('left')}
+                    >
+                        <ChevronLeft className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-10 w-10 rounded-full bg-white shadow-md hover:bg-gray-50 dark:bg-background cursor-pointer"
+                        onClick={() => scroll('right')}
+                    >
+                        <ChevronRight className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+                    </Button>
+                </div>
             </div>
 
             <div
                 ref={scrollContainerRef}
                 onMouseDown={handleMouseDown}
-                className={`flex w-full gap-5 overflow-x-auto pb-4 scrollbar-hide select-none ${(isDragging || isAnimating) ? 'cursor-grabbing snap-none' : 'cursor-grab snap-x snap-mandatory'
+                className={`flex w-full items-center gap-5 overflow-x-auto pb-4 scrollbar-hide select-none ${(isDragging || isAnimating) ? 'snap-none' : 'snap-x snap-mandatory'
                     }`}
                 style={{
                     scrollbarWidth: 'none',
@@ -208,52 +208,23 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
                 <div className="snap-start">
                     <div
                         onClick={() => setIsCreateModalOpen(true)}
-                        className="group/card relative flex h-[280px] w-[180px] shrink-0 cursor-pointer flex-col overflow-hidden rounded-3xl bg-gray-100 border border-gray-200 shadow-sm transition-all hover:scale-[1.02] dark:bg-gray-900 dark:border-gray-800"
+                        className='flex items-center justify-center w-24 h-32 z-10 cursor-pointer border-dashed border-2 border-gray-500 rounded-2xl'
                     >
-                        <div className="h-[70%] bg-gray-200 dark:bg-gray-800 flex items-center justify-center overflow-hidden">
-                            <img
-                                src="https://api.dicebear.com/7.x/avataaars/svg?seed=creator"
-                                className="w-full h-full object-cover"
-                                alt="Creator"
-                            />
-                        </div>
-                        <div className="absolute top-[60%] left-1/2 -translate-x-1/2 flex size-10 items-center justify-center rounded-full bg-blue-600 text-white border-4 border-white dark:border-gray-900 transition-transform group-hover/card:scale-110">
-                            <Plus className="h-6 w-6" />
-                        </div>
-                        <div className="flex flex-1 flex-col items-center justify-end pb-4 bg-white dark:bg-gray-900">
-                            <span className="text-sm font-bold text-gray-900 dark:text-gray-100">Crear historia</span>
-                        </div>
+                        <Plus className='h-8 w-6 text-gray-500' />
                     </div>
+                    <p className="text-xs text-gray-500 mt-2 text-center">Add Story</p>
                 </div>
 
                 {stories.map((story) => (
-                    <div
-                        key={story.id}
-                        className="snap-start relative h-[280px] w-[180px] shrink-0 cursor-pointer overflow-hidden rounded-3xl shadow-md transition-all hover:scale-[1.02]"
-                        onClick={() => handleCardClick(story.id)}
-                    >
-                        <img
-                            src={story.content_url}
-                            className="absolute h-full w-full object-cover transition-transform duration-700 hover:scale-110"
-                            alt={story.title}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-
-                        <div className="absolute top-3 left-3 z-20">
-                            <div className="h-10 w-10 rounded-full border-2 border-blue-500 overflow-hidden shadow-sm bg-gray-100 p-0.5">
-                                <img
-                                    src={story.author.avatar}
-                                    alt={story.author.name}
-                                    className="h-full w-full object-cover rounded-full"
-                                />
-                            </div>
+                    <div>
+                        <div
+                            key={story.id}
+                            onClick={() => handleCardClick(story.id)}
+                            className='flex items-center justify-center w-24 h-32 z-10 cursor-pointer rounded-2xl'
+                        >
+                            <img src={story.content_url} alt={story.title} className="w-full h-full object-cover rounded-2xl" />
                         </div>
-
-                        <div className="absolute bottom-4 left-3 right-3 z-20 pointer-events-none">
-                            <span className="text-xs font-bold text-white leading-tight drop-shadow-md">
-                                {story.author.name}
-                            </span>
-                        </div>
+                        <p className="text-xs text-gray-500 mt-2 text-center">{story.title}</p>
                     </div>
                 ))}
             </div>

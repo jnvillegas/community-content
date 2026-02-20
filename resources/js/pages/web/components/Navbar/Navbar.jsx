@@ -87,7 +87,7 @@ const Navbar = () => {
                     </svg>
                 </a>
 
-                <Link className={styles.svg_link} href={PATHROUTES.LOGIN}>
+                <Link className={styles.svg_link} href={`${auth.user ? 'settings/profile' : PATHROUTES.LOGIN}`}>
                     {auth.user ? (
                         <div className={styles.avatar}>
                             {auth.user.name ? auth.user.name.charAt(0) : 'A'}

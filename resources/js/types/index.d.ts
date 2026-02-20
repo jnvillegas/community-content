@@ -145,4 +145,9 @@ export interface Event {
     creator?: User;
     registrations?: any[]; // Define deeper if needed
     is_registered?: boolean; // For frontend helper
+    likes?: any[]; // EventLike objects
+    comments?: any[]; // EventComment objects
+    likes_count?: number;
+    is_liked?: boolean;
+    comments_count?: number;
 }

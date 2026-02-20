@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Heart, Calendar, MessageCircle, Share2, MapPin } from 'lucide-react';
+import { Heart, Calendar, Clock, MapPin, ArrowRight, MessageCircle, Share2, Bookmark } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Link, router } from '@inertiajs/react';
@@ -29,7 +29,6 @@ export default function FeedItem({ activity }: FeedItemProps) {
     const { user, subject, type } = activity;
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Determine content type
     const isEvent = activity.subject_type.includes('Event');
     const isStory = activity.subject_type.includes('Story');
     const isArticle = activity.subject_type.includes('Article');
@@ -37,16 +36,13 @@ export default function FeedItem({ activity }: FeedItemProps) {
     if (!subject) return null;
 
     const handleLike = (e: React.MouseEvent) => {
-        e.stopPropagation(); // Don't trigger modal
+        e.stopPropagation();
         let url = '';
         if (isEvent) url = `/events/${subject.id}/like`;
         else if (isStory) url = `/stories/${subject.id}/like`;
-
         if (!url) return;
 
-        router.post(url, {}, {
-            preserveScroll: true,
-        });
+        router.post(url, {}, { preserveScroll: true });
     };
 
     const handleCardClick = () => {
@@ -55,114 +51,126 @@ export default function FeedItem({ activity }: FeedItemProps) {
         }
     };
 
+    const likesCount = subject.likes_count || 0;
+    const commentsCount = subject.comments_count || subject.comments?.length || 0;
+
     return (
         <>
-            <Card
-                onClick={handleCardClick}
-                className="group relative border-none bg-[#111] overflow-hidden mb-12 w-full max-w-[780px] mx-auto h-[350px] rounded-[3rem] shadow-2xl transition-all duration-700 hover:shadow-black/60 cursor-pointer"
+            <article
+                // onClick={handleCardClick}
+                className="glass-card rounded-xl overflow-hidden group cursor-pointer transition-all duration-500 hover:shadow-2xs hover:shadow-black/40 bg-background border border-gray-200 dark:border-white/5 w-[100%] mb-10"
             >
-                {/* Full Background Image */}
-                <div className="absolute inset-0 z-0">
+                {/* Imagen superior - aspect-video */}
+                <div className="relative aspect-video overflow-hidden">
                     {subject.cover_image || subject.content_url ? (
                         <img
                             src={subject.cover_image || subject.content_url}
                             alt={subject.title}
-                            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
                     ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-[#2a3a2a] to-[#111]" />
+                        <div className="w-full h-full bg-gradient-to-br from-[#1a2a1a] to-[#0f0f0f]" />
                     )}
-                    {/* Visual Depth Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 z-10" />
+
+                    {/* Tag superior izquierdo */}
+                    <div className="absolute top-4 left-4">
+                        <span className="px-3 py-1.5 bg-zinc-900/20 backdrop-blur-md rounded-lg text-xs font-bold text-white border border-white/10">
+                            {subject.type}
+                        </span>
+                    </div>
                 </div>
 
-                {/* Content Overlay */}
-                <div className="relative z-20 h-full flex flex-col pl-2 pr-2 md:pr-6 md:pl-6 lg:pr-8 lg:pl-8 pointer-events-none">
+                {/* Contenido inferior */}
+                <div className="p-6 md:p-8">
+                    {/* Título + bookmark opcional */}
+                    <div className="flex justify-between items-start gap-4 mb-4">
+                        <h2 className="text-2xl font-bold leading-tight text-zinc-800  dark:text-white transition-colors">
+                            {subject.title}
+                        </h2>
 
-                    {/* Top Section: Author & Location */}
-                    <div className="flex items-center gap-4 pointer-events-auto shrink-0">
-                        <div className="h-14 w-14 rounded-full border-2 border-white/40 overflow-hidden shadow-2xl ring-2 ring-white/10">
-                            <img
-                                src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name}`}
-                                alt={user.name}
-                                className="h-full w-full object-cover"
-                            />
-                        </div>
-                        <div className="flex flex-col">
-                            <h4 className="text-xl font-bold text-white leading-tight drop-shadow-md">
-                                {user.name}
-                            </h4>
-                            <span className="text-sm font-semibold text-white/70 drop-shadow-md">
-                                {isEvent ? (subject.location || 'tucuman') : 'Artículo'}
+                        {/* Bookmark (puedes conectar lógica después o quitarlo) */}
+                        <Bookmark className="h-5 w-5  text-zinc-800 dark:text-white" />
+                    </div>
+
+                    {/* Descripción (usa excerpt si existe, fallback genérico) */}
+                    {subject.excerpt || subject.description ? (
+                        <p className="text-slate-400 text-base leading-relaxed mb-6 line-clamp-3">
+                            {subject.excerpt || subject.description}
+                        </p>
+                    ) : (
+                        <p className="text-slate-500 text-base mb-6 line-clamp-3">
+                            {isEvent
+                                ? `Evento en ${subject.location || 'Tucumán'}. Únete y no te lo pierdas.`
+                                : 'Contenido interesante disponible ahora.'}
+                        </p>
+                    )}
+
+                    {/* Info de fecha / hora / lugar */}
+                    <div className="flex flex-wrap items-center gap-5 md:gap-6 mb-8 text-sm text-zinc-800 dark:text-white">
+                        <div className="flex items-center gap-2">
+                            <Calendar className="h-5 w-5 text-zinc-800 dark:text-white" />
+                            <span>
+                                {isEvent && subject.start_date
+                                    ? format(new Date(subject.start_date), "d MMM yyyy", { locale: es })
+                                    : 'Disponible'}
                             </span>
+                        </div>
+
+                        {isEvent && subject.start_date && (
+                            <div className="flex items-center gap-2">
+                                <Clock className="h-5 w-5 text-zinc-800 dark:text-white" />
+                                <span>{format(new Date(subject.start_date), "HH:mm 'hs'", { locale: es })}</span>
+                            </div>
+                        )}
+
+                        <div className="flex items-center gap-2">
+                            <MapPin className="h-5 w-5 text-zinc-800 dark:text-white" />
+                            <span>{subject.location || 'Location'}</span>
                         </div>
                     </div>
 
-                    {/* Right Side: Action Tower */}
-                    <div className="absolute right-10 top-22 -translate-y-1/2   flex flex-col items-center gap-2 pointer-events-auto">
-                        <div className="flex flex-col items-center group/action cursor-pointer">
+                    {/* Footer: interacciones a la izquierda + botón a la derecha */}
+                    <div className="flex items-center justify-between pt-6 border-t border-black/10 dark:border-white/10">
+                        {/* Izquierda: like, comentarios, compartir */}
+                        <div className="flex items-center gap-6 md:gap-8">
                             <button
                                 onClick={handleLike}
-                                className={`drop-shadow-lg transition-all transform active:scale-125 ${subject.is_liked ? 'text-red-500 scale-110' : 'text-white group-hover/action:text-red-500'}`}
+                                className={`flex items-center gap-2 transition-all ${subject.is_liked
+                                    ? 'text-red-400 scale-105'
+                                    : 'text-zinc-800 hover:text-red-400 dark:text-white dark:hover:text-red-400'
+                                    }`}
                             >
-                                <Heart className={`h-7 w-7 ${subject.is_liked ? 'fill-current' : ''}`} />
+                                <Heart
+                                    className={`h-6 w-6 ${subject.is_liked ? 'fill-current' : ''}`}
+                                />
+                                <span className="text-sm font-semibold">{likesCount}</span>
                             </button>
-                            <span className="text-xs font-bold text-white/80 mt-1 drop-shadow-md">
-                                {subject.likes_count || 0}
-                            </span>
-                        </div>
 
-                        <div className="flex flex-col items-center group/action cursor-pointer">
-                            <button className="text-white drop-shadow-lg group-hover/action:text-blue-400 transition-colors">
-                                <MessageCircle className="h-7 w-7" />
-                            </button>
-                            <span className="text-xs font-bold text-white/80 mt-1 drop-shadow-md">
-                                {subject.comments_count || subject.comments?.length || 0}
-                            </span>
-                        </div>
+                            <Link href={`/events/${subject.slug}`} className="flex items-center gap-2 text-zinc-800 dark:text-white transition-colors">
+                                <MessageCircle className="h-6 w-6" />
+                                <span className="text-sm font-semibold">{commentsCount}</span>
+                            </Link>
 
-                        <div className="flex flex-col items-center group/action cursor-pointer">
                             <button
                                 onClick={(e) => e.stopPropagation()}
-                                className="text-white drop-shadow-lg group-hover/action:text-white transition-opacity"
+                                className="flex items-center gap-2 text-zinc-800 dark:text-white transition-colors"
                             >
-                                <Share2 className="h-7 w-7 opacity-80 group-hover:opacity-100" />
+                                <Share2 className="h-6 w-6" />
                             </button>
                         </div>
-                    </div>
 
-                    {/* Bottom-Left Section: Title and Date */}
-                    <div className="mt-auto space-y-2 pointer-events-auto max-w-[99%] ml-2">
-                        {/* Title: 22px Left Aligned */}
-                        <h3 className="text-[22px] md:text-2xl max-w-[80%] font-bold text-white leading-tight tracking-tight drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]">
-                            {subject.title}
-                        </h3>
-
-                        {/* Footer Row: Divider + Date */}
-                        <div className="flex flex-col gap-2 ">
-                            <div className="h-[1px] w-full bg-white/20" />
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3 text-white drop-shadow-lg">
-                                    <Calendar className="h-5 w-5 " />
-                                    <span className="text-lg font-bold">
-                                        {isEvent && subject.start_date
-                                            ? `${format(new Date(subject.start_date), "d MMM", { locale: es })} - ${subject.end_date ? format(new Date(subject.end_date), "d MMM", { locale: es }) : format(new Date(subject.start_date), "d MMM", { locale: es })}`
-                                            : 'Contenido Disponible'}
-                                    </span>
-                                </div>
-
-                                <Link
-                                    onClick={(e) => e.stopPropagation()}
-                                    href={isEvent ? `/events/${subject.slug}` : `/articles/${subject.slug}`}
-                                    className="h-10 w-10 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-md border border-white/20 text-white hover:bg-white/40 "
-                                >
-                                    <MapPin className="h-5 w-5" />
-                                </Link>
-                            </div>
-                        </div>
+                        {/* Derecha: botón principal */}
+                        <Link
+                            href={`/events/${subject.slug}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="bg-[#1d9bf0] text-white font-bold py-3 px-6 md:px-8 rounded-xl transition-all transform active:scale-95 shadow-lg shadow-[#1d9bf0]/20 flex items-center gap-2 text-base"
+                        >
+                            Detalhes
+                            <ArrowRight className="h-5 w-5" />
+                        </Link>
                     </div>
                 </div>
-            </Card>
+            </article>
 
             {isEvent && (
                 <EventModal

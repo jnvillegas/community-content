@@ -63,16 +63,16 @@ export default function CreateStoryModal({ isOpen, onClose }: CreateStoryModalPr
 
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-            <DialogContent className="sm:max-w-[425px] bg-white dark:bg-gray-950 p-0 overflow-hidden">
+            <DialogContent className="sm:max-w-[425px] bg-white dark:bg-black p-0 overflow-hidden">
                 <DialogHeader className="p-6 pb-0">
-                    <DialogTitle className="text-xl font-bold">Crear nueva historia</DialogTitle>
+                    <DialogTitle className="text-xl font-bold">Crea una nueva historia</DialogTitle>
                     <DialogDescription>
-                        Comparte momentos con tu comunidad. Ahora puedes subir varias imágenes.
+                        Comparte momentos exclusivos con tu comunidad.
                     </DialogDescription>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                    <div className="space-y-2">
+                <form onSubmit={handleSubmit} className="p-4 space-y-4 flex flex-col gap-2">
+                    <div className="space-y-2 flex flex-col gap-2">
                         <Label htmlFor="title">Título</Label>
                         <Input
                             id="title"
@@ -84,7 +84,7 @@ export default function CreateStoryModal({ isOpen, onClose }: CreateStoryModalPr
                         {errors.title && <p className="text-xs text-red-500">{errors.title}</p>}
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="space-y-2 flex flex-col gap-2">
                         <Label htmlFor="description">Descripción (opcional)</Label>
                         <Textarea
                             id="description"
@@ -96,11 +96,29 @@ export default function CreateStoryModal({ isOpen, onClose }: CreateStoryModalPr
                         />
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="space-y-4 flex flex-col flex-wrap gap-4">
                         <Label>Imágenes de la historia</Label>
+
+                        {previews.length === 0 && (
+                            <div
+                                onClick={() => fileInputRef.current?.click()}
+                                className="aspect-[9/16] w-full max-w-[150px] mx-auto rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 flex flex-col items-center justify-center cursor-pointer hover:border-[#1a87cb] hover:bg-gray-50 dark:hover:bg-gray-900 transition-all"
+                            >
+                                <ImagePlus className="w-8 h-8 text-gray-400 mb-2" />
+                                <span className="text-[10px] text-gray-500 text-center px-4 font-medium">Subir imágenes</span>
+                            </div>
+                        )}
 
                         {previews.length > 0 && (
                             <div className="grid grid-cols-3 gap-2 max-h-[200px] overflow-y-auto p-1">
+                                <button
+                                    type="button"
+                                    onClick={() => fileInputRef.current?.click()}
+                                    className="aspect-[9/16] rounded-lg border-2 border-dashed border-gray-200 flex flex-col items-center justify-center transition-all"
+                                >
+                                    <ImagePlus className="w-6 h-6 text-gray-400" />
+                                </button>
+
                                 {previews.map((preview, index) => (
                                     <div key={index} className="relative aspect-[9/16] rounded-lg border overflow-hidden bg-gray-100">
                                         <img src={preview} className="w-full h-full object-cover" alt={`Preview ${index}`} />
@@ -116,23 +134,7 @@ export default function CreateStoryModal({ isOpen, onClose }: CreateStoryModalPr
                                         </div>
                                     </div>
                                 ))}
-                                <button
-                                    type="button"
-                                    onClick={() => fileInputRef.current?.click()}
-                                    className="aspect-[9/16] rounded-lg border-2 border-dashed border-gray-200 flex flex-col items-center justify-center hover:border-blue-400 hover:bg-gray-50 transition-all"
-                                >
-                                    <ImagePlus className="w-6 h-6 text-gray-400" />
-                                </button>
-                            </div>
-                        )}
 
-                        {previews.length === 0 && (
-                            <div
-                                onClick={() => fileInputRef.current?.click()}
-                                className="aspect-[9/16] w-full max-w-[150px] mx-auto rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 hover:bg-gray-50 dark:hover:bg-gray-900 transition-all"
-                            >
-                                <ImagePlus className="w-8 h-8 text-gray-400 mb-2" />
-                                <span className="text-[10px] text-gray-500 text-center px-4 font-medium">Subir imágenes</span>
                             </div>
                         )}
 
@@ -151,7 +153,7 @@ export default function CreateStoryModal({ isOpen, onClose }: CreateStoryModalPr
                         <Button type="button" variant="outline" className="flex-1" onClick={handleClose}>
                             Cancelar
                         </Button>
-                        <Button type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700 font-bold" disabled={processing || data.images.length === 0}>
+                        <Button type="submit" className="flex-1 bg-[#1a87cb] hover:bg-[#1a87cb]/90 font-bold" disabled={processing || data.images.length === 0}>
                             {processing ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
                             Publicar ({data.images.length})
                         </Button>

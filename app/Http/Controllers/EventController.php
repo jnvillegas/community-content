@@ -43,9 +43,15 @@ class EventController extends Controller
             $query->whereDate('start_date', '<=', $request->date_to);
         }
 
-        $events = $query->with(['categories', 'createdBy'])
+        $events = $query->with(['categories', 'createdBy', 'likes', 'comments.user'])
             ->paginate(12)
-            ->withQueryString();
+            ->withQueryString()
+            ->through(function ($event) {
+                $event->likes_count = $event->likes->count();
+                $event->is_liked = Auth::check() ? $event->isLikedBy(Auth::user()) : false;
+                $event->comments_count = $event->comments->count();
+                return $event;
+            });
 
         $categories = EventCategory::all();
 
@@ -61,7 +67,7 @@ class EventController extends Controller
      */
     public function show(string $slug): Response
     {
-        $event = Event::with(['categories', 'createdBy', 'registrations'])
+        $event = Event::with(['categories', 'createdBy', 'registrations', 'likes', 'comments.user'])
             ->where('slug', $slug)
             ->firstOrFail();
 
@@ -79,6 +85,11 @@ class EventController extends Controller
                 ->whereIn('status', ['confirmed', 'attended']) // Check logic
                 ->exists();
         }
+
+        // Add computed properties for likes and comments
+        $event->likes_count = $event->likes->count();
+        $event->is_liked = Auth::check() ? $event->isLikedBy(Auth::user()) : false;
+        $event->comments_count = $event->comments->count();
 
         return Inertia::render('Events/Show', [
             'event' => $event,

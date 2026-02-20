@@ -8,10 +8,11 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { UserInfo } from '@/components/user-info';
 import { UserMenuContent } from '@/components/user-menu-content';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useInitials } from '@/hooks/use-initials';
 import { type BreadcrumbItem as BreadcrumbItemType, type SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { dashboard } from '@/routes';
@@ -24,6 +25,7 @@ export function AppSidebarHeader({
 }) {
     const { auth } = usePage<SharedData>().props;
     const isMobile = useIsMobile();
+    const getInitials = useInitials();
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 flex h-16 w-full shrink-0 items-center justify-between gap-4 bg-background px-6 transition-[width,height] ease-linear md:px-4">
@@ -51,14 +53,15 @@ export function AppSidebarHeader({
             <div className="shrink-0">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="gap-2 px-2 h-10 group hover:bg-accent"
-                        >
-                            <UserInfo user={auth.user} />
-                            <ChevronsUpDown className="size-4 opacity-50 group-data-[state=open]:opacity-100" />
-                        </Button>
+                        <Avatar className="size-9 overflow-hidden rounded-full cursor-pointer hover:opacity-80 transition-opacity">
+                            <AvatarImage
+                                src={auth.user.avatar}
+                                alt={auth.user.name}
+                            />
+                            <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
+                                {getInitials(auth.user.name)}
+                            </AvatarFallback>
+                        </Avatar>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                         className="w-56 rounded-lg"
