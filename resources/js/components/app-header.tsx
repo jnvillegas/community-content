@@ -34,7 +34,7 @@ import { useActiveUrl } from '@/hooks/use-active-url';
 import { useInitials } from '@/hooks/use-initials';
 import { cn, toUrl } from '@/lib/utils';
 import { dashboard } from '@/routes';
-import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
+import { type BreadcrumbItem, type NavItem, type PageProps } from '@/types';
 
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
@@ -68,7 +68,7 @@ interface AppHeaderProps {
 }
 
 export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
-    const page = usePage<SharedData>();
+    const page = usePage<PageProps>();
     const { auth } = page.props;
     const getInitials = useInitials();
     const { urlIsActive } = useActiveUrl();
@@ -83,7 +83,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="mr-2 h-[34px] w-[34px]"
+                                    className="mr-2 h-8.5 w-8.5"
                                 >
                                     <Menu className="h-5 w-5" />
                                 </Button>
@@ -193,7 +193,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                 size="icon"
                                 className="group h-9 w-9 cursor-pointer"
                             >
-                                <Search className="!size-5 opacity-80 group-hover:opacity-100" />
+                                <Search className="size-5! opacity-80 group-hover:opacity-100" />
                             </Button>
                             <div className="hidden lg:flex">
                                 {rightNavItems.map((item) => (
@@ -215,7 +215,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                     {item.icon && (
                                                         <Icon
                                                             iconNode={item.icon}
-                                                            className="size-5 opacity-80 group-hover:opacity-100"
+                                                            className="size-5! opacity-80 group-hover:opacity-100"
                                                         />
                                                     )}
                                                 </a>

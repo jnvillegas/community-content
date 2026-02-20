@@ -40,7 +40,7 @@ interface Props extends PageProps {
 
 export default function Show({ event: initialEvent, registrations_count, can_register, is_registered, auth }: Props) {
     const page = usePage<Props>();
-    const { post, delete: destroy, processing } = useForm();
+    const { post, delete: destroy, processing } = useForm({});
 
     const [isLiked, setIsLiked] = useState(initialEvent.is_liked || false);
     const [likesCount, setLikesCount] = useState(initialEvent.likes_count || 0);

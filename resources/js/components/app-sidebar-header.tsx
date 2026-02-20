@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { UserMenuContent } from '@/components/user-menu-content';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useInitials } from '@/hooks/use-initials';
-import { type BreadcrumbItem as BreadcrumbItemType, type SharedData } from '@/types';
+import { type BreadcrumbItem as BreadcrumbItemType, type PageProps } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { dashboard } from '@/routes';
 import AppLogo from './app-logo';
@@ -23,7 +23,7 @@ export function AppSidebarHeader({
 }: {
     breadcrumbs?: BreadcrumbItemType[];
 }) {
-    const { auth } = usePage<SharedData>().props;
+    const { auth } = usePage<PageProps>().props;
     const isMobile = useIsMobile();
     const getInitials = useInitials();
 
