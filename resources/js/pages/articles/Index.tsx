@@ -57,9 +57,9 @@ export default function Index({ articles }: Props) {
             case 'draft':
                 return <Badge variant="secondary" className="bg-gray-100 text-gray-700 border-none">Draft</Badge>;
             case 'scheduled':
-                return <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100 border-none">Scheduled</Badge>;
+                return <Badge className="bg-gray-100 text-gray-700 hover:bg-gray-100 border-none dark:bg-gray-800 dark:text-gray-300">Scheduled</Badge>;
             case 'private':
-                return <Badge className="bg-purple-100 text-purple-700 hover:bg-purple-100 border-none">Private</Badge>;
+                return <Badge className="bg-gray-100 text-gray-700 hover:bg-gray-100 border-none dark:bg-gray-800 dark:text-gray-300">Private</Badge>;
             default:
                 return <Badge variant="outline">{status}</Badge>;
         }
@@ -75,7 +75,7 @@ export default function Index({ articles }: Props) {
                         <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">Articles</h1>
                         <p className="text-gray-500 dark:text-gray-400 mt-1">Manage your blog posts and informative content.</p>
                     </div>
-                    <Button asChild className="bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/20 font-bold">
+                    <Button asChild>
                         <Link href="/articles/create">
                             <Plus className="mr-2 h-4 w-4" />
                             Create Article
@@ -83,15 +83,15 @@ export default function Index({ articles }: Props) {
                     </Button>
                 </div>
 
-                <Card className="border-none shadow-sm bg-white dark:bg-gray-900">
-                    <CardHeader className="p-4 md:p-6 border-b border-gray-50 dark:border-gray-800">
+                <Card className="border-card shadow-sm bg-background dark:bg-card">
+                    <CardHeader className="p-4 md:p-6 border-b border-muted">
                         <div className="flex flex-col md:flex-row gap-4 justify-between">
                             <div className="relative max-w-sm w-full">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                                <Input placeholder="Search articles..." className="pl-10 border-gray-100 bg-gray-50/50 dark:border-gray-800 dark:bg-gray-950/50" />
+                                <Input placeholder="Search articles..." className="pl-10 border-muted bg-background/50 dark:bg-card/30" />
                             </div>
                             <div className="flex items-center gap-2">
-                                <Button variant="outline" size="sm" className="hidden md:flex border-gray-100 dark:border-gray-800">
+                                <Button variant="outline" size="sm" className="hidden md:flex border-muted">
                                     <Filter className="mr-2 h-3.5 w-3.5" />
                                     Filter
                                 </Button>
@@ -100,8 +100,8 @@ export default function Index({ articles }: Props) {
                     </CardHeader>
                     <CardContent className="p-0">
                         <Table>
-                            <TableHeader className="bg-gray-50/50 dark:bg-gray-950/50">
-                                <TableRow className="hover:bg-transparent border-gray-100 dark:border-gray-800">
+                            <TableHeader className="bg-background/50 dark:bg-card/50">
+                                <TableRow className="hover:bg-transparent border-muted">
                                     <TableHead className="font-bold text-gray-900 dark:text-gray-100 px-6 py-4">Title</TableHead>
                                     <TableHead className="font-bold text-gray-900 dark:text-gray-100">Status</TableHead>
                                     <TableHead className="font-bold text-gray-900 dark:text-gray-100">Author</TableHead>
@@ -117,7 +117,7 @@ export default function Index({ articles }: Props) {
                                             <div className="flex flex-col items-center justify-center space-y-2">
                                                 <FileText className="h-10 w-10 text-gray-200" />
                                                 <p className="text-gray-500 font-medium">No articles found</p>
-                                                <Button variant="link" asChild className="text-blue-600">
+                                                <Button variant="link" asChild className="text-foreground hover:text-foreground">
                                                     <Link href="/articles/create">Create your first article</Link>
                                                 </Button>
                                             </div>
@@ -125,10 +125,10 @@ export default function Index({ articles }: Props) {
                                     </TableRow>
                                 ) : (
                                     articles.data.map((article) => (
-                                        <TableRow key={article.id} className="group hover:bg-gray-50/50 dark:hover:bg-gray-950/50 border-gray-100 dark:border-gray-800 transition-colors">
+                                        <TableRow key={article.id} className="group hover:bg-background/50 dark:hover:bg-card/50 border-muted transition-colors">
                                             <TableCell className="px-6 py-4">
                                                 <div className="flex flex-col">
-                                                    <span className="font-bold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 transition-colors">
+                                                    <span className="font-bold text-gray-900 dark:text-gray-100 group-hover:text-foreground transition-colors">
                                                         {article.title}
                                                     </span>
                                                     <span className="text-xs text-gray-500 mt-0.5">/{article.slug}</span>
@@ -143,7 +143,7 @@ export default function Index({ articles }: Props) {
                                             <TableCell>
                                                 <div className="flex flex-wrap gap-1">
                                                     {article.categories.map((cat) => (
-                                                        <Badge key={cat.id} variant="outline" className="text-[10px] py-0 px-2 font-medium border-gray-200 dark:border-gray-700">
+                                                        <Badge key={cat.id} variant="outline" className="text-[10px] py-0 px-2 font-medium border-muted">
                                                             {cat.name}
                                                         </Badge>
                                                     ))}

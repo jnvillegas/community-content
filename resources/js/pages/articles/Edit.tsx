@@ -117,7 +117,7 @@ export default function Edit({ article, categories, tags }: Props) {
 
             <form onSubmit={handleSubmit} className="min-h-screen bg-[#F8F9FA] dark:bg-gray-950/20">
                 {/* Fixed Top bar for actions */}
-                <div className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-gray-100 bg-white/80 px-4 backdrop-blur-md dark:border-gray-800 dark:bg-gray-950/80 md:px-8">
+                <div className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-muted bg-background/80 px-4 backdrop-blur-md dark:bg-card/80 md:px-8">
                     <div className="flex items-center gap-4">
                         <Button variant="ghost" size="sm" asChild className="text-gray-500">
                             <Link href="/articles">
@@ -140,7 +140,7 @@ export default function Edit({ article, categories, tags }: Props) {
                         <Button
                             disabled={processing}
                             type="submit"
-                            className="bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/20 font-bold h-9 px-6"
+                            className="font-bold h-9 px-6"
                         >
                             <Save className="mr-2 h-4 w-4" />
                             Update Article
@@ -164,7 +164,7 @@ export default function Edit({ article, categories, tags }: Props) {
 
                         {/* Editor Canvas */}
                         <Card className="border-none shadow-sm overflow-hidden min-h-[500px]">
-                            <CardHeader className="bg-gray-50/50 dark:bg-gray-900/50 border-b border-gray-100 dark:border-gray-800 p-3">
+                            <CardHeader className="bg-background/50 dark:bg-card/50 border-b border-muted p-3">
                                 <div className="flex items-center gap-1">
                                     <span className="text-xs font-bold uppercase tracking-wider text-gray-500">Rich Text Editor</span>
                                 </div>
@@ -179,7 +179,7 @@ export default function Edit({ article, categories, tags }: Props) {
 
                         {/* SEO Section */}
                         <Card className="border-none shadow-sm overflow-hidden border-t-4 border-t-blue-500">
-                            <CardHeader className="p-6 bg-blue-50/20">
+                            <CardHeader className="p-6 bg-background/50">
                                 <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-blue-600">
                                     <BarChart3 className="h-4 w-4" />
                                     SEO Configuration
@@ -188,7 +188,7 @@ export default function Edit({ article, categories, tags }: Props) {
                             <CardContent className="p-6 space-y-6">
                                 <div className="space-y-2">
                                     <Label className="text-xs font-bold uppercase text-gray-500">Google Result View</Label>
-                                    <div className="rounded-lg border border-gray-100 bg-white p-4 shadow-sm dark:bg-gray-950 dark:border-gray-800">
+                                    <div className="rounded-lg border border-muted bg-background p-4 shadow-sm dark:bg-card">
                                         <div className="text-blue-700 text-xl font-medium mb-1 truncate">{data.meta_title || data.title}</div>
                                         <div className="text-green-700 text-sm mb-1">yourdomain.com › blog › {article.slug}</div>
                                         <div className="text-gray-500 text-sm line-clamp-2">{data.meta_description || 'Write a meta description...'}</div>
@@ -269,7 +269,7 @@ export default function Edit({ article, categories, tags }: Props) {
                             </CardHeader>
                             <CardContent className="p-6 pt-0">
                                 <div
-                                    className="aspect-video w-full rounded-xl border-2 border-dashed border-gray-100 bg-gray-50/50 flex flex-col items-center justify-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/30 transition-all dark:border-gray-800 dark:bg-gray-950/50 overflow-hidden relative group"
+                                    className="aspect-video w-full rounded-xl border-2 border-dashed border-muted bg-background/50 flex flex-col items-center justify-center cursor-pointer hover:border-muted/80 hover:bg-background transition-all dark:bg-card/50 overflow-hidden relative group"
                                     onClick={() => document.getElementById('image-upload')?.click()}
                                 >
                                     {data.featured_image ? (

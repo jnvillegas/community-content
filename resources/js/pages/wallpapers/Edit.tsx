@@ -66,7 +66,7 @@ export default function Edit({ wallpaper }: Props) {
 
             <form onSubmit={handleSubmit} className="min-h-screen bg-[#F8F9FA] dark:bg-gray-950/20">
                 {/* Fixed Top bar for actions */}
-                <div className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-gray-100 bg-white/80 px-4 backdrop-blur-md dark:border-gray-800 dark:bg-gray-950/80 md:px-8">
+                <div className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-muted bg-background/80 px-4 backdrop-blur-md dark:bg-card/80 md:px-8">
                     <div className="flex items-center gap-4">
                         <Button variant="ghost" size="sm" asChild className="text-gray-500">
                             <Link href="/wallpapers">
@@ -88,7 +88,7 @@ export default function Edit({ wallpaper }: Props) {
                         <Button
                             disabled={processing}
                             type="submit"
-                            className="bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/20 font-bold h-9 px-6"
+                            className="font-bold h-9 px-6"
                         >
                             <Save className="mr-2 h-4 w-4" />
                             Update Wallpaper

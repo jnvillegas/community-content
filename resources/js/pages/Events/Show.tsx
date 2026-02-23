@@ -119,7 +119,7 @@ export default function Show({ event: initialEvent, registrations_count, can_reg
 
             <div className="min-h-screen ">
                 {/* Hero Banner */}
-                <div className="relative h-[300px] md:h-[450px] w-full overflow-hidden bg-gray-900">
+                <div className="relative h-[500px] md:h-[450px] w-full overflow-hidden bg-gray-900">
                     <img
                         src={event.cover_image || '/images/event-placeholder.jpg'}
                         alt={event.title}
@@ -138,7 +138,7 @@ export default function Show({ event: initialEvent, registrations_count, can_reg
 
                     <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 z-10 text-white">
                         <div className="max-w-7xl mx-auto w-full">
-                            <div className="flex flex-wrap gap-2 mb-6">
+                            <div className="flex flex-wrap gap-2 mb-2">
                                 <Badge className="bg-[#1d9bf0] hover:bg-[#1a87cb] text-white border-none text-sm font-bold py-1.5 px-4">
                                     {event.type}
                                 </Badge>
@@ -153,7 +153,16 @@ export default function Show({ event: initialEvent, registrations_count, can_reg
                                     </div>
                                     <div>
                                         <p className="text-xs text-gray-300 uppercase tracking-widest">Fecha</p>
-                                        <p>{format(new Date(event.start_date), 'd MMM yyyy', { locale: es })}</p>
+                                        <div className="flex gap-2">
+                                            <p>{format(new Date(event.start_date), 'd MMM yyyy', { locale: es })}</p>
+
+                                            {event.end_date && new Date(event.end_date).toDateString() !== new Date(event.start_date).toDateString() && (
+                                                <>
+                                                    <p>-</p>
+                                                    <p>{format(new Date(event.end_date), 'd MMM yyyy', { locale: es })}</p>
+                                                </>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3">
@@ -161,19 +170,32 @@ export default function Show({ event: initialEvent, registrations_count, can_reg
                                         <Clock className="w-5 h-5" />
                                     </div>
                                     <div>
-                                        <p className="text-xs text-gray-300 uppercase tracking-widest">Hora</p>
-                                        <p>{format(new Date(event.start_date), 'HH:mm', { locale: es })} hs</p>
+                                        <p className="text-xs text-gray-300 uppercase tracking-widest">Horario</p>
+                                        <div className='flex gap-2'>
+                                            <p>{format(new Date(event.start_date), 'HH:mm', { locale: es })} hs</p>
+
+                                            {event.end_date && (
+                                                <>
+                                                    <p>-</p>
+                                                    <p>{format(new Date(event.end_date), 'HH:mm', { locale: es })} hs</p>
+                                                </>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
-                                        {isVirtual ? <Clock className="w-5 h-5" /> : <MapPin className="w-5 h-5" />}
+
+
+                                {event.location && (
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
+                                            {isVirtual ? <Clock className="w-5 h-5" /> : <MapPin className="w-5 h-5" />}
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-gray-300 uppercase tracking-widest">Ubicación</p>
+                                            <p>{isVirtual ? 'Online' : (event.location || 'Por definir')}</p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className="text-xs text-gray-300 uppercase tracking-widest">Ubicación</p>
-                                        <p>{isVirtual ? 'Online' : (event.location || 'Por definir')}</p>
-                                    </div>
-                                </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -361,6 +383,19 @@ export default function Show({ event: initialEvent, registrations_count, can_reg
                                                     </p>
                                                 )}
                                             </div>
+                                        )}
+                                        {event.location_url && !isVirtual && (
+                                            <Button
+                                                variant="outline"
+                                                className="w-full border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-zinc-800 "
+                                                size="lg"
+                                                asChild
+                                            >
+                                                <a href={event.location_url} target="_blank" rel="noopener noreferrer">
+                                                    <MapPin className="w-4 h-4 mr-2" />
+                                                    Cómo llegar
+                                                </a>
+                                            </Button>
                                         )}
                                     </div>
 

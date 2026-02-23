@@ -51,7 +51,7 @@ export default function Show({ article }: Props) {
 
             <article className="min-h-screen bg-white dark:bg-gray-950">
                 {/* Fixed Sub-header for viewing mode */}
-                <div className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-gray-100 bg-white/80 px-4 backdrop-blur-md dark:border-gray-800 dark:bg-gray-950/80 md:px-8">
+                <div className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-muted bg-background/80 px-4 backdrop-blur-md dark:bg-card/80 md:px-8">
                     <div className="flex items-center gap-4">
                         <Button variant="ghost" size="sm" asChild className="text-gray-500">
                             <Link href="/articles">
@@ -65,7 +65,7 @@ export default function Show({ article }: Props) {
                         <Button variant="ghost" size="icon" className="text-gray-500">
                             <Share2 className="h-4 w-4" />
                         </Button>
-                        <Button asChild variant="outline" size="sm" className="font-bold border-gray-200">
+                        <Button asChild variant="outline" size="sm" className="font-bold border-muted">
                             <Link href={`/articles/${article.id}/edit`}>Edit Post</Link>
                         </Button>
                     </div>
@@ -75,7 +75,7 @@ export default function Show({ article }: Props) {
                     {/* Categories */}
                     <div className="flex flex-wrap gap-2 mb-6">
                         {article.categories.map(cat => (
-                            <Badge key={cat.id} variant="secondary" className="bg-blue-50 text-blue-600 hover:bg-blue-100 border-none px-3 font-bold text-[10px] uppercase tracking-widest">
+                            <Badge key={cat.id} variant="secondary" className="bg-background text-foreground border-muted px-3 font-bold text-[10px] uppercase tracking-widest">
                                 {cat.name}
                             </Badge>
                         ))}
@@ -89,7 +89,7 @@ export default function Show({ article }: Props) {
                     {/* Meta Info */}
                     <div className="flex flex-wrap items-center gap-6 mb-12 text-sm text-gray-500">
                         <div className="flex items-center gap-3">
-                            <Avatar className="h-10 w-10 border border-gray-100">
+                            <Avatar className="h-10 w-10 border border-muted">
                                 <AvatarImage src={article.author?.avatar} />
                                 <AvatarFallback className="bg-gray-100 text-gray-700 font-bold">
                                     {article.author?.name?.charAt(0) || 'U'}
@@ -131,14 +131,14 @@ export default function Show({ article }: Props) {
 
                     {/* Tags */}
                     {article.tags.length > 0 && (
-                        <div className="mt-20 pt-10 border-t border-gray-100 dark:border-gray-800">
+                        <div className="mt-20 pt-10 border-t border-muted">
                             <div className="flex flex-wrap gap-2">
                                 <span className="text-sm font-bold text-gray-400 uppercase tracking-widest mr-2 flex items-center">
                                     <Tag className="h-3.5 w-3.5 mr-2" />
                                     Tags:
                                 </span>
                                 {article.tags.map(tag => (
-                                    <Badge key={tag.id} variant="outline" className="rounded-full px-4 py-1 text-xs font-bold border-gray-100 text-gray-500">
+                                    <Badge key={tag.id} variant="outline" className="rounded-full px-4 py-1 text-xs font-bold border-muted">
                                         #{tag.name}
                                     </Badge>
                                 ))}
@@ -147,15 +147,15 @@ export default function Show({ article }: Props) {
                     )}
 
                     {/* Share Section */}
-                    <div className="mt-12 p-8 rounded-3xl bg-gray-50 dark:bg-gray-900/50 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div className="mt-12 p-8 rounded-3xl bg-background dark:bg-card flex flex-col md:flex-row items-center justify-between gap-6">
                         <div className="text-center md:text-left">
                             <h4 className="font-black text-gray-900 dark:text-white">Did you like this article?</h4>
                             <p className="text-sm text-gray-500">Share it with your community.</p>
                         </div>
                         <div className="flex gap-3">
-                            <Button variant="outline" className="rounded-full w-12 h-12 p-0 border-gray-200"><Facebook className="h-5 w-5 fill-current" /></Button>
-                            <Button variant="outline" className="rounded-full w-12 h-12 p-0 border-gray-200"><Twitter className="h-5 w-5 fill-current" /></Button>
-                            <Button variant="outline" className="rounded-full w-12 h-12 p-0 border-gray-200"><LinkIcon className="h-5 w-5" /></Button>
+                            <Button variant="outline" className="rounded-full w-12 h-12 p-0 border-muted"><Facebook className="h-5 w-5 fill-current" /></Button>
+                            <Button variant="outline" className="rounded-full w-12 h-12 p-0 border-muted"><Twitter className="h-5 w-5 fill-current" /></Button>
+                            <Button variant="outline" className="rounded-full w-12 h-12 p-0 border-muted"><LinkIcon className="h-5 w-5" /></Button>
                         </div>
                     </div>
                 </div>

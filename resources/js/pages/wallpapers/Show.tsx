@@ -32,11 +32,11 @@ export default function Show({ wallpaper }: Props) {
 
     const getCategoryBadge = (category: Wallpaper['category']) => {
         const colors = {
-            mobile: 'bg-blue-100 text-blue-700',
-            desktop: 'bg-purple-100 text-purple-700',
-            both: 'bg-indigo-100 text-indigo-700',
+            mobile: 'bg-background text-foreground border-muted',
+            desktop: 'bg-background text-foreground border-muted',
+            both: 'bg-background text-foreground border-muted',
         };
-        return <Badge className={`${colors[category]} hover:${colors[category]} border-none capitalize`}>{category}</Badge>;
+        return <Badge className={`${colors[category]} hover:${colors[category]} border capitalize`}>{category}</Badge>;
     };
 
     return (
@@ -45,7 +45,7 @@ export default function Show({ wallpaper }: Props) {
 
             <div className="min-h-screen bg-[#F8F9FA] dark:bg-gray-950/20">
                 {/* Fixed Top bar */}
-                <div className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-gray-100 bg-white/80 px-4 backdrop-blur-md dark:border-gray-800 dark:bg-gray-950/80 md:px-8">
+                <div className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-muted bg-background/80 px-4 backdrop-blur-md dark:bg-card/80 md:px-8">
                     <div className="flex items-center gap-4">
                         <Button variant="ghost" size="sm" asChild className="text-gray-500">
                             <Link href="/wallpapers">
@@ -66,7 +66,7 @@ export default function Show({ wallpaper }: Props) {
                                 View Full Size
                             </a>
                         </Button>
-                        <Button asChild className="bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/20 font-bold">
+                        <Button asChild className="font-bold h-9 px-6">
                             <Link href={`/wallpapers/${wallpaper.id}/edit`}>
                                 <Edit className="mr-2 h-4 w-4" />
                                 Edit

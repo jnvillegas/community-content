@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Heart, MessageCircle, Send, X, Share2 } from "lucide-react";
+import { Heart, MessageCircle, Send, X, Share2, ArrowRightCircle, ArrowLeftCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import { router, usePage } from "@inertiajs/react";
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 interface Comment {
     id: number;
@@ -44,6 +46,7 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const { auth } = usePage().props as any;
+    const [commentsOpen, setCommentsOpen] = useState(false);
 
     useEffect(() => {
         setCurrentImageIndex(0);
@@ -68,15 +71,15 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
     };
 
     // Auto-advance logic
-    useEffect(() => {
-        if (!isOpen || !story) return;
+    // useEffect(() => {
+    //     if (!isOpen || !story) return;
 
-        const timer = setTimeout(() => {
-            nextImage();
-        }, 5000); // 5 seconds per image
+    //     const timer = setTimeout(() => {
+    //         nextImage();
+    //     }, 5000);
 
-        return () => clearTimeout(timer);
-    }, [currentImageIndex, isOpen, story?.id]);
+    //     return () => clearTimeout(timer);
+    // }, [currentImageIndex, isOpen, story?.id]);
 
     if (!story) return null;
 
@@ -107,9 +110,14 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
         });
     };
 
+    console.log(story);
+
+
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+
             <DialogContent className="sm:max-w-md p-0 overflow-hidden gap-0 bg-black border-none h-[90vh] flex flex-col focus:outline-none focus-visible:ring-0">
+
                 <DialogHeader className="sr-only">
                     <DialogTitle>{story.title}</DialogTitle>
                     <DialogDescription>{story.description}</DialogDescription>
@@ -131,14 +139,14 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
                 {/* Header */}
                 <div className="absolute top-6 left-0 right-0 z-50 flex items-center justify-between px-4 text-white">
                     <div className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10 border-2 border-white/80">
+                        {/* <Avatar className="h-10 w-10 border-2 border-white/80">
                             <AvatarImage src={story.author.avatar} />
                             <AvatarFallback>{story.author.name[0]}</AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col">
                             <span className="text-sm font-bold leading-none drop-shadow-md">{story.author.name}</span>
                             <span className="text-xs text-white/70 mt-1 drop-shadow-md">{story.created_at}</span>
-                        </div>
+                        </div> */}
                     </div>
                     <button onClick={onClose} className="p-1 hover:bg-white/10 rounded-full transition-colors">
                         <X className="w-6 h-6 drop-shadow-md" />
@@ -155,14 +163,25 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
                     />
 
                     {/* Navigation Tap Areas */}
-                    <div
-                        className="absolute inset-y-0 left-0 w-1/3 cursor-pointer z-10"
+
+                    <button className="absolute left-2 top-[50%] z-999" onClick={(e) => { e.stopPropagation(); nextImage(); }} >
+                        <ArrowLeftCircle></ArrowLeftCircle>
+                    </button>
+
+                    <button className="absolute right-2 top-[50%] z-999" onClick={(e) => { e.stopPropagation(); nextImage(); }} >
+                        <ArrowRightCircle></ArrowRightCircle>
+                    </button>
+
+
+
+                    {/* <div
+                        className="absolute left-8 w-8 h-8 top-0 z-30"
                         onClick={(e) => { e.stopPropagation(); prevImage(); }}
-                    />
-                    <div
-                        className="absolute inset-y-0 right-0 w-1/3 cursor-pointer z-10"
+                    /> */}
+                    {/* <div
+                        className="absolute right-8 w-1/3 cursor-pointer z-10"
                         onClick={(e) => { e.stopPropagation(); nextImage(); }}
-                    />
+                    /> */}
                 </div>
 
                 {/* Bottom Actions & Input */}
@@ -186,11 +205,69 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
                             <Heart className={`w-7 h-7 filter drop-shadow-lg transition-all ${story.is_liked ? 'fill-red-500 text-red-500' : 'text-white'}`} />
                         </button>
 
-                        <button className="p-1 hover:scale-110 transition-transform">
-                            <Share2 className="w-7 h-7 text-white filter drop-shadow-lg" />
+                        <button
+                            onClick={() => setCommentsOpen(true)}
+                            className="p-1 hover:scale-110 transition-transform"
+                            aria-label="Ver comentarios"
+                        >
+                            <MessageCircle className="w-7 h-7 text-white filter drop-shadow-lg" />
                         </button>
                     </div>
                 </div>
+                {/* Comments modal (inside story) */}
+                <Dialog open={commentsOpen} onOpenChange={(open) => !open && setCommentsOpen(false)}>
+                    <DialogContent className="sm:max-w-md top-[73%]">
+                        <DialogHeader>
+                            <DialogTitle>Comentarios</DialogTitle>
+                            {/* <DialogDescription>
+                                <div className="flex items-center gap-3 mt-2">
+                                    <Heart className="w-5 h-5 text-red-500" />
+                                    <span className="font-bold">{story.likes_count ?? 0} likes</span>
+                                </div>
+                            </DialogDescription> */}
+                        </DialogHeader>
+
+                        <div className="p-2">
+                            <ScrollArea className="h-64">
+                                <div className="space-y-4">
+                                    {story.comments && story.comments.length > 0 ? (
+                                        story.comments.map((c: Comment) => (
+                                            <div key={c.id} className="flex items-start gap-3">
+                                                <Avatar className="h-8 w-8">
+                                                    {/* <AvatarImage src={c.user.avatar} /> */}
+                                                    <AvatarFallback>{c.user.name?.charAt(0)}</AvatarFallback>
+                                                </Avatar>
+                                                <div className="flex-1">
+                                                    <div className="flex items-center justify-between">
+                                                        <span className="font-medium">{c.user.name}</span>
+                                                        {/* <span className="text-xs text-muted-foreground">{format(new Date(c.created_at), 'd MMM yyyy HH:mm', { locale: es })}</span> */}
+                                                    </div>
+                                                    <p className="text-sm text-muted-foreground mt-1">{c.content}</p>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="text-center text-sm text-muted-foreground py-8">No hay comentarios aún</div>
+                                    )}
+                                </div>
+                            </ScrollArea>
+
+                            {/* Quick comment input inside comments modal */}
+                            {auth.user && (
+                                <form onSubmit={submitComment} className="mt-4 flex items-center gap-2">
+                                    <Input
+                                        placeholder="Escribe un comentario"
+                                        value={comment}
+                                        onChange={(e) => setComment(e.target.value)}
+                                    />
+                                    <Button type="submit" disabled={isSubmitting}>
+                                        <Send className="w-4 h-4" />
+                                    </Button>
+                                </form>
+                            )}
+                        </div>
+                    </DialogContent>
+                </Dialog>
             </DialogContent>
         </Dialog>
     );

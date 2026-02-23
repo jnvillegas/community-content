@@ -51,7 +51,7 @@ export default function Show({ video, relatedVideos }: Props) {
             <div className="bg-[#F8F9FA] dark:bg-gray-950/20 min-h-screen">
 
                 {/* Header Action Bar - Matches Create/Edit/Articles */}
-                <div className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-gray-100 bg-white/80 px-4 backdrop-blur-md dark:border-gray-800 dark:bg-gray-950/80 md:px-8">
+                <div className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-muted bg-background/80 px-4 backdrop-blur-md dark:bg-card/80 md:px-8">
                     <div className="flex items-center gap-4">
                         <Button variant="ghost" size="sm" asChild className="text-gray-500 hover:text-gray-900 rounded-lg">
                             <Link href="/videos">
@@ -71,7 +71,7 @@ export default function Show({ video, relatedVideos }: Props) {
                             <Share2 className="mr-2 h-4 w-4" />
                             Share
                         </Button>
-                        <Button asChild className="bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/20 font-bold h-9 px-6 transition-all">
+                        <Button asChild className="font-bold h-9 px-6 transition-all">
                             <Link href={`/videos/${video.id}/edit`}>
                                 <Edit className="mr-2 h-4 w-4" />
                                 Edit Video
@@ -86,7 +86,7 @@ export default function Show({ video, relatedVideos }: Props) {
                     <div className="lg:col-span-8 space-y-6">
 
                         {/* Immersive Video Player */}
-                        <div className="w-full aspect-video rounded-xl overflow-hidden bg-black shadow-lg relative group border border-gray-100 dark:border-gray-800">
+                        <div className="w-full aspect-video rounded-xl overflow-hidden bg-black shadow-lg relative group border border-muted">
                             {video.youtube_id ? (
                                 <iframe
                                     src={embedUrl}
@@ -102,15 +102,15 @@ export default function Show({ video, relatedVideos }: Props) {
                         </div>
 
                         {/* Video Info Header */}
-                        <div className="space-y-6 bg-white dark:bg-gray-900 p-6 md:p-8 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm">
+                        <div className="space-y-6 bg-background dark:bg-card p-6 md:p-8 rounded-xl border border-muted shadow-sm">
 
                             <div className="space-y-4">
                                 <div className="flex flex-wrap gap-2 items-center">
-                                    <Badge variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-100 border-none px-3 py-1 font-bold text-[10px] uppercase tracking-wide rounded-md">
+                                    <Badge variant="secondary" className="bg-background text-foreground border-muted px-3 py-1 font-bold text-[10px] uppercase tracking-wide rounded-md">
                                         Video
                                     </Badge>
                                     {video.categories.map(cat => (
-                                        <Badge key={cat.id} variant="outline" className="text-gray-500 font-medium text-[10px] uppercase tracking-wide rounded-md">
+                                        <Badge key={cat.id} variant="outline" className="text-muted-foreground font-medium text-[10px] uppercase tracking-wide rounded-md border-muted">
                                             {cat.name}
                                         </Badge>
                                     ))}
@@ -127,9 +127,9 @@ export default function Show({ video, relatedVideos }: Props) {
                                 </h1>
                             </div>
 
-                            <div className="flex items-center justify-between py-4 border-y border-gray-100 dark:border-gray-800">
+                            <div className="flex items-center justify-between py-4 border-y border-muted">
                                 <div className="flex items-center gap-3">
-                                    <Avatar className="h-10 w-10 border border-gray-100">
+                                    <Avatar className="h-10 w-10 border border-muted">
                                         <AvatarImage src={video.author?.avatar} />
                                         <AvatarFallback className="bg-blue-600 text-white font-bold text-xs">{video.author?.name?.charAt(0)}</AvatarFallback>
                                     </Avatar>
