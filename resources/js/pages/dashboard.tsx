@@ -52,15 +52,27 @@ interface DashboardProps {
         links: any[];
     };
     stories: any[];
+    courses: {
+        id: number;
+        title: string;
+        description: string;
+        cover_image: string;
+        slug: string;
+        instructor: {
+            name: string;
+            avatar: string;
+        };
+        modules_count: number;
+    }[];
     auth: any;
 }
 
 import StoriesBar from '@/components/feed/stories-bar';
 import ActivityFeed from '@/components/feed/activity-feed';
 
-export default function Dashboard({ upcomingEvents, activities, stories, auth }: DashboardProps) {
+export default function Dashboard({ upcomingEvents, activities, stories, courses, auth }: DashboardProps) {
     const [date, setDate] = useState<Date | undefined>(new Date());
-    const [sidebarTab, setSidebarTab] = useState<'upcoming' | 'calendar'>('upcoming');
+    const [sidebarTab, setSidebarTab] = useState<'upcoming' | 'calendar'>('calendar');
 
     const breadcrumbs: BreadcrumbItem[] = [
         {
@@ -80,7 +92,7 @@ export default function Dashboard({ upcomingEvents, activities, stories, auth }:
 
                     {/* Feed */}
                     <div className="mb-8">
-                        <ActivityFeed activities={activities} />
+                        <ActivityFeed activities={activities} courses={courses} />
                     </div>
                 </div>
 
@@ -89,16 +101,6 @@ export default function Dashboard({ upcomingEvents, activities, stories, auth }:
                     <div className="space-y-6 h-full sticky top-24">
 
                         <div className="flex items-center p-1 bg-gray-100 dark:bg-zinc-900 rounded-xl">
-                            <button
-                                onClick={() => setSidebarTab('upcoming')}
-                                className={`flex-1 flex items-center justify-center gap-2 p-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${sidebarTab === 'upcoming'
-                                    ? 'bg-white dark:bg-zinc-700 text-[#1d9bf0]shadow-sm'
-                                    : 'text-gray-500 hover:text-gray-900 dark:hover:text-gray-300'
-                                    }`}
-                            >
-                                <Rocket className="w-3 h-3" />
-                                Upcoming
-                            </button>
                             <button
                                 onClick={() => setSidebarTab('calendar')}
                                 className={`flex-1 flex items-center justify-center gap-2 p-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${sidebarTab === 'calendar'
@@ -109,7 +111,34 @@ export default function Dashboard({ upcomingEvents, activities, stories, auth }:
                                 <Clock className="w-3 h-3" />
                                 Calendar
                             </button>
+                            <button
+                                onClick={() => setSidebarTab('upcoming')}
+                                className={`flex-1 flex items-center justify-center gap-2 p-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${sidebarTab === 'upcoming'
+                                    ? 'bg-white dark:bg-zinc-700 text-[#1d9bf0]shadow-sm'
+                                    : 'text-gray-500 hover:text-gray-900 dark:hover:text-gray-300'
+                                    }`}
+                            >
+                                <Rocket className="w-3 h-3" />
+                                Upcoming
+                            </button>
                         </div>
+
+                        {sidebarTab === 'calendar' && (
+                            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                                <div className="flex items-center justify-between">
+                                    <h4 className="text-sm font-black uppercase tracking-widest text-gray-500">Calendar View</h4>
+                                    <Button variant="ghost" size="sm" className="h-8 text-[11px] font-bold text-[#1d9bf0]">Full View</Button>
+                                </div>
+                                <div className="rounded-2xl border border-gray-100 p-2 shadow-sm dark:border-gray-900 bg-gray-50/30 dark:bg-gray-900/40">
+                                    <Calendar
+                                        mode="single"
+                                        selected={date}
+                                        onSelect={setDate}
+                                        className="rounded-xl mx-auto"
+                                    />
+                                </div>
+                            </div>
+                        )}
 
                         {sidebarTab === 'upcoming' && (
                             <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
@@ -146,22 +175,7 @@ export default function Dashboard({ upcomingEvents, activities, stories, auth }:
                             </div>
                         )}
 
-                        {sidebarTab === 'calendar' && (
-                            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                                <div className="flex items-center justify-between">
-                                    <h4 className="text-sm font-black uppercase tracking-widest text-gray-500">Calendar View</h4>
-                                    <Button variant="ghost" size="sm" className="h-8 text-[11px] font-bold text-[#1d9bf0]">Full View</Button>
-                                </div>
-                                <div className="rounded-2xl border border-gray-100 p-2 shadow-sm dark:border-gray-900 bg-gray-50/30 dark:bg-gray-900/40">
-                                    <Calendar
-                                        mode="single"
-                                        selected={date}
-                                        onSelect={setDate}
-                                        className="rounded-xl mx-auto"
-                                    />
-                                </div>
-                            </div>
-                        )}
+
 
                     </div>
                 </aside>

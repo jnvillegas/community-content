@@ -149,12 +149,89 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
     const scroll = (direction: 'left' | 'right') => {
         if (scrollContainerRef.current) {
             stopInertia();
-            const scrollAmount = 370;
-            scrollContainerRef.current.scrollBy({
+            const el = scrollContainerRef.current;
+            const scrollAmount = Math.min(370, el.clientWidth * 0.9);
+            el.scrollBy({
                 left: direction === 'left' ? -scrollAmount : scrollAmount,
-                behavior: 'smooth'
+                behavior: 'smooth',
             });
         }
+    };
+
+    // Scroll state for disabling buttons
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
+    const [canScrollRight, setCanScrollRight] = useState(false);
+
+    useEffect(() => {
+        const el = scrollContainerRef.current;
+        if (!el) return;
+
+        const update = () => {
+            setCanScrollLeft(el.scrollLeft > 0);
+            setCanScrollRight(el.scrollWidth > el.clientWidth + el.scrollLeft + 1);
+        };
+
+        update();
+        el.addEventListener('scroll', update, { passive: true });
+
+        // Resize observer in case children change
+        const ro = new ResizeObserver(update);
+        ro.observe(el);
+
+        window.addEventListener('resize', update);
+
+        return () => {
+            el.removeEventListener('scroll', update);
+            ro.disconnect();
+            window.removeEventListener('resize', update);
+        };
+    }, [stories]);
+
+    // Touch handlers for mobile
+    const handleTouchStart = (e: React.TouchEvent) => {
+        if (!scrollContainerRef.current) return;
+        stopInertia();
+        setIsDragging(true);
+        const touch = e.touches[0];
+        setStartX(touch.pageX - scrollContainerRef.current.offsetLeft);
+        setScrollLeft(scrollContainerRef.current.scrollLeft);
+        setDraggedDistance(0);
+
+        lastXRef.current = touch.pageX;
+        lastTimeRef.current = performance.now();
+        velocityRef.current = 0;
+        velocitySamplesRef.current = [];
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        if (!isDragging || !scrollContainerRef.current) return;
+        const touch = e.touches[0];
+        const x = touch.pageX - scrollContainerRef.current.offsetLeft;
+        const now = performance.now();
+        const dt = now - lastTimeRef.current;
+
+        if (dt > 0) {
+            const dx = touch.pageX - lastXRef.current;
+            const currentVelocity = dx / dt;
+            velocitySamplesRef.current.push(currentVelocity);
+            if (velocitySamplesRef.current.length > 8) velocitySamplesRef.current.shift();
+        }
+
+        const walk = x - startX;
+        scrollContainerRef.current.scrollLeft = scrollLeft - walk;
+        setDraggedDistance(Math.abs(x - startX));
+
+        lastXRef.current = touch.pageX;
+        lastTimeRef.current = now;
+    };
+
+    const handleTouchEnd = () => {
+        setIsDragging(false);
+        if (velocitySamplesRef.current.length > 0) {
+            const sum = velocitySamplesRef.current.reduce((a, b) => a + b, 0);
+            velocityRef.current = (sum / velocitySamplesRef.current.length) * 1.6;
+        }
+        if (Math.abs(velocityRef.current) > 0.1) startInertia();
     };
 
     return (
@@ -165,16 +242,18 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="h-10 w-10 rounded-full bg-white shadow-md hover:bg-gray-50 dark:bg-background cursor-pointer"
+                        disabled={!canScrollLeft}
                         onClick={() => scroll('left')}
+                        className={`h-10 w-10 rounded-full bg-white shadow-md dark:bg-background transition-opacity ${!canScrollLeft ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-50'}`}
                     >
                         <ChevronLeft className="h-6 w-6 text-gray-600 dark:text-gray-300" />
                     </Button>
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="h-10 w-10 rounded-full bg-white shadow-md hover:bg-gray-50 dark:bg-background cursor-pointer"
+                        disabled={!canScrollRight}
                         onClick={() => scroll('right')}
+                        className={`h-10 w-10 rounded-full bg-white shadow-md dark:bg-background transition-opacity ${!canScrollRight ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-50'}`}
                     >
                         <ChevronRight className="h-6 w-6 text-gray-600 dark:text-gray-300" />
                     </Button>
@@ -184,6 +263,9 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
             <div
                 ref={scrollContainerRef}
                 onMouseDown={handleMouseDown}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
                 className={`flex w-full items-center gap-5 overflow-x-auto pb-4 scrollbar-hide select-none ${(isDragging || isAnimating) ? 'snap-none' : 'snap-x snap-mandatory'
                     }`}
                 style={{
@@ -205,7 +287,7 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
                     }
                 `}</style>
 
-                <div className="snap-start">
+                <div key="create" className="snap-start">
                     <div
                         onClick={() => setIsCreateModalOpen(true)}
                         className='flex items-center justify-center w-24 h-32 z-10 cursor-pointer border-dashed border-2 border-gray-500 rounded-2xl'
@@ -214,11 +296,9 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
                     </div>
                     <p className="text-xs text-gray-500 mt-2 text-center">Add Story</p>
                 </div>
-
                 {stories.map((story) => (
-                    <div>
+                    <div key={story.id} className="snap-start">
                         <div
-                            key={story.id}
                             onClick={() => handleCardClick(story.id)}
                             className='flex items-center justify-center w-24 h-32 z-10 cursor-pointer rounded-2xl'
                         >

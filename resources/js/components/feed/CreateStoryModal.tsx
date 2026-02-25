@@ -84,7 +84,7 @@ export default function CreateStoryModal({ isOpen, onClose }: CreateStoryModalPr
                         {errors.title && <p className="text-xs text-red-500">{errors.title}</p>}
                     </div>
 
-                    <div className="space-y-2 flex flex-col gap-2">
+                    {/* <div className="space-y-2 flex flex-col gap-2">
                         <Label htmlFor="description">Descripción (opcional)</Label>
                         <Textarea
                             id="description"
@@ -94,7 +94,7 @@ export default function CreateStoryModal({ isOpen, onClose }: CreateStoryModalPr
                             className="resize-none"
                             rows={2}
                         />
-                    </div>
+                    </div> */}
 
                     <div className="space-y-4 flex flex-col flex-wrap gap-4">
                         <Label>Imágenes de la historia</Label>

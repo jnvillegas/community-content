@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Activity;
+use App\Models\Course;
 use App\Models\Event;
 use App\Models\Story;
 use Illuminate\Http\Request;
@@ -158,10 +159,31 @@ class DashboardController extends Controller
                 ];
             });
 
+        $courses = Course::with(['instructor', 'modules'])
+            ->where('status', 'published')
+            ->latest()
+            ->take(6)
+            ->get()
+            ->map(function ($course) {
+                return [
+                    'id' => $course->id,
+                    'title' => $course->title,
+                    'description' => $course->description,
+                    'cover_image' => $course->cover_image,
+                    'slug' => $course->slug,
+                    'instructor' => [
+                        'name' => $course->instructor->name,
+                        'avatar' => $course->instructor->profile_photo_url,
+                    ],
+                    'modules_count' => $course->modules->count(),
+                ];
+            });
+
         return Inertia::render('dashboard', [
             'upcomingEvents' => $upcomingEvents,
             'activities' => $activities,
             'stories' => $stories,
+            'courses' => $courses,
         ]);
     }
 

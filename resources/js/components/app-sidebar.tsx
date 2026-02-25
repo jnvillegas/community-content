@@ -29,7 +29,8 @@ import {
 import AppLogo from '@/components/app-logo';
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
-
+import { usePage } from '@inertiajs/react';
+import { type SharedData } from '@/types';
 import CreateStoryModal from './feed/CreateStoryModal';
 import { useState } from 'react';
 
@@ -40,11 +41,11 @@ const platformItems: NavItem[] = [
         href: dashboard(),
         icon: Home,
     },
-    {
-        title: 'Save',
-        href: '#',
-        icon: Bookmark,
-    },
+    // {
+    //     title: 'Save',
+    //     href: '#',
+    //     icon: Bookmark,
+    // },
 ];
 
 
@@ -66,9 +67,6 @@ const membershipItems: NavItem[] = [
         icon: Crown,
     },
 ];
-
-import { usePage } from '@inertiajs/react';
-import { type SharedData } from '@/types';
 
 // Members Section
 const membersItems: NavItem[] = [
@@ -145,22 +143,22 @@ const academyItems: NavItem[] = [
         href: '/academy',
         icon: GraduationCap,
     },
-    {
-        title: 'My Courses',
-        href: '#',
-        icon: Bookmark,
-    },
+    // {
+    //     title: 'My Courses',
+    //     href: '#',
+    //     icon: Bookmark,
+    // },
     {
         title: 'Academy Dashboard',
         href: '/admin/academy',
         icon: LayoutGrid,
-        // permission: 'manage academy', // Temporarily removed for verification
+        // permission: 'manage academy',
     },
     {
         title: 'Manage Courses',
         href: '/admin/academy/courses',
         icon: BookOpen,
-        // permission: 'manage academy', // Temporarily removed for verification
+        // permission: 'manage academy',
     },
 ];
 
@@ -263,22 +261,22 @@ export function AppSidebar() {
                 )}
 
                 {/* Community Section */}
-                <SidebarGroup className="border-t border-gray-200 dark:border-neutral-700">
+                {/* <SidebarGroup className="border-t border-gray-200 dark:border-neutral-700">
                     <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
                         Community
                     </SidebarGroupLabel>
                     <NavMain items={filterItems(communityItems)} />
-                </SidebarGroup>
+                </SidebarGroup> */}
 
                 {/* Membership Section */}
-                {filterItems(membershipItems).length > 0 && (
+                {/* {filterItems(membershipItems).length > 0 && (
                     <SidebarGroup className="border-t border-gray-200 dark:border-neutral-700">
                         <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
                             Membership
                         </SidebarGroupLabel>
                         <NavMain items={filterItems(membershipItems)} />
                     </SidebarGroup>
-                )}
+                )} */}
             </SidebarContent>
 
             <CreateStoryModal

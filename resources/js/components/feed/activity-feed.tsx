@@ -1,15 +1,37 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import FeedItem from './feed-item';
+import CourseCard from './course-card';
 import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 
 interface ActivityFeedProps {
     activities: {
         data: any[];
         links: any[];
     };
+    courses?: {
+        id: number;
+        title: string;
+        description: string;
+        cover_image: string;
+        slug: string;
+        instructor: {
+            name: string;
+            avatar: string;
+        };
+        modules_count: number;
+    }[];
 }
 
-export default function ActivityFeed({ activities }: ActivityFeedProps) {
+export default function ActivityFeed({ activities, courses = [] }: ActivityFeedProps) {
+    const [filter, setFilter] = useState<'all' | 'courses' | 'events'>('all');
+
+    const filterOptions = [
+        { value: 'all', label: 'Todos' },
+        { value: 'events', label: 'Eventos' },
+        { value: 'courses', label: 'Cursos' },
+    ] as const;
+
     if (!activities.data.length) {
         return (
             <div className="text-center py-10 text-gray-500">
@@ -50,14 +72,66 @@ export default function ActivityFeed({ activities }: ActivityFeedProps) {
 
     return (
         <div className="space-y-6">
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                Próximos Eventos
-            </h3>
+            {/* Filter Header */}
+            <div className="flex items-center gap-4">
+                <div className="h-[2px] bg-gradient-to-r from-gray-600 to-transparent flex-grow rounded-full"></div>
+                <select
+                    value={filter}
+                    onChange={(e) => setFilter(e.target.value as 'all' | 'courses' | 'events')}
+                    className="px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer"
+                >
+                    {filterOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </select>
+            </div>
 
-            <div className="flex flex-col items-center gap-6">
-                {upcoming.map((activity) => (
-                    <FeedItem key={activity.id} activity={activity} />
-                ))}
+            {/* Próximos Eventos */}
+            {(filter === 'all' || filter === 'events') && (
+                <div>
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                        Próximos Eventos
+                    </h3>
+
+                    <div className="flex flex-col items-center gap-6">
+                        {upcoming.length > 0 ? (
+                            upcoming.map((activity) => (
+                                <FeedItem key={activity.id} activity={activity} />
+                            ))
+                        ) : (
+                            <div className="text-center py-10 w-full text-gray-500">
+                                <p>No hay eventos proximos</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {/* Content */}
+            <div className="space-y-8">
+                {/* Cursos Disponibles */}
+                {(filter === 'all' || filter === 'courses') && courses.length > 0 && (
+                    <div className="space-y-4">
+                        <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                            Cursos Disponibles
+                        </h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {courses.map((course) => (
+                                <CourseCard key={course.id} course={course} />
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+
+                {/* Empty State */}
+                {filter === 'courses' && courses.length === 0 && (
+                    <div className="text-center py-10 text-gray-500">
+                        <p>No hay cursos disponibles</p>
+                    </div>
+                )}
             </div>
         </div>
     );

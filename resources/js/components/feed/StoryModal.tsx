@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Heart, MessageCircle, Send, X, Share2, ArrowRightCircle, ArrowLeftCircle } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { router, usePage } from "@inertiajs/react";
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -47,6 +47,9 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const { auth } = usePage().props as any;
     const [commentsOpen, setCommentsOpen] = useState(false);
+    const touchStartXRef = useRef<number | null>(null);
+    const lastTouchXRef = useRef<number | null>(null);
+    const TOUCH_THRESHOLD = 50;
 
     useEffect(() => {
         setCurrentImageIndex(0);
@@ -68,6 +71,40 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
         if (currentImageIndex > 0) {
             setCurrentImageIndex((prev) => prev - 1);
         }
+    };
+
+    // Touch swipe handlers for mobile
+    const handleTouchStart = (e: React.TouchEvent) => {
+        const t = e.touches[0];
+        touchStartXRef.current = t.clientX;
+        lastTouchXRef.current = t.clientX;
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        const t = e.touches[0];
+        lastTouchXRef.current = t.clientX;
+    };
+
+    const handleTouchEnd = () => {
+        if (touchStartXRef.current === null || lastTouchXRef.current === null) {
+            touchStartXRef.current = null;
+            lastTouchXRef.current = null;
+            return;
+        }
+
+        const dx = lastTouchXRef.current - touchStartXRef.current;
+        if (Math.abs(dx) > TOUCH_THRESHOLD) {
+            if (dx < 0) {
+                // swipe left -> next
+                nextImage();
+            } else {
+                // swipe right -> prev
+                prevImage();
+            }
+        }
+
+        touchStartXRef.current = null;
+        lastTouchXRef.current = null;
     };
 
     // Auto-advance logic
@@ -162,26 +199,26 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
                         className="w-full h-full object-contain animate-fade-in"
                     />
 
-                    {/* Navigation Tap Areas */}
+                    {/* Navigation overlays: visible on desktop (md+), hidden on mobile. Buttons placed outside the image area with semi-transparent bg */}
+                    <div className="hidden absolute w-full justify-between px-2 md:flex">
+                        <button
+                            aria-label="Anterior"
+                            onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                            className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                        >
+                            <ArrowLeftCircle className="w-7 h-7 text-white" />
+                        </button>
+                        <button
+                            aria-label="Siguiente"
+                            onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                            className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                        >
+                            <ArrowRightCircle className="w-7 h-7 text-white" />
+                        </button>
+                    </div>
 
-                    <button className="absolute left-2 top-[50%] z-999" onClick={(e) => { e.stopPropagation(); nextImage(); }} >
-                        <ArrowLeftCircle></ArrowLeftCircle>
-                    </button>
-
-                    <button className="absolute right-2 top-[50%] z-999" onClick={(e) => { e.stopPropagation(); nextImage(); }} >
-                        <ArrowRightCircle></ArrowRightCircle>
-                    </button>
-
-
-
-                    {/* <div
-                        className="absolute left-8 w-8 h-8 top-0 z-30"
-                        onClick={(e) => { e.stopPropagation(); prevImage(); }}
-                    /> */}
-                    {/* <div
-                        className="absolute right-8 w-1/3 cursor-pointer z-10"
-                        onClick={(e) => { e.stopPropagation(); nextImage(); }}
-                    /> */}
+                    {/* Touch swipe area for mobile (hidden overlays above are md+) */}
+                    <div className="absolute left-0 right-0 top-0 bottom-0 md:hidden" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd} />
                 </div>
 
                 {/* Bottom Actions & Input */}
