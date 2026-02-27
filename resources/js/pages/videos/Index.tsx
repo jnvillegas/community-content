@@ -164,6 +164,12 @@ export default function Index({ videos, filters = {} }: Props) {
                                             src={video.thumbnail_url || `https://img.youtube.com/vi/${video.youtube_id}/maxresdefault.jpg`}
                                             alt={video.title}
                                             className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-105"
+                                            onError={(e) => {
+                                                const target = e.target as HTMLImageElement;
+                                                if (target.src.includes('maxresdefault.jpg')) {
+                                                    target.src = `https://img.youtube.com/vi/${video.youtube_id}/hqdefault.jpg`;
+                                                }
+                                            }}
                                         />
                                     </Link>
 

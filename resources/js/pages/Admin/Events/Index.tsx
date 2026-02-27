@@ -33,7 +33,7 @@ interface Props extends PageProps {
 export default function Index({ events }: Props) {
     const handleDelete = (slug: string) => {
         if (confirm('Are you sure you want to delete this event?')) {
-            router.delete(`/ admin / events / ${slug} `);
+            router.delete(`/admin/events/${slug}`);
         }
     };
 

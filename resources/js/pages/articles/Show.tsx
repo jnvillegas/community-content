@@ -117,6 +117,17 @@ export default function Show({ article }: Props) {
                                 src={article.featured_image.startsWith('http') || article.featured_image.startsWith('/storage') ? article.featured_image : `/storage/${article.featured_image}`}
                                 className="w-full h-full object-cover"
                                 alt={article.title}
+                                onError={(e) => {
+                                    const target = e.target as HTMLImageElement;
+                                    target.style.display = 'none';
+                                    const parent = target.parentElement;
+                                    if (parent) {
+                                        const placeholder = document.createElement('div');
+                                        placeholder.className = "w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center text-gray-400";
+                                        placeholder.innerHTML = '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>';
+                                        parent.appendChild(placeholder);
+                                    }
+                                }}
                             />
                         </div>
                     )}

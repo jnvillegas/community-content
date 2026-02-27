@@ -30,6 +30,16 @@ export default function EventCard({ event }: EventCardProps) {
                         src={event.cover_image}
                         alt={event.title}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            const parent = target.parentElement;
+                            if (parent) {
+                                const placeholder = document.createElement('div');
+                                placeholder.className = "w-full h-full bg-gradient-to-br from-[#1a2a1a] to-[#0f0f0f]";
+                                parent.appendChild(placeholder);
+                            }
+                        }}
                     />
                 ) : (
                     <div className="w-full h-full bg-gradient-to-br from-[#1a2a1a] to-[#0f0f0f]" />
