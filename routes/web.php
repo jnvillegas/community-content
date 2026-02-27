@@ -76,6 +76,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/stories', [\App\Http\Controllers\StoryController::class, 'store'])->name('stories.store');
     Route::post('/stories/{story}/like', [\App\Http\Controllers\StoryController::class, 'like'])->name('stories.like');
     Route::post('/stories/{story}/comments', [\App\Http\Controllers\StoryController::class, 'comment'])->name('stories.comment');
+    Route::delete('/stories/{story}', [\App\Http\Controllers\StoryController::class, 'destroy'])->name('stories.destroy');
 
     // Academy (Courses)
     Route::get('/academy', [\App\Http\Controllers\CourseController::class, 'index'])->name('academy.index');

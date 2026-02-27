@@ -151,7 +151,7 @@ class Event extends Model
 
     public function scopeUpcoming(Builder $query): Builder
     {
-        return $query->where('start_date', '>', now())
+        return $query->where('end_date', '>=', now())
             ->orderBy('start_date', 'asc');
     }
 

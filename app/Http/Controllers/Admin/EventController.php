@@ -34,6 +34,11 @@ class EventController extends Controller
     public function index(): Response
     {
         $events = Event::with(['createdBy', 'categories'])
+            ->withCount([
+                'registrations as active_registrations_count' => function ($query) {
+                    $query->whereIn('status', ['confirmed', 'attended']);
+                }
+            ])
             ->latest() // or ordered by start_date
             ->paginate(15);
 

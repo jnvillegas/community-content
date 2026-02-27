@@ -172,8 +172,6 @@ export default function StoryModal({ story, isOpen, onClose, onStoryEnd, onStory
         });
     };
 
-    console.log(story);
-
 
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>

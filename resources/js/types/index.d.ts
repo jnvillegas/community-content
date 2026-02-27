@@ -128,7 +128,8 @@ export interface Event {
     start_date: string;
     end_date: string;
     registration_deadline: string | null;
-    max_participants: number | null;
+    max_attendees: number | null;
+    active_registrations_count?: number;
     requires_subscription: boolean;
     location: string | null;
     location_url: string | null;

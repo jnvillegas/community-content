@@ -163,8 +163,9 @@ const academyItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
-    const { auth } = usePage<any>().props; // Using any or specific PageProps type to bypass strict SharedData check for now
+    const { auth } = usePage<any>().props;
     const userPermissions = auth.permissions || [];
+    const userRoles = auth.roles || [];
     const [isCreateStoryOpen, setIsCreateStoryOpen] = useState(false);
 
     // Stories Section
@@ -173,18 +174,22 @@ export function AppSidebar() {
             title: 'Dashboard',
             href: '/admin/stories',
             icon: LayoutGrid,
+            permission: 'manage stories',
         },
         {
             title: 'Crear Historia',
             href: '/admin/stories',
             icon: Plus,
             onClick: () => setIsCreateStoryOpen(true),
+            permission: 'manage stories',
         },
     ];
 
     const hasPermission = (item: NavItem) => {
         if (!item.permission) return true;
-        return userPermissions.includes(item.permission) || userPermissions.includes('manage all'); // 'manage all' is a fallback for super admins if used
+        return userPermissions.includes(item.permission) ||
+            userPermissions.includes('manage all') ||
+            userRoles.includes('admin'); // Fallback for admin role
     };
 
     const filterItems = (items: NavItem[]) => items.filter(hasPermission);
@@ -223,12 +228,14 @@ export function AppSidebar() {
                 )}
 
                 {/* Stories Section */}
-                <SidebarGroup className="border-t border-gray-200 dark:border-neutral-700">
-                    <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
-                        Stories
-                    </SidebarGroupLabel>
-                    <NavMain items={filterItems(storiesItems)} />
-                </SidebarGroup>
+                {filterItems(storiesItems).length > 0 && (
+                    <SidebarGroup className="border-t border-gray-200 dark:border-neutral-700">
+                        <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
+                            Stories
+                        </SidebarGroupLabel>
+                        <NavMain items={filterItems(storiesItems)} />
+                    </SidebarGroup>
+                )}
 
                 {/* Event Management Section */}
                 {filterItems(eventManagementItems).length > 0 && (

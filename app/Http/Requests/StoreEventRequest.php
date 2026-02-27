@@ -74,7 +74,7 @@ class StoreEventRequest extends FormRequest
             'start_date.after' => 'La fecha de inicio debe ser futura.',
             'end_date.after' => 'La fecha de fin debe ser posterior a la de inicio.',
             'registration_deadline.before' => 'La fecha límite de registro debe ser antes del evento.',
-            'featured_image.max' => 'La imagen no debe pesar más de 5MB.',
+            'cover_image.max' => 'La imagen no debe pesar más de 5MB.',
         ];
     }
 }
