@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { Plus, Search, Filter, MoreHorizontal, Edit, Trash2, Eye, FileText } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
@@ -62,6 +62,12 @@ export default function Index({ articles }: Props) {
                 return <Badge className="bg-gray-100 text-gray-700 hover:bg-gray-100 border-none dark:bg-gray-800 dark:text-gray-300">Private</Badge>;
             default:
                 return <Badge variant="outline">{status}</Badge>;
+        }
+    };
+
+    const handleDelete = (id: number) => {
+        if (confirm('¿Estás seguro de que deseas eliminar este artículo?')) {
+            router.delete(`/articles/${id}`);
         }
     };
 
@@ -180,7 +186,10 @@ export default function Index({ articles }: Props) {
                                                             </Link>
                                                         </DropdownMenuItem>
                                                         <DropdownMenuSeparator />
-                                                        <DropdownMenuItem className="text-red-600 focus:text-red-600 flex items-center">
+                                                        <DropdownMenuItem
+                                                            className="text-red-600 focus:text-red-600 flex items-center cursor-pointer"
+                                                            onClick={() => handleDelete(article.id)}
+                                                        >
                                                             <Trash2 className="mr-2 h-3.5 w-3.5" />
                                                             Delete
                                                         </DropdownMenuItem>
