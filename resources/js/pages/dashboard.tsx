@@ -85,19 +85,19 @@ export default function Dashboard({ upcomingEvents, activities, stories, courses
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Creator Connect - Dashboard" />
 
-            <main className="flex columns-2 background:transparent justify-center">
-                <div className="min-h-screen min-w-0 bg-transparent p-4 md:p-8 dark:bg-transparent max-w-[1024px]">
+            <main className="flex background:transparent justify-center w-full max-w-7xl mx-auto">
+                <div className="min-h-screen min-w-0 w-full bg-transparent px-4 md:px-8 md:px-8 dark:bg-transparent max-w-[1024px]">
                     {/* Stories */}
                     <StoriesBar stories={stories} />
 
                     {/* Feed */}
-                    <div className="mb-8">
+                    <div className="mb-8 w-full">
                         <ActivityFeed activities={activities} courses={courses} />
                     </div>
                 </div>
 
                 {/* Right Column - Widgets */}
-                <aside className="bg-white p-6 pt-10 dark:bg-transparent hidden lg:block w-[312px]">
+                <aside className="bg-white p-6 pt-10 dark:bg-transparent hidden lg:block w-[312px] min-w-[312px]">
                     <div className="space-y-6 h-full sticky top-24">
 
                         <div className="flex items-center p-1 bg-gray-100 dark:bg-zinc-900 rounded-xl">
