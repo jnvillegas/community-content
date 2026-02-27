@@ -18,7 +18,7 @@ class CourseSeeder extends Seeder
         if (!$user)
             return;
 
-        $course = \App\Models\Course::updateOrCreate(
+        $course = \App\Models\Course::withTrashed()->updateOrCreate(
             ['slug' => 'mastering-content-creation'],
             [
                 'title' => 'Mastering Content Creation',
@@ -26,6 +26,7 @@ class CourseSeeder extends Seeder
                 'cover_image' => 'https://images.unsplash.com/photo-1492724441997-5dc865305da7?q=80&w=2070&auto=format&fit=crop',
                 'instructor_id' => $user->id,
                 'status' => 'published',
+                'deleted_at' => null,
             ]
         );
 
@@ -34,7 +35,7 @@ class CourseSeeder extends Seeder
             ['order' => 1]
         );
 
-        \App\Models\Lesson::updateOrCreate(
+        \App\Models\Lesson::withTrashed()->updateOrCreate(
             ['module_id' => $module1->id, 'slug' => 'finding-your-niche'],
             [
                 'title' => 'Finding Your Niche',
@@ -42,16 +43,18 @@ class CourseSeeder extends Seeder
                 'video_url' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
                 'duration' => 600,
                 'order' => 1,
+                'deleted_at' => null,
             ]
         );
 
-        \App\Models\Lesson::updateOrCreate(
+        \App\Models\Lesson::withTrashed()->updateOrCreate(
             ['module_id' => $module1->id, 'slug' => 'defining-your-audience'],
             [
                 'title' => 'Defining Your Audience',
                 'content_type' => 'text',
                 'content_body' => 'In this lesson, we cover who your target audience is...',
                 'order' => 2,
+                'deleted_at' => null,
             ]
         );
 
@@ -60,7 +63,7 @@ class CourseSeeder extends Seeder
             ['order' => 2]
         );
 
-        \App\Models\Lesson::updateOrCreate(
+        \App\Models\Lesson::withTrashed()->updateOrCreate(
             ['module_id' => $module2->id, 'slug' => 'choosing-your-gear'],
             [
                 'title' => 'Choosing Your Gear',
@@ -68,6 +71,7 @@ class CourseSeeder extends Seeder
                 'video_url' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
                 'duration' => 1200,
                 'order' => 1,
+                'deleted_at' => null,
             ]
         );
     }
