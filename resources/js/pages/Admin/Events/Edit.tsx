@@ -14,7 +14,10 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Loader2, ArrowLeft } from 'lucide-react';
+import { Loader2, ArrowLeft, CalendarDays } from 'lucide-react';
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+import { useState } from 'react';
 
 interface Props {
     event: Event;
@@ -68,7 +71,10 @@ export default function Edit({ event, categories, types }: Props) {
                             </Link>
                         </Button>
                         <h1 className="text-3xl font-black tracking-tight mt-2">Edit Event</h1>
-                        <p className="text-muted-foreground">Update event details.</p>
+                        <div className="flex items-center gap-2 text-muted-foreground mt-1 text-sm">
+                            <CalendarDays className="w-4 h-4" />
+                            <span>Publicado originalmente el {format(new Date(event.created_at), "d 'de' MMMM, yyyy", { locale: es })}</span>
+                        </div>
                     </div>
                 </div>
 

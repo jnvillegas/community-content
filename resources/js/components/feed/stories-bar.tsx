@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link, router } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { Plus, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import StoryModal from './StoryModal';
@@ -26,6 +26,12 @@ interface StoriesBarProps {
 }
 
 export default function StoriesBar({ stories }: StoriesBarProps) {
+    const { auth } = usePage<any>().props;
+    const canManageStories =
+        auth.permissions?.includes('manage stories') ||
+        auth.permissions?.includes('manage all') ||
+        auth.roles?.includes('admin');
+
     const [selectedStoryId, setSelectedStoryId] = useState<number | null>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
@@ -287,15 +293,17 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
                     }
                 `}</style>
 
-                <div key="create" className="snap-start">
-                    <div
-                        onClick={() => setIsCreateModalOpen(true)}
-                        className='flex items-center justify-center w-24 h-32 z-10 cursor-pointer border-dashed border-2 border-gray-500 rounded-2xl'
-                    >
-                        <Plus className='h-8 w-6 text-gray-500' />
+                {canManageStories && (
+                    <div key="create" className="snap-start">
+                        <div
+                            onClick={() => setIsCreateModalOpen(true)}
+                            className='flex items-center justify-center w-24 h-32 z-10 cursor-pointer border-dashed border-2 border-gray-500 rounded-2xl'
+                        >
+                            <Plus className='h-8 w-6 text-gray-500' />
+                        </div>
+                        <p className="text-xs text-gray-500 mt-2 text-center">Add Story</p>
                     </div>
-                    <p className="text-xs text-gray-500 mt-2 text-center">Add Story</p>
-                </div>
+                )}
                 {stories.map((story) => (
                     <div key={story.id} className="snap-start">
                         <div

@@ -140,6 +140,7 @@ export default function StoriesDashboard({ stats, recentComments, storiesPerform
                                         <TableHead className="text-right">Views</TableHead>
                                         <TableHead className="text-right">Likes</TableHead>
                                         <TableHead className="text-right">Engagement</TableHead>
+                                        <TableHead className="text-right">Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -150,6 +151,20 @@ export default function StoriesDashboard({ stats, recentComments, storiesPerform
                                             <TableCell className="text-right">{story.likes}</TableCell>
                                             <TableCell className="text-right">
                                                 {story.engagement_rate}%
+                                            </TableCell>
+                                            <TableCell className="text-right">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                    onClick={() => {
+                                                        if (confirm('¿Estás seguro de que deseas eliminar esta historia?')) {
+                                                            router.delete(`/stories/${story.id}`);
+                                                        }
+                                                    }}
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
                                             </TableCell>
                                         </TableRow>
                                     ))}

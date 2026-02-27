@@ -121,4 +121,21 @@ class StoryController extends Controller
 
         return back();
     }
+
+    public function destroy(Story $story)
+    {
+        if ($story->user_id !== auth()->id() && !auth()->user()->hasRole('admin')) {
+            abort(403);
+        }
+
+        // Delete associated images from storage if necessary
+        foreach ($story->images as $image) {
+            $path = str_replace('/storage/', '', $image->image_url);
+            Storage::disk('public')->delete($path);
+        }
+
+        $story->delete();
+
+        return back()->with('success', 'Historia eliminada correctamente');
+    }
 }

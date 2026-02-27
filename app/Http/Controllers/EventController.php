@@ -93,7 +93,9 @@ class EventController extends Controller
 
         return Inertia::render('Events/Show', [
             'event' => $event,
-            'registrations_count' => $event->registrations()->count(),
+            'registrations_count' => $event->registrations()
+                ->whereIn('status', ['confirmed', 'attended'])
+                ->count(),
             'can_register' => $canRegister,
             'is_registered' => $isRegistered,
         ]);
