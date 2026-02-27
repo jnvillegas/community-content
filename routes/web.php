@@ -93,6 +93,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/events/{slug}/attendees/{user}/mark', [AdminEventController::class, 'markAttendance'])->name('events.mark-attendance');
     Route::resource('event-categories', \App\Http\Controllers\Admin\EventCategoryController::class);
     Route::get('/stories', [\App\Http\Controllers\Admin\StoryDashboardController::class, 'index'])->name('stories.index');
+    Route::delete('/stories/comments/{comment}', [\App\Http\Controllers\Admin\StoryDashboardController::class, 'destroyComment'])->name('stories.comments.destroy');
 
     // Academy Dashboard
     Route::group(['prefix' => 'academy', 'as' => 'academy.'], function () {
