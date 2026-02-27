@@ -35,6 +35,9 @@ export default function Index({ events }: Props) {
         }
     };
 
+    console.log(events);
+
+
     return (
         <AppLayout breadcrumbs={[
             { title: 'Home', href: '/dashboard' },
@@ -49,11 +52,11 @@ export default function Index({ events }: Props) {
                         <p className="text-muted-foreground">Manage all community events.</p>
                     </div>
                     <div className="flex gap-2">
-                        <Button variant="outline" asChild>
+                        {/* <Button variant="outline" asChild>
                             <Link href="/admin/event-categories">
                                 Categories
                             </Link>
-                        </Button>
+                        </Button> */}
                         <Button asChild>
                             <Link href="/admin/events/create">
                                 <Plus className="w-4 h-4 mr-2" />

@@ -62,7 +62,7 @@ export default function EventCard({ event }: EventCardProps) {
                     </p>
                 ) : (
                     <p className="text-slate-500 text-sm sm:text-base mb-4 sm:mb-6 line-clamp-2">
-                        Evento en {event.location || 'Tucumán'}. Únete y no te lo pierdas.
+                        Evento en {event.location || 'Location'}. Únete y no te lo pierdas.
                     </p>
                 )}
 
@@ -121,9 +121,9 @@ export default function EventCard({ event }: EventCardProps) {
                     <Link
                         href={`/events/${event.slug}`}
                         onClick={(e) => e.stopPropagation()}
-                        className="bg-[#1d9bf0] text-white font-bold py-2 sm:py-3 px-4 sm:px-6 md:px-8 rounded-xl transition-all transform active:scale-95 shadow-lg shadow-[#1d9bf0]/20 flex items-center justify-center sm:justify-start gap-2 text-xs sm:text-base whitespace-nowrap"
+                        className="bg-[#1d9bf0] text-white font-bold py-2 sm:py-3 px-4 sm:px-6 md:px-8 rounded-xl transition-all transform active:scale-95 flex items-center justify-center sm:justify-start gap-2 text-xs sm:text-base whitespace-nowrap"
                     >
-                        Detalhes
+                        More Details
                         <ArrowRight className="sm:h-5 sm:w-5" />
                     </Link>
                 </div>

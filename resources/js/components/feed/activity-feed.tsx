@@ -2,6 +2,13 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import FeedItem from './feed-item';
 import CourseCard from './course-card';
 import { Button } from '@/components/ui/button';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { useState } from 'react';
 
 interface ActivityFeedProps {
@@ -75,25 +82,26 @@ export default function ActivityFeed({ activities, courses = [] }: ActivityFeedP
             {/* Filter Header */}
             <div className="flex items-center gap-4">
                 <div className="h-[2px] bg-gradient-to-r from-gray-600 to-transparent flex-grow rounded-full"></div>
-                <select
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value as 'all' | 'courses' | 'events')}
-                    className="px-4 py-2 text-sm font-semibold text-gray-900 dark:text-white bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer"
-                >
-                    {filterOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                            {option.label}
-                        </option>
-                    ))}
-                </select>
+                <Select value={filter} onValueChange={(value) => setFilter(value as 'all' | 'courses' | 'events')}>
+                    <SelectTrigger className="w-40">
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {filterOptions.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
             </div>
 
             {/* Próximos Eventos */}
             {(filter === 'all' || filter === 'events') && (
                 <div>
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+                    {/* <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
                         Próximos Eventos
-                    </h3>
+                    </h3> */}
 
                     <div className="flex flex-col items-center gap-6">
                         {upcoming.length > 0 ? (
@@ -114,10 +122,10 @@ export default function ActivityFeed({ activities, courses = [] }: ActivityFeedP
                 {/* Cursos Disponibles */}
                 {(filter === 'all' || filter === 'courses') && courses.length > 0 && (
                     <div className="space-y-4">
-                        <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                        {/* <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                             Cursos Disponibles
-                        </h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        </h3> */}
+                        <div className="flex flex-col items-center gap-6">
                             {courses.map((course) => (
                                 <CourseCard key={course.id} course={course} />
                             ))}

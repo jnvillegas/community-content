@@ -125,10 +125,6 @@ export default function Dashboard({ upcomingEvents, activities, stories, courses
 
                         {sidebarTab === 'calendar' && (
                             <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                                <div className="flex items-center justify-between">
-                                    <h4 className="text-sm font-black uppercase tracking-widest text-gray-500">Calendar View</h4>
-                                    <Button variant="ghost" size="sm" className="h-8 text-[11px] font-bold text-[#1d9bf0]">Full View</Button>
-                                </div>
                                 <div className="rounded-2xl border border-gray-100 p-2 shadow-sm dark:border-gray-900 bg-gray-50/30 dark:bg-gray-900/40">
                                     <Calendar
                                         mode="single"
@@ -144,7 +140,7 @@ export default function Dashboard({ upcomingEvents, activities, stories, courses
                             <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
                                 <div className="flex items-center justify-between">
                                     <h4 className="text-sm font-black uppercase tracking-widest text-gray-500">Next Events</h4>
-                                    <Plus className="h-4 w-4 text-gray-400 cursor-pointer hover:text-[#1d9bf0] transition-colors" />
+                                    {/* <Plus className="h-4 w-4 text-gray-400 cursor-pointer hover:text-[#1d9bf0] transition-colors" /> */}
                                 </div>
                                 <div className="space-y-3">
                                     {upcomingEvents.length > 0 ? (
@@ -168,10 +164,10 @@ export default function Dashboard({ upcomingEvents, activities, stories, courses
                                         <p className="text-sm text-gray-500 text-center py-4">No upcoming events</p>
                                     )}
                                 </div>
-                                <Button variant="ghost" className="w-full text-[#1d9bf0] font-bold text-[11px] uppercase tracking-widest gap-2 mt-2 hover:bg-zinc-700 hover:text-[#1d9bf0] ">
+                                {/* <Button variant="ghost" className="w-full text-[#1d9bf0] font-bold text-[11px] uppercase tracking-widest gap-2 mt-2 hover:bg-zinc-700 hover:text-[#1d9bf0] ">
                                     See all events
                                     <ArrowRight className="h-3 w-3" />
-                                </Button>
+                                </Button> */}
                             </div>
                         )}
 

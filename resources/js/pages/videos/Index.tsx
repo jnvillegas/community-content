@@ -150,7 +150,7 @@ export default function Index({ videos, filters = {} }: Props) {
                 {/* Video Grid Content */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
                     {videos.data.length === 0 ? (
-                        <div className="col-span-full py-32 text-center border-2 border-dashed border-gray-100 rounded-[2rem]">
+                        <div className="col-span-full py-32 text-center border-1 border-dashed border-gray-100/20 rounded-[2rem]">
                             <p className="text-gray-300 font-black uppercase tracking-[0.2em]">No expeditions found</p>
                         </div>
                     ) : (

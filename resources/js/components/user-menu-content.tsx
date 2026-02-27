@@ -21,8 +21,12 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
     const cleanup = useMobileNavigation();
 
     const handleLogout = () => {
-        cleanup();
-        router.flushAll();
+        // cleanup();
+        router.post(logout().url, {}, {
+            onFinish: () => {
+                router.visit('/login');
+            }
+        });
     };
 
     return (

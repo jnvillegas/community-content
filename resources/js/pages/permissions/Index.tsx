@@ -119,8 +119,8 @@ export default function Index({ permissions }: PermissionsPageProps) {
                                     key={i}
                                     href={link.url || '#'}
                                     className={`px-3 py-1 text-sm rounded ${link.active
-                                        ? 'bg-blue-600 text-white'
-                                        : 'bg-white border text-gray-700 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300'
+                                        ? 'bg-black/30 text-white dark:border-neutral-100'
+                                        : 'bg-white border text-gray-700 hover:bg-gray-50 dark:bg-neutral-900 dark:border-neutral-700 dark:text-gray-300'
                                         } ${!link.url ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     dangerouslySetInnerHTML={{ __html: link.label }}
                                 />

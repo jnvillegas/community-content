@@ -131,6 +131,24 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
         }
     };
 
+    const handleStoryEnd = () => {
+        // Find current story index and move to next
+        const currentIndex = stories.findIndex(s => s.id === selectedStoryId);
+        if (currentIndex !== -1 && currentIndex < stories.length - 1) {
+            setSelectedStoryId(stories[currentIndex + 1].id);
+        } else {
+            setSelectedStoryId(null);
+        }
+    };
+
+    const handleStoryPrev = () => {
+        // Find current story index and move to previous
+        const currentIndex = stories.findIndex(s => s.id === selectedStoryId);
+        if (currentIndex > 0) {
+            setSelectedStoryId(stories[currentIndex - 1].id);
+        }
+    };
+
     const handleMouseDown = (e: React.MouseEvent) => {
         if (!scrollContainerRef.current) return;
 
@@ -313,6 +331,8 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
                 story={selectedStory}
                 isOpen={!!selectedStoryId}
                 onClose={() => setSelectedStoryId(null)}
+                onStoryEnd={handleStoryEnd}
+                onStoryPrev={handleStoryPrev}
             />
 
             <CreateStoryModal

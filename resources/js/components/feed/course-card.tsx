@@ -1,7 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, User } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { ArrowRight, BookOpen } from 'lucide-react';
 
 interface CourseCardProps {
     course: {
@@ -20,52 +18,74 @@ interface CourseCardProps {
 
 export default function CourseCard({ course }: CourseCardProps) {
     return (
-        <Link href={`/academy/${course.slug}`}>
-            <Card className="overflow-hidden h-full grow hover:shadow-lg transition-all duration-200 cursor-pointer border-0 bg-white dark:bg-zinc-800">
-                {/* Course Cover Image */}
-                <div className="relative h-48 overflow-hidden bg-linear-to-br from-blue-400 to-blue-600">
-                    {course.cover_image ? (
-                        <img
-                            src={course.cover_image}
-                            alt={course.title}
-                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                        />
-                    ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                            <BookOpen className="w-12 h-12 text-white/50" />
-                        </div>
-                    )}
-                </div>
+        <article className="glass-card rounded-xl overflow-hidden group transition-all duration-500 hover:shadow-2xs hover:shadow-black/40 bg-background border border-gray-200 dark:border-white/5 w-[100%] mb-10">
+            {/* Imagen superior - aspect-video */}
+            <div className="relative aspect-video overflow-hidden">
+                {course.cover_image ? (
+                    <img
+                        src={course.cover_image}
+                        alt={course.title}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-[#1a2a1a] to-[#0f0f0f] flex items-center justify-center">
+                        <BookOpen className="w-12 h-12 text-white/30" />
+                    </div>
+                )}
 
-                {/* Course Info */}
-                <CardContent className="pt-4 pb-3 px-4">
-                    <h3 className="font-bold text-base line-clamp-2 text-gray-900 dark:text-white mb-1">
-                        {course.title}
-                    </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-4">
+                {/* Tag superior izquierdo */}
+                <div className="absolute top-4 left-4">
+                    <span className="px-3 py-1.5 bg-zinc-900/20 backdrop-blur-md rounded-lg text-xs font-bold text-white border border-white/10">
+                        COURSE
+                    </span>
+                </div>
+            </div>
+
+            {/* Contenido inferior */}
+            <div className="p-6 md:p-8">
+                {/* Título */}
+                <h2 className="text-2xl font-bold leading-tight text-zinc-800 dark:text-white transition-colors mb-4">
+                    {course.title}
+                </h2>
+
+                {/* Descripción */}
+                {course.description ? (
+                    <p className="text-slate-400 text-base leading-relaxed mb-6 line-clamp-3">
                         {course.description}
                     </p>
+                ) : (
+                    <p className="text-slate-500 text-base mb-6 line-clamp-3">
+                        Curso disponible para aprender
+                    </p>
+                )}
 
-                    {/* Instructor Info */}
-                    <div className="flex items-center gap-2 mb-4">
-                        <Avatar className="w-8 h-8">
-                            <AvatarImage src={course.instructor.avatar} alt={course.instructor.name} />
-                            <AvatarFallback>{course.instructor.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div className="min-w-0 flex-1">
-                            <p className="text-xs font-medium text-gray-700 dark:text-gray-300 truncate">
-                                {course.instructor.name}
-                            </p>
-                        </div>
+                {/* Info del instructor y módulos */}
+                {/* <div className="flex flex-wrap items-center gap-5 md:gap-6 mb-8 text-sm text-zinc-800 dark:text-white">
+                    <div className="flex items-center gap-2">
+                        <span className="font-medium">{course.instructor.name}</span>
                     </div>
 
-                    {/* Modules Count */}
-                    <div className="flex items-center gap-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
-                        <BookOpen className="w-4 h-4" />
+                    <div className="flex items-center gap-2">
+                        <BookOpen className="h-5 w-5" />
                         <span>{course.modules_count} módulos</span>
                     </div>
-                </CardContent>
-            </Card>
-        </Link>
+                </div> */}
+
+                {/* Footer: botón principal */}
+                <div className="flex items-center justify-between pt-6 border-t border-black/10 dark:border-white/10">
+                    <div className="flex items-center gap-2">
+                        <BookOpen className="h-5 w-5" />
+                        <span>{course.modules_count} módulos</span>
+                    </div>
+                    <Link
+                        href={`/academy/${course.slug}`}
+                        className="bg-[#1d9bf0] text-white font-bold py-3 px-6 md:px-8 rounded-xl transition-all transform active:scale-95 flex items-center gap-2 text-base"
+                    >
+                        See Course
+                        <ArrowRight className="h-5 w-5" />
+                    </Link>
+                </div>
+            </div>
+        </article>
     );
 }

@@ -39,14 +39,18 @@ interface StoryModalProps {
     story: StoryData | null;
     isOpen: boolean;
     onClose: () => void;
+    onStoryEnd?: () => void;
+    onStoryPrev?: () => void;
 }
 
-export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) {
+export default function StoryModal({ story, isOpen, onClose, onStoryEnd, onStoryPrev }: StoryModalProps) {
     const [comment, setComment] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const { auth } = usePage().props as any;
     const [commentsOpen, setCommentsOpen] = useState(false);
+    const [isPressing, setIsPressing] = useState(false);
+    const [isInputFocused, setIsInputFocused] = useState(false);
     const touchStartXRef = useRef<number | null>(null);
     const lastTouchXRef = useRef<number | null>(null);
     const TOUCH_THRESHOLD = 50;
@@ -62,7 +66,12 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
         if (currentImageIndex < images.length - 1) {
             setCurrentImageIndex((prev) => prev + 1);
         } else {
-            onClose();
+            // Story ended, trigger callback for next story or close
+            if (onStoryEnd) {
+                onStoryEnd();
+            } else {
+                onClose();
+            }
         }
     };
 
@@ -70,6 +79,11 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
         if (!story) return;
         if (currentImageIndex > 0) {
             setCurrentImageIndex((prev) => prev - 1);
+        } else {
+            // Already on the first image of this story, go to previous story
+            if (onStoryPrev) {
+                onStoryPrev();
+            }
         }
     };
 
@@ -78,6 +92,7 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
         const t = e.touches[0];
         touchStartXRef.current = t.clientX;
         lastTouchXRef.current = t.clientX;
+        setIsPressing(true);
     };
 
     const handleTouchMove = (e: React.TouchEvent) => {
@@ -89,6 +104,7 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
         if (touchStartXRef.current === null || lastTouchXRef.current === null) {
             touchStartXRef.current = null;
             lastTouchXRef.current = null;
+            setIsPressing(false);
             return;
         }
 
@@ -105,18 +121,27 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
 
         touchStartXRef.current = null;
         lastTouchXRef.current = null;
+        setIsPressing(false);
+    };
+
+    const handleMouseDown = () => {
+        setIsPressing(true);
+    };
+
+    const handleMouseUp = () => {
+        setIsPressing(false);
     };
 
     // Auto-advance logic
-    // useEffect(() => {
-    //     if (!isOpen || !story) return;
+    useEffect(() => {
+        if (!isOpen || !story || commentsOpen || isPressing || isInputFocused) return;
 
-    //     const timer = setTimeout(() => {
-    //         nextImage();
-    //     }, 5000);
+        const timer = setTimeout(() => {
+            nextImage();
+        }, 5000);
 
-    //     return () => clearTimeout(timer);
-    // }, [currentImageIndex, isOpen, story?.id]);
+        return () => clearTimeout(timer);
+    }, [currentImageIndex, isOpen, story?.id, commentsOpen, isPressing, isInputFocused]);
 
     if (!story) return null;
 
@@ -168,6 +193,9 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
                                 className={`h-full bg-white transition-all duration-100 ${index < currentImageIndex ? 'w-full' :
                                     index === currentImageIndex ? 'animate-progress-fast' : 'w-0'
                                     }`}
+                                style={{
+                                    animationPlayState: (commentsOpen || isPressing || isInputFocused) ? 'paused' : 'running'
+                                }}
                             />
                         </div>
                     ))}
@@ -191,7 +219,12 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
                 </div>
 
                 {/* Content Image & Navigation Areas */}
-                <div className="flex-1 relative bg-black flex items-center justify-center select-none">
+                <div
+                    className="flex-1 relative bg-black flex items-center justify-center select-none"
+                    onMouseDown={handleMouseDown}
+                    onMouseUp={handleMouseUp}
+                    onMouseLeave={handleMouseUp}
+                >
                     <img
                         key={`${story.id}-${currentImageIndex}`}
                         src={images[currentImageIndex]}
@@ -226,9 +259,11 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
                     <div className="flex items-center gap-3 text-white">
                         <form onSubmit={submitComment} className="flex-1 flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-full px-4 py-2 border border-white/10 hover:bg-white/15 transition-colors">
                             <Input
-                                placeholder="Send a message"
+                                placeholder="Send Comment"
                                 value={comment}
                                 onChange={(e) => setComment(e.target.value)}
+                                onFocus={() => setIsInputFocused(true)}
+                                onBlur={() => setIsInputFocused(false)}
                                 className="flex-1 border-none bg-transparent p-0 focus-visible:ring-0 placeholder:text-white/60 text-sm h-auto"
                             />
                             {comment && (
@@ -238,16 +273,22 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
                             )}
                         </form>
 
-                        <button onClick={toggleLike} className="p-1 hover:scale-110 transition-transform">
+                        <button onClick={toggleLike} className="flex gap-2 items-center justify-center p-1 transition-transform min-w-[32px]">
                             <Heart className={`w-7 h-7 filter drop-shadow-lg transition-all ${story.is_liked ? 'fill-red-500 text-red-500' : 'text-white'}`} />
+                            {(story.likes_count ?? 0) >= 1 && (
+                                <span className="text-[16px] font-bold leading-none drop-shadow-md">{story.likes_count}</span>
+                            )}
                         </button>
 
                         <button
                             onClick={() => setCommentsOpen(true)}
-                            className="p-1 hover:scale-110 transition-transform"
+                            className="flex flex gap-2 items-center justify-center p-1 transition-transform min-w-[32px]"
                             aria-label="Ver comentarios"
                         >
-                            <MessageCircle className="w-7 h-7 text-white filter drop-shadow-lg" />
+                            <MessageCircle className="flex w-7 h-7 text-white filter drop-shadow-lg" />
+                            {story.comments && story.comments.length >= 1 && (
+                                <span className="text-[16px] font-bold leading-none drop-shadow-md">{story.comments.length}</span>
+                            )}
                         </button>
                     </div>
                 </div>
@@ -255,7 +296,7 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
                 <Dialog open={commentsOpen} onOpenChange={(open) => !open && setCommentsOpen(false)}>
                     <DialogContent className="sm:max-w-md top-[73%]">
                         <DialogHeader>
-                            <DialogTitle>Comentarios</DialogTitle>
+                            <DialogTitle>Comments</DialogTitle>
                             {/* <DialogDescription>
                                 <div className="flex items-center gap-3 mt-2">
                                     <Heart className="w-5 h-5 text-red-500" />
@@ -293,7 +334,7 @@ export default function StoryModal({ story, isOpen, onClose }: StoryModalProps) 
                             {auth.user && (
                                 <form onSubmit={submitComment} className="mt-4 flex items-center gap-2">
                                     <Input
-                                        placeholder="Escribe un comentario"
+                                        placeholder="Send Comment"
                                         value={comment}
                                         onChange={(e) => setComment(e.target.value)}
                                     />

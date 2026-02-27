@@ -58,7 +58,7 @@ export default function FeedItem({ activity }: FeedItemProps) {
         <>
             <article
                 // onClick={handleCardClick}
-                className="glass-card rounded-xl overflow-hidden group cursor-pointer transition-all duration-500 hover:shadow-2xs hover:shadow-black/40 bg-background border border-gray-200 dark:border-white/5 w-[100%] mb-10"
+                className="glass-card rounded-xl overflow-hidden group transition-all duration-500 hover:shadow-2xs hover:shadow-black/40 bg-background border border-gray-200 dark:border-white/5 w-[100%] mb-10"
             >
                 {/* Imagen superior - aspect-video */}
                 <div className="relative aspect-video overflow-hidden">
@@ -100,7 +100,7 @@ export default function FeedItem({ activity }: FeedItemProps) {
                     ) : (
                         <p className="text-slate-500 text-base mb-6 line-clamp-3">
                             {isEvent
-                                ? `Evento en ${subject.location || 'Tucumán'}. Únete y no te lo pierdas.`
+                                ? `Evento en ${subject.location || 'Location'}. Únete y no te lo pierdas.`
                                 : 'Contenido interesante disponible ahora.'}
                         </p>
                     )}
@@ -135,7 +135,7 @@ export default function FeedItem({ activity }: FeedItemProps) {
                         <div className="flex items-center gap-6 md:gap-8">
                             <button
                                 onClick={handleLike}
-                                className={`flex items-center gap-2 transition-all ${subject.is_liked
+                                className={`flex cursor-pointer items-center gap-2 transition-all ${subject.is_liked
                                     ? 'text-red-400 scale-105'
                                     : 'text-zinc-800 hover:text-red-400 dark:text-white dark:hover:text-red-400'
                                     }`}
@@ -163,9 +163,9 @@ export default function FeedItem({ activity }: FeedItemProps) {
                         <Link
                             href={`/events/${subject.slug}`}
                             onClick={(e) => e.stopPropagation()}
-                            className="bg-[#1d9bf0] text-white font-bold py-3 px-6 md:px-8 rounded-xl transition-all transform active:scale-95 shadow-lg shadow-[#1d9bf0]/20 flex items-center gap-2 text-base"
+                            className="bg-[#1d9bf0] text-white font-bold py-3 px-6 md:px-8 rounded-xl transition-all transform active:scale-95 flex items-center gap-2 text-base"
                         >
-                            Detalhes
+                            More Details
                             <ArrowRight className="h-5 w-5" />
                         </Link>
                     </div>
