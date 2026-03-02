@@ -326,11 +326,29 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
                     <div key={story.id} className="snap-start">
                         <div
                             onClick={() => handleCardClick(story.id)}
-                            className='flex items-center justify-center w-24 h-32 z-10 cursor-pointer rounded-2xl'
+                            className='relative group/story flex items-center justify-center w-24 h-32 z-10 cursor-pointer rounded-2xl overflow-hidden transition-all duration-300'
                         >
-                            <img src={story.content_url} alt={story.title} className="w-full h-full object-cover rounded-2xl" />
+                            <img 
+                                src={story.content_url} 
+                                alt={story.title} 
+                                className="w-full h-full object-cover rounded-2xl transition-transform duration-500 group-hover/story:scale-110" 
+                            />
+                            
+                            {/* Gradient overlay for interaction */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover/story:opacity-100 transition-opacity duration-300" />
+
+                            {(story.likes_count > 0 || (story.comments && story.comments.length > 0)) && (
+                                <div className="absolute top-2 right-2 z-20 animate-in fade-in zoom-in duration-300">
+                                    <div className="flex items-center justify-center min-w-[20px] h-5 px-1 bg-rose-500/90 backdrop-blur-sm rounded-full border border-white/40 shadow-sm">
+                                        <Heart className={`w-2.5 h-2.5 mr-0.5 fill-white text-white`} />
+                                        <span className="text-[10px] font-bold text-white leading-none">
+                                            {(story.likes_count || 0) + (story.comments?.length || 0)}
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
                         </div>
-                        <p className="text-xs text-gray-500 mt-2 text-center">{story.title}</p>
+                        <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mt-2 text-center truncate w-24 px-1">{story.title}</p>
                     </div>
                 ))}
             </div>
