@@ -30,14 +30,18 @@ interface ActivityFeedProps {
     }[];
 }
 
-export default function ActivityFeed({ activities, courses = [] }: ActivityFeedProps) {
-    const [filter, setFilter] = useState<'all' | 'courses' | 'events'>('all');
+export type ActivityFilterType = 'all' | 'courses' | 'events' | 'articles' | 'videos';
 
-    const filterOptions = [
+export default function ActivityFeed({ activities, courses = [] }: ActivityFeedProps) {
+    const [filter, setFilter] = useState<ActivityFilterType>('all');
+
+    const filterOptions: { value: ActivityFilterType; label: string }[] = [
         { value: 'all', label: 'Todos' },
         { value: 'events', label: 'Eventos' },
         { value: 'courses', label: 'Cursos' },
-    ] as const;
+        { value: 'articles', label: 'Artículos' },
+        { value: 'videos', label: 'Videos' },
+    ];
 
     if (!activities.data.length) {
         return (
@@ -78,11 +82,11 @@ export default function ActivityFeed({ activities, courses = [] }: ActivityFeedP
     });
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 w-full">
             {/* Filter Header */}
             <div className="flex items-center gap-4">
                 <div className="h-[2px] bg-gradient-to-r from-gray-600 to-transparent flex-grow rounded-full"></div>
-                <Select value={filter} onValueChange={(value) => setFilter(value as 'all' | 'courses' | 'events')}>
+                <Select value={filter} onValueChange={(value) => setFilter(value as ActivityFilterType)}>
                     <SelectTrigger className="w-40">
                         <SelectValue />
                     </SelectTrigger>
@@ -96,21 +100,17 @@ export default function ActivityFeed({ activities, courses = [] }: ActivityFeedP
                 </Select>
             </div>
 
-            {/* Próximos Eventos */}
-            {(filter === 'all' || filter === 'events') && (
-                <div>
-                    {/* <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-                        Próximos Eventos
-                    </h3> */}
-
-                    <div className="flex flex-col items-center gap-6">
+            {/* Actividades (Eventos, Artículos, Videos) */}
+            {filter !== 'courses' && (
+                <div className="space-y-8 w-full">
+                    <div className="flex flex-col items-stretch w-full gap-6">
                         {upcoming.length > 0 ? (
                             upcoming.map((activity) => (
-                                <FeedItem key={activity.id} activity={activity} />
+                                <FeedItem key={activity.id} activity={activity} filter={filter} />
                             ))
                         ) : (
                             <div className="text-center py-10 w-full text-gray-500">
-                                <p>No hay eventos proximos</p>
+                                <p>No hay actividad para mostrar</p>
                             </div>
                         )}
                     </div>
@@ -118,14 +118,14 @@ export default function ActivityFeed({ activities, courses = [] }: ActivityFeedP
             )}
 
             {/* Content */}
-            <div className="space-y-8">
+            <div className="space-y-8 w-full">
                 {/* Cursos Disponibles */}
                 {(filter === 'all' || filter === 'courses') && courses.length > 0 && (
-                    <div className="space-y-4">
+                    <div className="space-y-4 w-full">
                         {/* <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                             Cursos Disponibles
                         </h3> */}
-                        <div className="flex flex-col items-center gap-6">
+                        <div className="flex flex-col items-stretch w-full gap-6">
                             {courses.map((course) => (
                                 <CourseCard key={course.id} course={course} />
                             ))}
