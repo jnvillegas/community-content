@@ -65,7 +65,7 @@ class StoryController extends Controller
         foreach ($request->file('images') as $index => $image) {
             $path = $image->store('stories', 'public');
             $imagePaths[] = [
-                'url' => Storage::url($path),
+                'url' => $path,
                 'order' => $index
             ];
         }
