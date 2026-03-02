@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class StoryImage extends Model
 {
@@ -23,8 +24,17 @@ class StoryImage extends Model
      */
     public function getImageUrlAttribute($value): string
     {
-        if (filter_var($value, FILTER_VALIDATE_URL)) {
+        if (empty($value))
+            return '';
+
+        // Si ya es una URL completa con protocolo, la devolvemos tal cual
+        if (preg_match('/^https?:\/\//', $value)) {
             return $value;
+        }
+
+        // Si la cadena contiene "/storage/", extraemos solo lo que viene después
+        if (str_contains($value, '/storage/')) {
+            $value = Str::after($value, '/storage/');
         }
 
         return Storage::url($value);

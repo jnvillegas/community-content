@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Story extends Model
 {
@@ -65,8 +66,18 @@ class Story extends Model
      */
     public function getContentUrlAttribute($value): string
     {
-        if (filter_var($value, FILTER_VALIDATE_URL)) {
+        if (empty($value))
+            return '';
+
+        // Si ya es una URL completa con protocolo, la devolvemos tal cual
+        if (preg_match('/^https?:\/\//', $value)) {
             return $value;
+        }
+
+        // Si la cadena contiene "/storage/", extraemos solo lo que viene después
+        // para evitar duplicar el dominio o el prefijo de almacenamiento
+        if (str_contains($value, '/storage/')) {
+            $value = Str::after($value, '/storage/');
         }
 
         return Storage::url($value);

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 use App\Traits\RecordsActivity;
 
@@ -71,5 +72,27 @@ class Article extends Model
         }
 
         return false;
+    }
+
+    /**
+     * Get the full URL for the featured image.
+     */
+    public function getFeaturedImageAttribute($value): ?string
+    {
+        if (empty($value))
+            return null;
+
+        // Si ya es una URL completa con protocolo, la devolvemos tal cual
+        if (preg_match('/^https?:\/\//', $value)) {
+            return $value;
+        }
+
+        // Si la cadena contiene "/storage/", extraemos solo lo que viene después
+        // para evitar duplicar el dominio o el prefijo de almacenamiento
+        if (str_contains($value, '/storage/')) {
+            $value = Str::after($value, '/storage/');
+        }
+
+        return Storage::url($value);
     }
 }
