@@ -74,12 +74,24 @@ class Story extends Model
             return $value;
         }
 
-        // Si la cadena contiene "/storage/", extraemos solo lo que viene después
-        // para evitar duplicar el dominio o el prefijo de almacenamiento
+        // Limpieza: si contiene el dominio o /storage/, extraemos solo la ruta final
         if (str_contains($value, '/storage/')) {
             $value = Str::after($value, '/storage/');
+        } elseif (str_contains($value, 'railway.app')) {
+            $value = Str::after($value, 'railway.app');
+            $value = ltrim($value, '/');
         }
 
-        return Storage::url($value);
+        // Generamos la URL base. Usamos asset() para asegurar protocolo y dominio
+        $url = asset('storage/' . $value);
+
+        // Forzamos siempre HTTPS en producción para evitar Mixed Content
+        if (str_starts_with($url, 'http://')) {
+            $url = str_replace('http://', 'https://', $url);
+        } elseif (!str_starts_with($url, 'http')) {
+            $url = 'https://' . ltrim($url, '/');
+        }
+
+        return $url;
     }
 }
