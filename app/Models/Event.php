@@ -226,4 +226,35 @@ class Event extends Model
 
         return false;
     }
+
+    /**
+     * Get the full URL for the cover image.
+     */
+    public function getCoverImageAttribute($value): ?string
+    {
+        if (empty($value))
+            return null;
+
+        // Si ya es una URL completa con protocolo, la devolvemos tal cual
+        if (preg_match('/^https?:\/\//', $value)) {
+            if (app()->isProduction() && str_starts_with($value, 'http://')) {
+                return str_replace('http://', 'https://', $value);
+            }
+            return $value;
+        }
+
+        // Generamos la URL base usando asset()
+        $url = asset('storage/' . $value);
+
+        // Forzamos siempre HTTPS en producción para evitar Mixed Content
+        if (app()->isProduction()) {
+            if (str_starts_with($url, 'http://')) {
+                $url = str_replace('http://', 'https://', $url);
+            } elseif (!str_starts_with($url, 'https://') && !str_starts_with($url, 'http://')) {
+                $url = 'https://' . ltrim($url, '/');
+            }
+        }
+
+        return $url;
+    }
 }

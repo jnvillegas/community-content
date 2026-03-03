@@ -95,15 +95,19 @@ class Article extends Model
             $value = ltrim($value, '/');
         }
 
-        // Generamos la URL base usando asset()
+        // Generamos la URL completa usando asset() o Storage
         $url = asset('storage/' . $value);
 
-        // Forzamos siempre HTTPS en producción para evitar Mixed Content
-        if (str_starts_with($url, 'http://')) {
-            $url = str_replace('http://', 'https://', $url);
-        } elseif (!str_starts_with($url, 'http')) {
-            $url = 'https://' . ltrim($url, '/');
+        // Ajustamos el protocolo según el entorno
+        if (app()->isProduction()) {
+            if (str_starts_with($url, 'http://')) {
+                $url = str_replace('http://', 'https://', $url);
+            } elseif (!str_starts_with($url, 'https://') && !str_starts_with($url, 'http://')) {
+                $url = 'https://' . ltrim($url, '/');
+            }
         }
+        // En local/staging, dejamos que asset() determine el protocolo (usualmente http://)
+        // o lo forzamos a http:// si es necesario, pero asset() suele ser suficiente.
 
         return $url;
     }

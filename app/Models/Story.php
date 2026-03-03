@@ -86,10 +86,12 @@ class Story extends Model
         $url = asset('storage/' . $value);
 
         // Forzamos siempre HTTPS en producción para evitar Mixed Content
-        if (str_starts_with($url, 'http://')) {
-            $url = str_replace('http://', 'https://', $url);
-        } elseif (!str_starts_with($url, 'http')) {
-            $url = 'https://' . ltrim($url, '/');
+        if (app()->isProduction()) {
+            if (str_starts_with($url, 'http://')) {
+                $url = str_replace('http://', 'https://', $url);
+            } elseif (!str_starts_with($url, 'https://') && !str_starts_with($url, 'http://')) {
+                $url = 'https://' . ltrim($url, '/');
+            }
         }
 
         return $url;

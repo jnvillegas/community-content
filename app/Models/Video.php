@@ -58,6 +58,40 @@ class Video extends Model
         return "https://www.youtube.com/embed/{$this->youtube_id}?rel=0&showinfo=0&autoplay=0";
     }
 
+    /**
+     * Get the full URL for the thumbnail.
+     */
+    public function getThumbnailUrlAttribute($value): ?string
+    {
+        if (empty($value)) {
+            // Si no hay miniatura, podemos devolver una por defecto de YouTube si tenemos el ID
+            if ($this->youtube_id) {
+                return "https://img.youtube.com/vi/{$this->youtube_id}/maxresdefault.jpg";
+            }
+            return null;
+        }
+
+        // Si ya es una URL completa, la devolvemos
+        if (preg_match('/^https?:\/\//', $value)) {
+            // Forzamos HTTPS solo en producción
+            if (app()->isProduction() && str_starts_with($value, 'http://')) {
+                return str_replace('http://', 'https://', $value);
+            }
+            return $value;
+        }
+
+        // Si es una ruta relativa de storage
+        $url = asset('storage/' . $value);
+
+        if (app()->isProduction()) {
+            if (str_starts_with($url, 'http://')) {
+                $url = str_replace('http://', 'https://', $url);
+            }
+        }
+
+        return $url;
+    }
+
     public function shouldRecordActivity(string $eventName): bool
     {
         if ($eventName === 'created') {

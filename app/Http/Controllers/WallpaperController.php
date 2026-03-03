@@ -15,8 +15,20 @@ class WallpaperController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:manage wallpapers', except: ['index', 'show', 'download']),
+            new Middleware('permission:manage wallpapers', except: ['index', 'show', 'download', 'gallery']),
+            new Middleware('permission:view wallpaper gallery', only: ['gallery']),
         ];
+    }
+
+    public function gallery(): Response
+    {
+        $wallpapers = Wallpaper::where('status', 'published')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return Inertia::render('wallpapers/Gallery', [
+            'wallpapers' => $wallpapers
+        ]);
     }
 
     /**

@@ -51,12 +51,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('notifications/{id}', [\App\Http\Controllers\NotificationController::class, 'destroy'])->name('notifications.destroy');
 
     // Articles (WordPress-style blog)
+    Route::get('articles/gallery', [\App\Http\Controllers\ArticleController::class, 'gallery'])->name('articles.gallery');
     Route::resource('articles', \App\Http\Controllers\ArticleController::class);
 
     // Videos (Travel Explorer Hub)
+    Route::get('videos/gallery', [\App\Http\Controllers\VideoController::class, 'gallery'])->name('videos.gallery');
     Route::resource('videos', \App\Http\Controllers\VideoController::class);
 
     // Wallpapers
+    Route::get('wallpapers/gallery', [\App\Http\Controllers\WallpaperController::class, 'gallery'])->name('wallpapers.gallery');
     Route::resource('wallpapers', \App\Http\Controllers\WallpaperController::class);
     //
     // // Dynamic Categories (AJAX)
