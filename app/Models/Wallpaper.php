@@ -2,14 +2,34 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use App\Traits\RecordsActivity;
 
 class Wallpaper extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, RecordsActivity;
+
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'author_id');
+    }
+
+    public function shouldRecordActivity(string $eventName): bool
+    {
+        if ($eventName === 'created') {
+            return $this->status === 'published';
+        }
+
+        if ($eventName === 'updated') {
+            return $this->wasChanged('status') && $this->status === 'published';
+        }
+
+        return false;
+    }
 
     protected $fillable = [
         'title',
@@ -48,14 +68,6 @@ class Wallpaper extends Model
                 $wallpaper->slug = Str::slug($wallpaper->title);
             }
         });
-    }
-
-    /**
-     * Get the author of the wallpaper.
-     */
-    public function author(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'author_id');
     }
 
     /**

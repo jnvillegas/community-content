@@ -6,9 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Traits\RecordsActivity;
+
 class Course extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, RecordsActivity;
+
+    public function shouldRecordActivity(string $eventName): bool
+    {
+        if ($eventName === 'created') {
+            return $this->status === 'published';
+        }
+
+        if ($eventName === 'updated') {
+            return $this->wasChanged('status') && $this->status === 'published';
+        }
+
+        return false;
+    }
 
     protected $fillable = [
         'title',

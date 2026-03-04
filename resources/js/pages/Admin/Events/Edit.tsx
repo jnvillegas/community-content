@@ -15,7 +15,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Loader2, ArrowLeft, CalendarDays } from 'lucide-react';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useState } from 'react';
 
@@ -51,7 +51,7 @@ export default function Edit({ event, categories, types }: Props) {
         post(`/admin/events/${event.slug}`);
     };
 
-    const isVirtual = data.event_type === 'WEBINAR' || data.event_type === 'LIVE';
+    const isVirtual = (data.event_type as string) === 'WEBINAR' || (data.event_type as string) === 'LIVE';
 
     return (
         <AppLayout breadcrumbs={[
@@ -73,7 +73,11 @@ export default function Edit({ event, categories, types }: Props) {
                         <h1 className="text-3xl font-black tracking-tight mt-2">Edit Event</h1>
                         <div className="flex items-center gap-2 text-muted-foreground mt-1 text-sm">
                             <CalendarDays className="w-4 h-4" />
-                            <span>Publicado originalmente el {format(new Date(event.created_at), "d 'de' MMMM, yyyy", { locale: es })}</span>
+                            <span>
+                                Publicado originalmente el {event.created_at && isValid(new Date(event.created_at))
+                                    ? format(new Date(event.created_at), "d 'de' MMMM, yyyy", { locale: es })
+                                    : 'N/A'}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -89,7 +93,7 @@ export default function Edit({ event, categories, types }: Props) {
                                 <Input
                                     id="title"
                                     value={data.title}
-                                    onChange={e => setData('title', e.target.value)}
+                                    onChange={e => setData('title' as any, e.target.value)}
                                     required
                                 />
                                 {errors.title && <p className="text-sm text-red-500">{errors.title}</p>}
@@ -100,7 +104,7 @@ export default function Edit({ event, categories, types }: Props) {
                                 <Textarea
                                     id="description"
                                     value={data.description}
-                                    onChange={e => setData('description', e.target.value)}
+                                    onChange={e => setData('description' as any, e.target.value)}
                                     className="min-h-[120px]"
                                     required
                                 />
@@ -112,7 +116,7 @@ export default function Edit({ event, categories, types }: Props) {
                                     <Label htmlFor="type">Event Type</Label>
                                     <Select
                                         value={data.event_type}
-                                        onValueChange={(val) => setData('event_type', val)}
+                                        onValueChange={(val) => setData('event_type' as any, val)}
                                     >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select type" />
@@ -130,7 +134,7 @@ export default function Edit({ event, categories, types }: Props) {
                                     <Label htmlFor="status">Status</Label>
                                     <Select
                                         value={data.status}
-                                        onValueChange={(val: any) => setData('status', val)}
+                                        onValueChange={(val: any) => setData('status' as any, val)}
                                     >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select status" />
@@ -152,7 +156,7 @@ export default function Edit({ event, categories, types }: Props) {
                                     id="cover_image"
                                     type="file"
                                     accept="image/*"
-                                    onChange={e => setData('cover_image', e.target.files ? e.target.files[0] : null)}
+                                    onChange={e => setData('cover_image' as any, e.target.files ? e.target.files[0] : null)}
                                 />
                                 {errors.cover_image && <p className="text-sm text-red-500">{errors.cover_image}</p>}
                                 {event.cover_image && (
@@ -175,7 +179,7 @@ export default function Edit({ event, categories, types }: Props) {
                                     id="start_date"
                                     type="datetime-local"
                                     value={data.start_date}
-                                    onChange={e => setData('start_date', e.target.value)}
+                                    onChange={e => setData('start_date' as any, e.target.value)}
                                     required
                                 />
                                 {errors.start_date && <p className="text-sm text-red-500">{errors.start_date}</p>}
@@ -187,7 +191,7 @@ export default function Edit({ event, categories, types }: Props) {
                                     id="end_date"
                                     type="datetime-local"
                                     value={data.end_date}
-                                    onChange={e => setData('end_date', e.target.value)}
+                                    onChange={e => setData('end_date' as any, e.target.value)}
                                     required
                                 />
                                 {errors.end_date && <p className="text-sm text-red-500">{errors.end_date}</p>}
@@ -199,7 +203,7 @@ export default function Edit({ event, categories, types }: Props) {
                                     id="registration_deadline"
                                     type="datetime-local"
                                     value={data.registration_deadline}
-                                    onChange={e => setData('registration_deadline', e.target.value)}
+                                    onChange={e => setData('registration_deadline' as any, e.target.value)}
                                 />
                                 {errors.registration_deadline && <p className="text-sm text-red-500">{errors.registration_deadline}</p>}
                             </div>
@@ -217,7 +221,7 @@ export default function Edit({ event, categories, types }: Props) {
                                     <Input
                                         id="virtual_url"
                                         value={data.virtual_url}
-                                        onChange={e => setData('virtual_url', e.target.value)}
+                                        onChange={e => setData('virtual_url' as any, e.target.value)}
                                         placeholder="https://zoom.us/..."
                                     />
                                     {errors.virtual_url && <p className="text-sm text-red-500">{errors.virtual_url}</p>}
@@ -229,7 +233,7 @@ export default function Edit({ event, categories, types }: Props) {
                                         <Input
                                             id="location"
                                             value={data.location}
-                                            onChange={e => setData('location', e.target.value)}
+                                            onChange={e => setData('location' as any, e.target.value)}
                                             placeholder="e.g. Main Conference Hall"
                                         />
                                         {errors.location && <p className="text-sm text-red-500">{errors.location}</p>}
@@ -239,7 +243,7 @@ export default function Edit({ event, categories, types }: Props) {
                                         <Input
                                             id="address"
                                             value={data.address}
-                                            onChange={e => setData('address', e.target.value)}
+                                            onChange={e => setData('address' as any, e.target.value)}
                                             placeholder="123 Example St, City"
                                         />
                                         {errors.address && <p className="text-sm text-red-500">{errors.address}</p>}
@@ -249,7 +253,7 @@ export default function Edit({ event, categories, types }: Props) {
                                         <Input
                                             id="location_url"
                                             value={data.location_url}
-                                            onChange={e => setData('location_url', e.target.value)}
+                                            onChange={e => setData('location_url' as any, e.target.value)}
                                             placeholder="https://maps.google.com/..."
                                         />
                                         {errors.location_url && <p className="text-sm text-red-500">{errors.location_url}</p>}
@@ -264,7 +268,7 @@ export default function Edit({ event, categories, types }: Props) {
                                         id="max_participants"
                                         type="number"
                                         value={data.max_participants}
-                                        onChange={e => setData('max_participants', e.target.value)}
+                                        onChange={e => setData('max_participants' as any, e.target.value)}
                                         placeholder="Leave empty for unlimited"
                                     />
                                     {errors.max_participants && <p className="text-sm text-red-500">{errors.max_participants}</p>}
@@ -273,7 +277,7 @@ export default function Edit({ event, categories, types }: Props) {
                                     <Checkbox
                                         id="requires_subscription"
                                         checked={data.requires_subscription}
-                                        onCheckedChange={(checked) => setData('requires_subscription', !!checked)}
+                                        onCheckedChange={(checked) => setData('requires_subscription' as any, !!checked)}
                                     />
                                     <Label htmlFor="requires_subscription" className="cursor-pointer">
                                         Requires Active Subscription?

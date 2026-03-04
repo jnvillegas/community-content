@@ -5,9 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+use App\Traits\RecordsActivity;
+
 class StoryLike extends Model
 {
+    use RecordsActivity;
     protected $fillable = ['user_id', 'story_id'];
+    protected $touches = ['story'];
 
     public function user(): BelongsTo
     {

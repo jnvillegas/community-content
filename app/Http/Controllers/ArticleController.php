@@ -12,6 +12,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
+use App\Models\User;
 
 class ArticleController extends Controller implements HasMiddleware
 {

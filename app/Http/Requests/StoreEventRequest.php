@@ -32,7 +32,8 @@ class StoreEventRequest extends FormRequest
                     Event::TYPE_WORKSHOP,
                     Event::TYPE_MEETUP,
                     Event::TYPE_WEBINAR,
-                    Event::TYPE_TRIP
+                    Event::TYPE_TRIP,
+                    Event::TYPE_LIVE
                 ])
             ],
             'start_date' => ['required', 'date', 'after:now'],

@@ -1,7 +1,7 @@
 import { Event } from '@/types';
 import { Link, router } from '@inertiajs/react';
 import { Calendar, Clock, MapPin, ArrowRight, MessageCircle, Share2, Bookmark, Heart } from 'lucide-react';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useState } from 'react';
 
@@ -81,18 +81,20 @@ export default function EventCard({ event }: EventCardProps) {
                     <div className="flex items-center gap-2 min-w-0">
                         <Calendar className="sm:h-5 sm:w-5 text-zinc-800 dark:text-white" />
                         <span className="truncate">
-                            {event.start_date
+                            {event.start_date && isValid(new Date(event.start_date))
                                 ? format(new Date(event.start_date), 'd MMM', { locale: es })
-                                : 'Disponible'}
+                                : 'Por definir'}
                         </span>
                     </div>
 
-                    {event.start_date && (
-                        <div className="flex items-center gap-2 min-w-0">
-                            <Clock className="sm:h-5 sm:w-5 text-zinc-800 dark:text-white" />
-                            <span className="truncate">{format(new Date(event.start_date), "HH:mm 'hs'", { locale: es })}</span>
-                        </div>
-                    )}
+                    <div className="flex items-center gap-2 min-w-0">
+                        <Clock className="sm:h-5 sm:w-5 text-zinc-800 dark:text-white" />
+                        <span className="truncate">
+                            {isValid(new Date(event.start_date))
+                                ? format(new Date(event.start_date), "HH:mm 'hs'", { locale: es })
+                                : '--:-- hs'}
+                        </span>
+                    </div>
 
                     <div className="flex items-center gap-2 min-w-0">
                         <MapPin className="sm:h-5 sm:w-5 text-zinc-800 dark:text-white" />

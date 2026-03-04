@@ -26,6 +26,16 @@ class User extends Authenticatable
         'password',
         'avatar',
         'status',
+        'last_seen_at',
+    ];
+
+    /**
+     * The attributes that should be appended to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'is_online',
     ];
 
     /**
@@ -51,7 +61,22 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
+            'last_seen_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Determine if the user is considered online.
+     * 
+     * @return bool
+     */
+    public function getIsOnlineAttribute(): bool
+    {
+        if (!$this->last_seen_at) {
+            return false;
+        }
+
+        return $this->last_seen_at->gt(now()->subMinutes(5));
     }
     /**
      * Get the event registrations for the user.

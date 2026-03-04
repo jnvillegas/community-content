@@ -13,6 +13,7 @@ interface Story {
     images: string[];
     likes_count: number;
     is_liked: boolean;
+    is_viewed: boolean;
     comments: any[];
     author: {
         name: string;
@@ -32,6 +33,7 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
         auth.permissions?.includes('manage all') ||
         auth.roles?.includes('admin');
 
+    const [localStories, setLocalStories] = useState<Story[]>(stories);
     const [selectedStoryId, setSelectedStoryId] = useState<number | null>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
@@ -40,6 +42,12 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
     const [draggedDistance, setDraggedDistance] = useState(0);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
+    useEffect(() => {
+        // Update local stories when prop changes
+        // We now keep stories even when viewed, so they won't vanish abruptly
+        setLocalStories(stories);
+    }, [stories]);
+
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const velocityRef = useRef(0);
     const velocitySamplesRef = useRef<number[]>([]);
@@ -47,7 +55,7 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
     const lastTimeRef = useRef(0);
     const animationFrameRef = useRef<number | null>(null);
 
-    const selectedStory = stories.find(s => s.id === selectedStoryId) || null;
+    const selectedStory = localStories.find(s => s.id === selectedStoryId) || null;
 
     const stopInertia = () => {
         if (animationFrameRef.current !== null) {
@@ -139,9 +147,9 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
 
     const handleStoryEnd = () => {
         // Find current story index and move to next
-        const currentIndex = stories.findIndex(s => s.id === selectedStoryId);
-        if (currentIndex !== -1 && currentIndex < stories.length - 1) {
-            setSelectedStoryId(stories[currentIndex + 1].id);
+        const currentIndex = localStories.findIndex(s => s.id === selectedStoryId);
+        if (currentIndex !== -1 && currentIndex < localStories.length - 1) {
+            setSelectedStoryId(localStories[currentIndex + 1].id);
         } else {
             setSelectedStoryId(null);
         }
@@ -149,9 +157,9 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
 
     const handleStoryPrev = () => {
         // Find current story index and move to previous
-        const currentIndex = stories.findIndex(s => s.id === selectedStoryId);
+        const currentIndex = localStories.findIndex(s => s.id === selectedStoryId);
         if (currentIndex > 0) {
-            setSelectedStoryId(stories[currentIndex - 1].id);
+            setSelectedStoryId(localStories[currentIndex - 1].id);
         }
     };
 
@@ -209,7 +217,7 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
             ro.disconnect();
             window.removeEventListener('resize', update);
         };
-    }, [stories]);
+    }, [localStories]);
 
     // Touch handlers for mobile
     const handleTouchStart = (e: React.TouchEvent) => {
@@ -290,7 +298,7 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
-                className={`flex w-full items-center gap-5 overflow-x-auto pb-4 scrollbar-hide select-none ${(isDragging || isAnimating) ? 'snap-none' : 'snap-x snap-mandatory'
+                className={`flex w-full items-center gap-5 overflow-x-auto pt-2 pb-4 scrollbar-hide select-none ${(isDragging || isAnimating) ? 'snap-none' : 'snap-x snap-mandatory'
                     }`}
                 style={{
                     scrollbarWidth: 'none',
@@ -315,32 +323,36 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
                     <div key="create" className="snap-start">
                         <div
                             onClick={() => setIsCreateModalOpen(true)}
-                            className='flex items-center justify-center w-24 h-32 z-10 cursor-pointer border-dashed border-2 border-gray-500 rounded-2xl'
+                            className='relative w-24 h-32 z-10 cursor-pointer p-[2px] rounded-2xl bg-gradient-to-b from-black to-gray-400 hover:shadow-md transition-all duration-300 group/add'
                         >
-                            <Plus className='h-8 w-6 text-gray-500' />
+                            <div className="w-full h-full rounded-[14px] bg-white dark:bg-gray-900 flex items-center justify-center transition-all duration-300 group-hover/add:bg-gray-50 dark:group-hover/add:bg-gray-800">
+                                <div className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-400 dark:border-gray-500 group-hover/add:border-blue-500 transition-colors">
+                                    <Plus className='h-5 w-5 text-gray-500 dark:text-gray-400 group-hover/add:text-blue-500' />
+                                </div>
+                            </div>
                         </div>
-                        <p className="text-xs text-gray-500 mt-2 text-center">Add Story</p>
+                        <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mt-2 text-center">add stories</p>
                     </div>
                 )}
-                {stories.map((story) => (
+                {localStories.map((story) => (
                     <div key={story.id} className="snap-start">
                         <div
                             onClick={() => handleCardClick(story.id)}
-                            className='relative group/story flex items-center justify-center w-24 h-32 z-10 cursor-pointer rounded-2xl overflow-hidden transition-all duration-300'
+                            className={`relative group/story flex items-center justify-center w-24 h-32 z-10 cursor-pointer rounded-2xl transition-all duration-300 ${!story.is_viewed ? 'p-[2px] bg-gradient-to-b from-black to-gray-400' : ''}`}
                         >
-                            <img 
-                                src={story.content_url} 
-                                alt={story.title} 
-                                className="w-full h-full object-cover rounded-2xl transition-transform duration-500 group-hover/story:scale-110" 
-                            />
-                            
-                            {/* Gradient overlay for interaction */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover/story:opacity-100 transition-opacity duration-300" />
+                            <div className={`absolute inset-0 rounded-2xl overflow-hidden ${!story.is_viewed ? 'm-[2px] rounded-[14px]' : 'rounded-2xl'}`}>
+                                <img
+                                    src={story.content_url}
+                                    alt={story.title}
+                                    className="w-full h-full object-cover transition-transform duration-500 group-hover/story:scale-110"
+                                />
+                                {/* Gradient overlay for interaction */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover/story:opacity-100 transition-opacity duration-300" />
+                            </div>
 
-                            {(story.likes_count > 0 || (story.comments && story.comments.length > 0)) && (
-                                <div className="absolute top-2 right-2 z-20 animate-in fade-in zoom-in duration-300">
-                                    <div className="flex items-center justify-center min-w-[20px] h-5 px-1 bg-rose-500/90 backdrop-blur-sm rounded-full border border-white/40 shadow-sm">
-                                        <Heart className={`w-2.5 h-2.5 mr-0.5 fill-white text-white`} />
+                            {!story.is_viewed && (story.likes_count > 0 || (story.comments && story.comments.length > 0)) && (
+                                <div className="absolute -top-2 -right-2 z-20 animate-in fade-in zoom-in duration-300">
+                                    <div className="flex items-center justify-center w-6 h-6 bg-blue-600 backdrop-blur-sm rounded-full border-2 border-white shadow-lg">
                                         <span className="text-[10px] font-bold text-white leading-none">
                                             {(story.likes_count || 0) + (story.comments?.length || 0)}
                                         </span>

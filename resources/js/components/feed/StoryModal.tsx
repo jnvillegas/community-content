@@ -44,6 +44,7 @@ interface StoryModalProps {
 }
 
 export default function StoryModal({ story, isOpen, onClose, onStoryEnd, onStoryPrev }: StoryModalProps) {
+    const [localStory, setLocalStory] = useState<StoryData | null>(story);
     const [comment, setComment] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -56,17 +57,31 @@ export default function StoryModal({ story, isOpen, onClose, onStoryEnd, onStory
     const TOUCH_THRESHOLD = 50;
 
     useEffect(() => {
-        setCurrentImageIndex(0);
-    }, [story?.id, isOpen]);
+        if (story) {
+            setLocalStory(story);
+        }
+    }, [story]);
 
-    const images = story?.images && story.images.length > 0 ? story.images : (story ? [story.content_url] : []);
+    useEffect(() => {
+        setCurrentImageIndex(0);
+
+        if (isOpen && localStory?.id) {
+            router.post(`/stories/${localStory.id}/view`, {}, {
+                preserveScroll: true,
+                preserveState: true,
+                only: ['stories'], // Refresh only stories data
+            });
+        }
+    }, [localStory?.id, isOpen]);
+
+    const images = localStory?.images && localStory.images.length > 0 ? localStory.images : (localStory ? [localStory.content_url] : []);
 
     const nextImage = () => {
-        if (!story) return;
+        if (!localStory) return;
         if (currentImageIndex < images.length - 1) {
             setCurrentImageIndex((prev) => prev + 1);
         } else {
-            // Story ended, trigger callback for next story or close
+            // Story ended, trigger callback for next localStory or close
             if (onStoryEnd) {
                 onStoryEnd();
             } else {
@@ -76,11 +91,11 @@ export default function StoryModal({ story, isOpen, onClose, onStoryEnd, onStory
     };
 
     const prevImage = () => {
-        if (!story) return;
+        if (!localStory) return;
         if (currentImageIndex > 0) {
             setCurrentImageIndex((prev) => prev - 1);
         } else {
-            // Already on the first image of this story, go to previous story
+            // Already on the first image of this localStory, go to previous localStory
             if (onStoryPrev) {
                 onStoryPrev();
             }
@@ -134,19 +149,19 @@ export default function StoryModal({ story, isOpen, onClose, onStoryEnd, onStory
 
     // Auto-advance logic
     useEffect(() => {
-        if (!isOpen || !story || commentsOpen || isPressing || isInputFocused) return;
+        if (!isOpen || !localStory || commentsOpen || isPressing || isInputFocused) return;
 
         const timer = setTimeout(() => {
             nextImage();
         }, 5000);
 
         return () => clearTimeout(timer);
-    }, [currentImageIndex, isOpen, story?.id, commentsOpen, isPressing, isInputFocused]);
+    }, [currentImageIndex, isOpen, localStory?.id, commentsOpen, isPressing, isInputFocused]);
 
-    if (!story) return null;
+    if (!localStory) return null;
 
     const toggleLike = () => {
-        router.post(`/stories/${story.id}/like`, {}, {
+        router.post(`/stories/${localStory.id}/like`, {}, {
             preserveScroll: true,
             preserveState: true,
         });
@@ -157,7 +172,7 @@ export default function StoryModal({ story, isOpen, onClose, onStoryEnd, onStory
         if (!comment.trim()) return;
 
         setIsSubmitting(true);
-        router.post(`/stories/${story.id}/comments`, {
+        router.post(`/stories/${localStory.id}/comments`, {
             content: comment
         }, {
             preserveScroll: true,
@@ -179,8 +194,8 @@ export default function StoryModal({ story, isOpen, onClose, onStoryEnd, onStory
             <DialogContent className="sm:max-w-md p-0 overflow-hidden gap-0 bg-black border-none h-[90vh] flex flex-col focus:outline-none focus-visible:ring-0">
 
                 <DialogHeader className="sr-only">
-                    <DialogTitle>{story.title}</DialogTitle>
-                    <DialogDescription>{story.description}</DialogDescription>
+                    <DialogTitle>{localStory.title}</DialogTitle>
+                    <DialogDescription>{localStory.description}</DialogDescription>
                 </DialogHeader>
 
                 {/* Progress Bars */}
@@ -203,12 +218,12 @@ export default function StoryModal({ story, isOpen, onClose, onStoryEnd, onStory
                 <div className="absolute top-6 left-0 right-0 z-50 flex items-center justify-between px-4 text-white">
                     <div className="flex items-center gap-3">
                         {/* <Avatar className="h-10 w-10 border-2 border-white/80">
-                            <AvatarImage src={story.author.avatar} />
-                            <AvatarFallback>{story.author.name[0]}</AvatarFallback>
+                            <AvatarImage src={localStory.author.avatar} />
+                            <AvatarFallback>{localStory.author.name[0]}</AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col">
-                            <span className="text-sm font-bold leading-none drop-shadow-md">{story.author.name}</span>
-                            <span className="text-xs text-white/70 mt-1 drop-shadow-md">{story.created_at}</span>
+                            <span className="text-sm font-bold leading-none drop-shadow-md">{localStory.author.name}</span>
+                            <span className="text-xs text-white/70 mt-1 drop-shadow-md">{localStory.created_at}</span>
                         </div> */}
                     </div>
                     <button onClick={onClose} className="p-1 hover:bg-white/10 rounded-full transition-colors">
@@ -224,9 +239,9 @@ export default function StoryModal({ story, isOpen, onClose, onStoryEnd, onStory
                     onMouseLeave={handleMouseUp}
                 >
                     <img
-                        key={`${story.id}-${currentImageIndex}`}
+                        key={`${localStory.id}-${currentImageIndex}`}
                         src={images[currentImageIndex]}
-                        alt={story.title}
+                        alt={localStory.title}
                         className="w-full h-full object-contain animate-fade-in"
                     />
 
@@ -260,7 +275,11 @@ export default function StoryModal({ story, isOpen, onClose, onStoryEnd, onStory
                                 placeholder="Send Comment"
                                 value={comment}
                                 onChange={(e) => setComment(e.target.value)}
-                                onFocus={() => setIsInputFocused(true)}
+                                onFocus={() => {
+                                    setIsInputFocused(true);
+                                    setCommentsOpen(true);
+                                }}
+                                onClick={() => setCommentsOpen(true)}
                                 onBlur={() => setIsInputFocused(false)}
                                 className="flex-1 border-none bg-transparent p-0 focus-visible:ring-0 placeholder:text-white/60 text-sm h-auto"
                             />
@@ -272,9 +291,9 @@ export default function StoryModal({ story, isOpen, onClose, onStoryEnd, onStory
                         </form>
 
                         <button onClick={toggleLike} className="flex gap-2 items-center justify-center p-1 transition-transform min-w-[32px]">
-                            <Heart className={`w-7 h-7 filter drop-shadow-lg transition-all ${story.is_liked ? 'fill-red-500 text-red-500' : 'text-white'}`} />
-                            {(story.likes_count ?? 0) >= 1 && (
-                                <span className="text-[16px] font-bold leading-none drop-shadow-md">{story.likes_count}</span>
+                            <Heart className={`w-7 h-7 filter drop-shadow-lg transition-all ${localStory.is_liked ? 'fill-red-500 text-red-500' : 'text-white'}`} />
+                            {(localStory.likes_count ?? 0) >= 1 && (
+                                <span className="text-[16px] font-bold leading-none drop-shadow-md">{localStory.likes_count}</span>
                             )}
                         </button>
 
@@ -284,21 +303,21 @@ export default function StoryModal({ story, isOpen, onClose, onStoryEnd, onStory
                             aria-label="Ver comentarios"
                         >
                             <MessageCircle className="flex w-7 h-7 text-white filter drop-shadow-lg" />
-                            {story.comments && story.comments.length >= 1 && (
-                                <span className="text-[16px] font-bold leading-none drop-shadow-md">{story.comments.length}</span>
+                            {localStory.comments && localStory.comments.length >= 1 && (
+                                <span className="text-[16px] font-bold leading-none drop-shadow-md">{localStory.comments.length}</span>
                             )}
                         </button>
                     </div>
                 </div>
-                {/* Comments modal (inside story) */}
+                {/* Comments modal (inside localStory) */}
                 <Dialog open={commentsOpen} onOpenChange={(open) => !open && setCommentsOpen(false)}>
-                    <DialogContent className="sm:max-w-md top-[73%]">
+                    <DialogContent className="sm:max-w-md top-[73%] animate-in fade-in slide-in-from-bottom-full duration-500 ease-out focus:outline-none focus-visible:ring-0">
                         <DialogHeader>
-                            <DialogTitle>Comments</DialogTitle>
+                            <DialogTitle>Comentarios ({localStory.comments?.length || 0})</DialogTitle>
                             {/* <DialogDescription>
                                 <div className="flex items-center gap-3 mt-2">
                                     <Heart className="w-5 h-5 text-red-500" />
-                                    <span className="font-bold">{story.likes_count ?? 0} likes</span>
+                                    <span className="font-bold">{localStory.likes_count ?? 0} likes</span>
                                 </div>
                             </DialogDescription> */}
                         </DialogHeader>
@@ -306,8 +325,8 @@ export default function StoryModal({ story, isOpen, onClose, onStoryEnd, onStory
                         <div className="p-2">
                             <ScrollArea className="h-64">
                                 <div className="space-y-4">
-                                    {story.comments && story.comments.length > 0 ? (
-                                        story.comments.map((c: Comment) => (
+                                    {localStory.comments && localStory.comments.length > 0 ? (
+                                        localStory.comments.map((c: Comment) => (
                                             <div key={c.id} className="flex items-start gap-3">
                                                 <Avatar className="h-8 w-8">
                                                     {/* <AvatarImage src={c.user.avatar} /> */}
@@ -335,6 +354,8 @@ export default function StoryModal({ story, isOpen, onClose, onStoryEnd, onStory
                                         placeholder="Send Comment"
                                         value={comment}
                                         onChange={(e) => setComment(e.target.value)}
+                                        autoFocus
+                                        className="focus-visible:ring-[#1d9bf0]"
                                     />
                                     <Button type="submit" disabled={isSubmitting}>
                                         <Send className="w-4 h-4" />

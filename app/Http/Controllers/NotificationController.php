@@ -11,18 +11,30 @@ class NotificationController extends Controller
     /**
      * Get all notifications for the authenticated user.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return auth()->user()->notifications()->paginate(20);
+        $notifications = auth()->user()->notifications()->paginate(20);
+
+        if ($request->wantsJson()) {
+            return $notifications;
+        }
+
+        return \Inertia\Inertia::render('notifications/index', [
+            'notifications' => $notifications
+        ]);
     }
 
     /**
      * Mark a specific notification as read.
      */
-    public function markAsRead(string $id): RedirectResponse
+    public function markAsRead(string $id)
     {
         $notification = auth()->user()->notifications()->findOrFail($id);
         $notification->markAsRead();
+
+        if (request()->wantsJson() || request()->header('X-Inertia')) {
+            return response()->noContent();
+        }
 
         return redirect()->back();
     }
@@ -30,9 +42,13 @@ class NotificationController extends Controller
     /**
      * Mark all notifications as read.
      */
-    public function markAllAsRead(): RedirectResponse
+    public function markAllAsRead()
     {
         auth()->user()->unreadNotifications->markAsRead();
+
+        if (request()->wantsJson() || request()->header('X-Inertia')) {
+            return response()->noContent();
+        }
 
         return redirect()->back();
     }
@@ -40,10 +56,14 @@ class NotificationController extends Controller
     /**
      * Delete a notification.
      */
-    public function destroy(string $id): RedirectResponse
+    public function destroy(string $id)
     {
         $notification = auth()->user()->notifications()->findOrFail($id);
         $notification->delete();
+
+        if (request()->wantsJson() || request()->header('X-Inertia')) {
+            return response()->noContent();
+        }
 
         return redirect()->back();
     }

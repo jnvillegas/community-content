@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { Heart, MessageCircle, Send, X, Share2, MapPin, Calendar } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { router, usePage, Link } from "@inertiajs/react";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
 import { es } from "date-fns/locale";
 
 interface Comment {
@@ -160,12 +160,16 @@ export default function EventModal({ event, isOpen, onClose }: EventModalProps) 
                                 <div className="flex flex-col gap-2 text-sm text-gray-600 dark:text-gray-300">
                                     <div className="flex items-center gap-2">
                                         <Calendar className="w-4 h-4 text-gray-400" />
-                                        <span>{format(new Date(event.start_date), "PPP", { locale: es })}</span>
+                                        <span>
+                                            {event.start_date && isValid(new Date(event.start_date))
+                                                ? format(new Date(event.start_date), "PPP", { locale: es })
+                                                : "Fecha por definir"}
+                                        </span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <MapPin className="w-4 h-4 text-gray-400" />
                                         <a
-                                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`}
+                                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location || '')}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
@@ -194,16 +198,16 @@ export default function EventModal({ event, isOpen, onClose }: EventModalProps) 
 
                             {/* Comments List */}
                             <div className="space-y-4">
-                                {event.comments.length > 0 ? (
+                                {event.comments && event.comments.length > 0 ? (
                                     event.comments.map((comment) => (
                                         <div key={comment.id} className="flex gap-3 items-start">
                                             <Avatar className="w-8 h-8 shrink-0">
-                                                <AvatarImage src={comment.user.avatar} />
-                                                <AvatarFallback>{comment.user.name.substring(0, 2).toUpperCase()}</AvatarFallback>
+                                                <AvatarImage src={comment.user?.avatar} />
+                                                <AvatarFallback>{(comment.user?.name || "??").substring(0, 2).toUpperCase()}</AvatarFallback>
                                             </Avatar>
                                             <div className="flex flex-col text-sm">
                                                 <div className="flex items-baseline gap-2">
-                                                    <span className="font-bold text-gray-900 dark:text-gray-100">{comment.user.name}</span>
+                                                    <span className="font-bold text-gray-900 dark:text-gray-100">{comment.user?.name || "Usuario"}</span>
                                                     <span className="text-xs text-gray-400">{comment.created_at}</span>
                                                 </div>
                                                 <p className="text-gray-700 dark:text-gray-300 leading-snug">{comment.content}</p>
@@ -248,7 +252,7 @@ export default function EventModal({ event, isOpen, onClose }: EventModalProps) 
                                 </Button>
                             </div>
                             <div className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                                {event.likes_count} Me gusta
+                                {event.likes_count || 0} Me gusta
                             </div>
                         </div>
 

@@ -12,7 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { type SharedData } from '@/types';
+import { type PageProps } from '@/types';
 import { cn } from '@/lib/utils';
 import axios from 'axios';
 
@@ -30,7 +30,7 @@ interface NotificationData {
 }
 
 export function NotificationDropdown() {
-    const { auth } = usePage<SharedData>().props;
+    const { auth } = usePage<PageProps>().props;
     const [notifications, setNotifications] = useState<NotificationData[]>([]);
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
@@ -47,25 +47,6 @@ export function NotificationDropdown() {
         }
     };
 
-    useEffect(() => {
-        if (isOpen) {
-            fetchNotifications();
-        }
-    }, [isOpen]);
-
-    const markAsRead = async (id: string) => {
-        try {
-            await axios.patch(`/notifications/${id}/read`);
-            setNotifications(notifications.map(n =>
-                n.id === id ? { ...n, read_at: new Date().toISOString() } : n
-            ));
-            // Trigger Inertia reload to update the shared count
-            router.reload({ only: ['auth'] });
-        } catch (error) {
-            console.error('Failed to mark notification as read', error);
-        }
-    };
-
     const markAllAsRead = async () => {
         try {
             await axios.post('/notifications/read-all');
@@ -75,6 +56,33 @@ export function NotificationDropdown() {
             console.error('Failed to mark all as read', error);
         }
     };
+
+    const markAsRead = async (id: string, actionUrl?: string) => {
+        try {
+            await axios.patch(`/notifications/${id}/read`);
+            setNotifications(notifications.map(n =>
+                n.id === id ? { ...n, read_at: new Date().toISOString() } : n
+            ));
+
+            // If there's an action URL, navigate to it
+            if (actionUrl && actionUrl !== '#') {
+                router.visit(actionUrl);
+            } else {
+                router.reload({ only: ['auth'] });
+            }
+        } catch (error) {
+            console.error('Failed to mark notification as read', error);
+        }
+    };
+
+    useEffect(() => {
+        if (isOpen) {
+            fetchNotifications();
+            if (auth.unread_notifications_count > 0) {
+                markAllAsRead();
+            }
+        }
+    }, [isOpen]);
 
     const deleteNotification = async (id: string, e: React.MouseEvent) => {
         e.stopPropagation();
@@ -90,12 +98,14 @@ export function NotificationDropdown() {
     return (
         <DropdownMenu onOpenChange={setIsOpen}>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative text-gray-500">
-                    <Bell className="h-5 w-5" />
+                <button className="relative p-2 rounded-xl text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-all duration-300 group/bell">
+                    <Bell className="size-5 group-hover/bell:scale-110 transition-transform" />
                     {auth.unread_notifications_count > 0 && (
-                        <span className="absolute right-2.5 top-2.5 flex h-2 w-2 rounded-full bg-red-500 border-2 border-white dark:border-gray-950"></span>
+                        <div className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white border-2 border-white dark:border-gray-950">
+                            {auth.unread_notifications_count}
+                        </div>
                     )}
-                </Button>
+                </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-80 p-0" align="end">
                 <DropdownMenuLabel className="p-4 flex items-center justify-between">
@@ -129,7 +139,7 @@ export function NotificationDropdown() {
                                         "p-4 border-b border-gray-50 dark:border-gray-800 last:border-0 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors relative group",
                                         !notification.read_at && "bg-blue-50/30 dark:bg-blue-900/10"
                                     )}
-                                    onClick={() => markAsRead(notification.id)}
+                                    onClick={() => markAsRead(notification.id, notification.data.action_url)}
                                 >
                                     <div className="flex gap-3">
                                         <Avatar className="h-9 w-9 shrink-0">
@@ -171,7 +181,10 @@ export function NotificationDropdown() {
                     )}
                 </ScrollArea>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="p-3 justify-center text-xs font-bold text-gray-500 uppercase tracking-widest cursor-pointer hover:text-blue-600">
+                <DropdownMenuItem
+                    className="p-3 justify-center text-xs font-bold text-gray-500 uppercase tracking-widest cursor-pointer hover:text-blue-600"
+                    onClick={() => router.visit(window.route ? window.route('notifications.index') : '/notifications')}
+                >
                     View all notifications
                 </DropdownMenuItem>
             </DropdownMenuContent>

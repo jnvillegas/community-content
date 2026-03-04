@@ -1,4 +1,5 @@
 import { Head, Link, useForm, usePage, router } from '@inertiajs/react';
+import { format, isValid } from 'date-fns';
 import AppLayout from '@/layouts/app-layout';
 import { Event, PageProps } from '@/types';
 import { Badge } from '@/components/ui/badge';
@@ -19,7 +20,6 @@ import {
     MessageCircle,
     Send
 } from 'lucide-react';
-import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useState, useEffect } from 'react';
 
@@ -102,7 +102,10 @@ export default function Show({ event: initialEvent, registrations_count, can_reg
     const event = page.props.event;
 
     const formatDate = (dateString: string) => {
-        return format(new Date(dateString), 'EEEE, d MMMM yyyy, HH:mm', { locale: es });
+        if (!dateString) return 'N/A';
+        const date = new Date(dateString);
+        if (!isValid(date)) return 'N/A';
+        return format(date, 'EEEE, d MMMM yyyy, HH:mm', { locale: es });
     };
 
     const isVirtual = event.type === 'WEBINAR' || (event.type as string) === 'LIVE';
@@ -154,9 +157,13 @@ export default function Show({ event: initialEvent, registrations_count, can_reg
                                     <div>
                                         <p className="text-xs text-gray-300 uppercase tracking-widest">Fecha</p>
                                         <div className="flex gap-2">
-                                            <p>{format(new Date(event.start_date), 'd MMM yyyy', { locale: es })}</p>
+                                            <p>
+                                                {event.start_date && isValid(new Date(event.start_date))
+                                                    ? format(new Date(event.start_date), 'd MMM yyyy', { locale: es })
+                                                    : 'Por definir'}
+                                            </p>
 
-                                            {event.end_date && new Date(event.end_date).toDateString() !== new Date(event.start_date).toDateString() && (
+                                            {event.end_date && isValid(new Date(event.end_date)) && new Date(event.end_date).toDateString() !== new Date(event.start_date).toDateString() && (
                                                 <>
                                                     <p>-</p>
                                                     <p>{format(new Date(event.end_date), 'd MMM yyyy', { locale: es })}</p>
@@ -172,9 +179,13 @@ export default function Show({ event: initialEvent, registrations_count, can_reg
                                     <div>
                                         <p className="text-xs text-gray-300 uppercase tracking-widest">Horario</p>
                                         <div className='flex gap-2'>
-                                            <p>{format(new Date(event.start_date), 'HH:mm', { locale: es })} hs</p>
+                                            <p>
+                                                {event.start_date && isValid(new Date(event.start_date))
+                                                    ? format(new Date(event.start_date), 'HH:mm', { locale: es })
+                                                    : '--:--'} hs
+                                            </p>
 
-                                            {event.end_date && (
+                                            {event.end_date && isValid(new Date(event.end_date)) && (
                                                 <>
                                                     <p>-</p>
                                                     <p>{format(new Date(event.end_date), 'HH:mm', { locale: es })} hs</p>
@@ -294,11 +305,11 @@ export default function Show({ event: initialEvent, registrations_count, can_reg
                                                             </p>
                                                         </div>
                                                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                                                            {comment.created_at && format(
+                                                            {comment.created_at && isValid(new Date(comment.created_at)) ? format(
                                                                 new Date(comment.created_at),
                                                                 'd MMM yyyy HH:mm',
                                                                 { locale: es }
-                                                            )}
+                                                            ) : comment.created_at}
                                                         </p>
                                                     </div>
                                                 </div>

@@ -41,7 +41,16 @@ class Article extends Model
 
         static::creating(function ($article) {
             if (empty($article->slug)) {
-                $article->slug = Str::slug($article->title);
+                $slug = Str::slug($article->title);
+                $originalSlug = $slug;
+                $count = 1;
+
+                while (static::where('slug', $slug)->exists()) {
+                    $slug = "{$originalSlug}-{$count}";
+                    $count++;
+                }
+
+                $article->slug = $slug;
             }
         });
     }

@@ -57,7 +57,8 @@ class UpdateEventRequest extends FormRequest
                     Event::TYPE_WORKSHOP,
                     Event::TYPE_MEETUP,
                     Event::TYPE_WEBINAR,
-                    Event::TYPE_TRIP
+                    Event::TYPE_TRIP,
+                    Event::TYPE_LIVE
                 ])
             ],
             'start_date' => ['sometimes', 'required', 'date', 'after:now'],

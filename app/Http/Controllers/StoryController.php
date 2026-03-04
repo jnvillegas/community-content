@@ -6,6 +6,7 @@ use App\Models\Story;
 use App\Models\StoryLike;
 use App\Models\StoryComment;
 use App\Models\StoryImage;
+use App\Models\StoryView;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -31,6 +32,7 @@ class StoryController extends Controller
                 'images' => $story->images->map(fn($img) => $img->image_url),
                 'likes_count' => $story->likes->count(),
                 'is_liked' => auth()->check() ? $story->isLikedBy(auth()->user()) : false,
+                'is_viewed' => auth()->check() ? $story->isViewedBy(auth()->user()) : false,
                 'comments' => $story->comments->map(function ($comment) {
                     return [
                         'id' => $comment->id,
@@ -104,6 +106,12 @@ class StoryController extends Controller
             ]);
         }
 
+        if (auth()->check()) {
+            StoryView::updateOrCreate(
+                ['user_id' => auth()->id(), 'story_id' => $story->id]
+            )->touch();
+        }
+
         return back();
     }
 
@@ -118,6 +126,12 @@ class StoryController extends Controller
             'story_id' => $story->id,
             'content' => $request->content,
         ]);
+
+        if (auth()->check()) {
+            StoryView::updateOrCreate(
+                ['user_id' => auth()->id(), 'story_id' => $story->id]
+            )->touch();
+        }
 
         return back();
     }
@@ -137,5 +151,16 @@ class StoryController extends Controller
         $story->delete();
 
         return back()->with('success', 'Historia eliminada correctamente');
+    }
+
+    public function markAsViewed(Story $story)
+    {
+        if (auth()->check()) {
+            StoryView::updateOrCreate(
+                ['user_id' => auth()->id(), 'story_id' => $story->id]
+            )->touch();
+        }
+
+        return back()->with('success', 'Historia marcada como vista');
     }
 }

@@ -59,6 +59,7 @@ class EventController extends Controller
                 Event::TYPE_MEETUP,
                 Event::TYPE_WEBINAR,
                 Event::TYPE_TRIP,
+                Event::TYPE_LIVE,
             ],
         ]);
     }
@@ -111,6 +112,7 @@ class EventController extends Controller
                 Event::TYPE_MEETUP,
                 Event::TYPE_WEBINAR,
                 Event::TYPE_TRIP,
+                Event::TYPE_LIVE,
             ],
         ]);
     }
