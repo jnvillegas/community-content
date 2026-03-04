@@ -51,7 +51,7 @@ class EventService
             // 2. Handle File Upload
             if (isset($data['cover_image']) && $data['cover_image'] instanceof UploadedFile) {
                 $path = $data['cover_image']->store('events/covers', 'public');
-                $data['cover_image'] = '/storage/' . $path;
+                $data['cover_image'] = $path;
             }
 
             // 3. Generate Slug
@@ -108,7 +108,7 @@ class EventService
                 }
 
                 $path = $data['cover_image']->store('events/covers', 'public');
-                $data['cover_image'] = '/storage/' . $path;
+                $data['cover_image'] = $path;
             }
 
             // 4. Update via Repository

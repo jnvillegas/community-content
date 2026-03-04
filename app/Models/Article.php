@@ -93,21 +93,24 @@ class Article extends Model
 
         // Si ya es una URL completa con protocolo, la devolvemos tal cual
         if (preg_match('/^https?:\/\//', $value)) {
+            if (app()->isProduction() && str_starts_with($value, 'http://')) {
+                return str_replace('http://', 'https://', $value);
+            }
             return $value;
         }
 
         // Limpieza: si contiene el dominio o /storage/, extraemos solo la ruta final
         if (str_contains($value, '/storage/')) {
-            $value = Str::after($value, '/storage/');
+            $value = \Illuminate\Support\Str::after($value, '/storage/');
         } elseif (str_contains($value, 'railway.app')) {
-            $value = Str::after($value, 'railway.app');
+            $value = \Illuminate\Support\Str::after($value, 'railway.app');
             $value = ltrim($value, '/');
         }
 
-        // Generamos la URL completa usando asset() o Storage
+        // Generamos la URL completa usando asset()
         $url = asset('storage/' . $value);
 
-        // Ajustamos el protocolo según el entorno
+        // Forzamos siempre HTTPS en producción para evitar Mixed Content
         if (app()->isProduction()) {
             if (str_starts_with($url, 'http://')) {
                 $url = str_replace('http://', 'https://', $url);
@@ -115,8 +118,6 @@ class Article extends Model
                 $url = 'https://' . ltrim($url, '/');
             }
         }
-        // En local/staging, dejamos que asset() determine el protocolo (usualmente http://)
-        // o lo forzamos a http:// si es necesario, pero asset() suele ser suficiente.
 
         return $url;
     }

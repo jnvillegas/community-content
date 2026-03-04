@@ -97,4 +97,40 @@ class User extends Authenticatable
         // For now, return true to allow all users to register for events
         return true;
     }
+    /**
+     * Get the user's avatar URL.
+     */
+    public function getAvatarAttribute($value): ?string
+    {
+        if (empty($value)) {
+            return 'https://api.dicebear.com/7.x/avataaars/svg?seed=' . urlencode($this->name);
+        }
+
+        // Si ya es una URL completa con protocolo, la devolvemos tal cual
+        if (preg_match('/^https?:\/\//', $value)) {
+            if (app()->isProduction() && str_starts_with($value, 'http://')) {
+                return str_replace('http://', 'https://', $value);
+            }
+            return $value;
+        }
+
+        // Limpieza: si contiene /storage/, extraemos solo la ruta final
+        if (str_contains($value, '/storage/')) {
+            $value = \Illuminate\Support\Str::after($value, '/storage/');
+        }
+
+        // Generamos la URL base usando asset()
+        $url = asset('storage/' . $value);
+
+        // Forzamos siempre HTTPS en producción para evitar Mixed Content
+        if (app()->isProduction()) {
+            if (str_starts_with($url, 'http://')) {
+                $url = str_replace('http://', 'https://', $url);
+            } elseif (!str_starts_with($url, 'https://') && !str_starts_with($url, 'http://')) {
+                $url = 'https://' . ltrim($url, '/');
+            }
+        }
+
+        return $url;
+    }
 }

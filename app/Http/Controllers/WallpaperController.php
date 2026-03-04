@@ -77,7 +77,7 @@ class WallpaperController extends Controller implements HasMiddleware
 
         if ($request->hasFile('image_file')) {
             $path = $request->file('image_file')->store('wallpapers', 'public');
-            $validated['src'] = '/storage/' . $path;
+            $validated['src'] = $path;
         }
 
         if (empty($validated['src'])) {
@@ -135,7 +135,7 @@ class WallpaperController extends Controller implements HasMiddleware
 
         if ($request->hasFile('image_file')) {
             $path = $request->file('image_file')->store('wallpapers', 'public');
-            $validated['src'] = '/storage/' . $path;
+            $validated['src'] = $path;
         }
 
         // If src is still empty (and no new file), keep original src? 

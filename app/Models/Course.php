@@ -65,6 +65,11 @@ class Course extends Model
             return $value;
         }
 
+        // Limpieza: si contiene /storage/, extraemos solo la ruta final
+        if (str_contains($value, '/storage/')) {
+            $value = \Illuminate\Support\Str::after($value, '/storage/');
+        }
+
         // Generamos la URL base usando asset()
         $url = asset('storage/' . $value);
 

@@ -245,7 +245,8 @@ class Event extends Model
         }
 
         // Generamos la URL base usando asset()
-        $url = asset('storage/' . $value);
+        $path = str_starts_with($value, 'storage/') ? $value : 'storage/' . $value;
+        $url = asset($path);
 
         // Forzamos siempre HTTPS en producción para evitar Mixed Content
         if (app()->isProduction()) {

@@ -103,4 +103,39 @@ class Wallpaper extends Model
     {
         return $query->where('is_featured', true);
     }
+    /**
+     * Get the full URL for the wallpaper source.
+     */
+    public function getSrcAttribute($value): ?string
+    {
+        if (empty($value))
+            return null;
+
+        // Si ya es una URL completa con protocolo, la devolvemos tal cual
+        if (preg_match('/^https?:\/\//', $value)) {
+            if (app()->isProduction() && str_starts_with($value, 'http://')) {
+                return str_replace('http://', 'https://', $value);
+            }
+            return $value;
+        }
+
+        // Limpieza: si contiene /storage/, extraemos solo la ruta final
+        if (str_contains($value, '/storage/')) {
+            $value = \Illuminate\Support\Str::after($value, '/storage/');
+        }
+
+        // Generamos la URL base usando asset()
+        $url = asset('storage/' . $value);
+
+        // Forzamos siempre HTTPS en producción para evitar Mixed Content
+        if (app()->isProduction()) {
+            if (str_starts_with($url, 'http://')) {
+                $url = str_replace('http://', 'https://', $url);
+            } elseif (!str_starts_with($url, 'https://') && !str_starts_with($url, 'http://')) {
+                $url = 'https://' . ltrim($url, '/');
+            }
+        }
+
+        return $url;
+    }
 }

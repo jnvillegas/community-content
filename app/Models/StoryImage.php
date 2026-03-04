@@ -29,14 +29,17 @@ class StoryImage extends Model
 
         // Si ya es una URL completa con protocolo, la devolvemos tal cual
         if (preg_match('/^https?:\/\//', $value)) {
+            if (app()->isProduction() && str_starts_with($value, 'http://')) {
+                return str_replace('http://', 'https://', $value);
+            }
             return $value;
         }
 
         // Limpieza: si contiene el dominio o /storage/, extraemos solo la ruta final
         if (str_contains($value, '/storage/')) {
-            $value = Str::after($value, '/storage/');
+            $value = \Illuminate\Support\Str::after($value, '/storage/');
         } elseif (str_contains($value, 'railway.app')) {
-            $value = Str::after($value, 'railway.app');
+            $value = \Illuminate\Support\Str::after($value, 'railway.app');
             $value = ltrim($value, '/');
         }
 

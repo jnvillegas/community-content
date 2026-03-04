@@ -64,7 +64,6 @@ class Video extends Model
     public function getThumbnailUrlAttribute($value): ?string
     {
         if (empty($value)) {
-            // Si no hay miniatura, podemos devolver una por defecto de YouTube si tenemos el ID
             if ($this->youtube_id) {
                 return "https://img.youtube.com/vi/{$this->youtube_id}/maxresdefault.jpg";
             }
@@ -73,19 +72,24 @@ class Video extends Model
 
         // Si ya es una URL completa, la devolvemos
         if (preg_match('/^https?:\/\//', $value)) {
-            // Forzamos HTTPS solo en producción
             if (app()->isProduction() && str_starts_with($value, 'http://')) {
                 return str_replace('http://', 'https://', $value);
             }
             return $value;
         }
 
-        // Si es una ruta relativa de storage
+        // Limpieza: si contiene /storage/, extraemos solo la ruta final
+        if (str_contains($value, '/storage/')) {
+            $value = \Illuminate\Support\Str::after($value, '/storage/');
+        }
+
         $url = asset('storage/' . $value);
 
         if (app()->isProduction()) {
             if (str_starts_with($url, 'http://')) {
                 $url = str_replace('http://', 'https://', $url);
+            } elseif (!str_starts_with($url, 'https://') && !str_starts_with($url, 'http://')) {
+                $url = 'https://' . ltrim($url, '/');
             }
         }
 
