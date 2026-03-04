@@ -4,6 +4,7 @@ import WebLayout from "../../layout";
 import { usePage } from "@inertiajs/react";
 import { router } from '@inertiajs/react';
 import { Link } from '@inertiajs/react';
+import img from '../../assets/community/banner.jpg'
 
 const Community = () => {
     const auth = usePage().props.auth;
@@ -14,10 +15,15 @@ const Community = () => {
         <>
             <main className={styles.hero_main}>
                 <div className={styles.hero_background_wrapper}>
-                    <img
+                    {/* <img
                         alt="Consolidated Community Pillars"
                         className={styles.hero_background_image}
                         src="https://images.unsplash.com/photo-1604239282228-6a723984962c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    /> */}
+                    <img
+                        alt="Consolidated Community Pillars"
+                        className={styles.hero_background_image}
+                        src={img}
                     />
                     <div className={styles.hero_gradient_overlay} />
                     <div className={styles.hero_vignette_overlay} />

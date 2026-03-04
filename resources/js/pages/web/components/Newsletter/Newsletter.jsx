@@ -1,4 +1,5 @@
 import styles from './Newsletter.module.css'
+import img from '../../assets/blog/newsletter.jpg'
 
 const Newsletters = () => {
     return (
@@ -10,7 +11,7 @@ const Newsletters = () => {
 
                 <div className={styles.newsletter_card}>
                     <div className={styles.image_container}>
-                        <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvKu4g4cYm0CBCv0n9FEEmry0cVJiKseeSj7NhKSbg4_nvjUvhvattRCgvcKPhjS2_j3n8ite-_OX1BWYUADFOBHrY8oak4xKqIipuNxAJ-auq1Uxpw95cPpcgGXUTGe1X_qrid4qININLGZw5mSnk4mLNE45dg9S1bAuzJcBLaRPXCn1OdFIvPPVXf4D3T1TN0N2c5v8NUHOlA84ta6xiIeUfrQ7GtG6kgpe2xnYsJel4beq9Tp2USBquwwlw-kV1i4P010NE4eA" alt="" className={styles.image} />
+                        <img src={img} alt="" className={styles.image} />
                     </div>
 
                     <div className={styles.newsletter_content}>

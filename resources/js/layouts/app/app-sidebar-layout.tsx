@@ -5,6 +5,7 @@ import { AppShell } from '@/components/app-shell';
 import { AppSidebar } from '@/components/app-sidebar';
 import { AppSidebarHeader } from '@/components/app-sidebar-header';
 import { type BreadcrumbItem } from '@/types';
+import { AppNavUser } from '@/components/app-nav-user';
 
 export default function AppSidebarLayout({
     children,
@@ -20,6 +21,7 @@ export default function AppSidebarLayout({
             <div className="flex flex-1 overflow-hidden pt-16">
                 {/* Sidebar fijo a la izquierda */}
                 <AppSidebar />
+                {/* <AppNavUser></AppNavUser> */}
 
                 {/* Contenido principal scrollable - con margin dinámico para el sidebar fixed */}
                 <AppContent variant="sidebar" className="peer-data-[state=expanded]:ml-4 peer-data-[state=collapsed]:ml-4 transition-[margin-left] duration-200 ease-linear">

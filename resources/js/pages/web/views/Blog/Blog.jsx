@@ -5,6 +5,7 @@ import { Link } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
 import Newsletters from '../../components/Newsletter/Newsletter';
 import Banner from '../../components/Banner/Banner';
+import bannerImg from '../../assets/blog/banner.jpg'
 
 const scrollToTop = () => {
     window.scrollTo(0, 0);
@@ -18,7 +19,7 @@ const Blog = () => {
 
     return (
         <div>
-            <Banner title={'Blog'} />
+            <Banner title={'Blog'} url={bannerImg} />
 
             <section className={styles.stories_section}>
                 <div className={styles.stories_header}>

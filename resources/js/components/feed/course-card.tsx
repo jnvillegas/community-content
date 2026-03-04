@@ -42,15 +42,15 @@ export default function CourseCard({ course }: CourseCardProps) {
             </div>
 
             {/* Contenido inferior */}
-            <div className="p-6 md:p-8">
+            <div className="p-4 md:p-6">
                 {/* Título */}
-                <h2 className="text-2xl font-bold leading-tight text-zinc-800 dark:text-white transition-colors mb-4">
+                <h2 className="text-2xl font-bold leading-tight text-zinc-800 dark:text-white transition-colors mb-1">
                     {course.title}
                 </h2>
 
                 {/* Descripción */}
                 {course.description ? (
-                    <p className="text-slate-400 text-base leading-relaxed mb-6 line-clamp-3">
+                    <p className="text-slate-400 text-base leading-relaxed mb-4 line-clamp-3">
                         {course.description}
                     </p>
                 ) : (
@@ -79,9 +79,9 @@ export default function CourseCard({ course }: CourseCardProps) {
                     </div>
                     <Link
                         href={`/academy/${course.slug}`}
-                        className="bg-[#1d9bf0] text-white font-bold py-3 px-6 md:px-8 rounded-xl transition-all transform active:scale-95 flex items-center gap-2 text-base"
+                        className="bg-[#1d9bf0] text-white font-bold py-3 px-6 md:px-8 rounded-sm transition-all transform active:scale-95 flex items-center gap-2 text-base"
                     >
-                        See Course
+                        See More
                         <ArrowRight className="h-5 w-5" />
                     </Link>
                 </div>

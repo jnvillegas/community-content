@@ -1,14 +1,13 @@
 import styles from "./Header.module.css";
-import banner from "../../assets/header-banner.JPG";
-import video from "../../assets/header-video.mp4";
+import banner from "../../assets/main/banner.jpg";
 import { Link } from "@inertiajs/react"
 import { PATHROUTES } from "../../helpers/PathRoutes";
 
 const Header = () => {
     return (
         <header className={styles.main_content}>
-            {/* <img src={banner} alt="" className={styles.video} /> */}
-            <video className={styles.video} src={video} loop autoPlay muted ></video>
+            <img src={banner} alt="" className={styles.video} />
+            {/* <video className={styles.video} src={video} loop autoPlay muted ></video> */}
             <div className={styles.filter}></div>
             <div className={styles.text_content}>
                 <h1 className={styles.title_first}>Viagens reais,</h1>

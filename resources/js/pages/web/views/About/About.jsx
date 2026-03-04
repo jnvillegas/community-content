@@ -3,12 +3,18 @@ import styles from './About.module.css';
 import logo from '../../assets/bear.png'
 import WebLayout from '../../layout';
 import Banner from '../../components/Banner/Banner';
+import aboutBanner from '../../assets/about/banner.jpg';
+import profileImg from '../../assets/about/profile.jpg';
+import w1 from '../../assets/about/w1.jpg'
+import w2 from '../../assets/about/w2.jpg'
+import w3 from '../../assets/about/w3.jpg'
+import w4 from '../../assets/about/w4.jpg'
 
 const About = () => {
 
     return (
         <div>
-            <Banner title={'Sobre Nós'} />
+            <Banner title={'Sobre Nós'} url={aboutBanner} />
 
             <section className={styles.section}>
                 <div className={styles.container}>
@@ -43,7 +49,7 @@ const About = () => {
                         <div className={styles.image_container}>
                             <div className={styles.polaroid}>
                                 <img
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDalBudIXT_YVVfXS0kp9NkNFg7jgHumMjZ-Bm9Xh7Pjy4b-xbTqSvxdCNxTtoj26-7AbxZ7BQY1AOyvl6e0JLMt7Jf2B6Zb_UuUtXybMsOmsc9NorCu32sL52EBVe08ONtiwd0dIa-JA_HsTpaYDKSAGR7LLTUgJBOZTyA8U5z9fWKI40FbU0YXgD_auQXq2mlUPeiKb00QZaPgHrZvOPjpwv5W7t-tU9eAZmzDkoX1QPtgRg7STiVsoh2urd3cAb0UKHHtSD-E0"
+                                    src={profileImg}
                                     alt="Deividi e Paula em uma de suas viagens"
                                     className={styles.main_photo}
                                 />
@@ -60,24 +66,24 @@ const About = () => {
                         <div className={styles.gallery_grid}>
                             <div className={styles.gallery_column}>
                                 <img
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCdi7Ku3O5Sm7pQEDrCkavp-K9hh3qu3fFk99W5EHaXluqQ3PjQzz0pm6hb-HlKV09aQhAbHjMwVL99i3f2iXevzCFMhGuGk2o3VU8ygNBgoLknoJMZZLVO3QRAU_1Vg64p_-Wxzlu1lw3cZQ2yQ8ZriJA5TSg0HnIarLB9Swdlv-1b8S0przrqSu41c9esc_8qzN8ojXGobUtAm85XFZuqElsmYcpjvjkG-GoVfM-tsJpyk9pQuMYUUhME2KLpSZmUDG9Ch2Fv-U"
+                                    src={w1}
                                     alt="Montanhas"
                                     className={styles.gallery_image}
                                 />
                                 <img
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDK-sy9Sz9nF8OWao7wsa1Ms9Q65CARVoOdane1HK5QsAkJWUlN4plJ4-Np5ha6jdROMe__UH7zpLJ6Bsx4-XWy7ezOAGjW7cz6RFGPWtrdoJMgQIheTWY4FW9n_wzj53LUgGMWEN6HVDpmm59KcsKviFnXZh__XfRb0QSVSuMD-_QS-00TOtHRmitaqIdwJkQWfCVXd93R2Zoc0kgH14V0Dvw_xxatXOsocT9VIzby_XYVKwnI-a5_hG-XdLqSD9fjFgeeOLzhzKw"
+                                    src={w3}
                                     alt="Estrada cênica"
                                     className={styles.gallery_image_tall}
                                 />
                             </div>
                             <div className={styles.gallery_column}>
                                 <img
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ29bk2SP206pKpTMZvT_X9HTTReXRVvNIQ13_jWkbXblkwbcmqNhF3PdmuL_YGtSFV3Eh_FgoY1Nw-3MznF15sxGqQQHOz2EY6TiuHjG-fQ1sBYhh03kVLqMe7UNXXq9SNYLdvtFgdUCuXxPQLybX0Mwdj0mwWS6SO2_QViz0H8ULmHBXJnoyJBKM0OJhz3O40CI3_w8c5zy6E87bdBVCRFmjN0WOTUDuJ_8NhjzJEVKN056_DakbPocntzq3I-MMttvp-2Hh-Pc"
+                                    src={w2}
                                     alt="Lago sereno"
                                     className={styles.gallery_image_tall}
                                 />
                                 <img
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDalBudIXT_YVVfXS0kp9NkNFg7jgHumMjZ-Bm9Xh7Pjy4b-xbTqSvxdCNxTtoj26-7AbxZ7BQY1AOyvl6e0JLMt7Jf2B6Zb_UuUtXybMsOmsc9NorCu32sL52EBVe08ONtiwd0dIa-JA_HsTpaYDKSAGR7LLTUgJBOZTyA8U5z9fWKI40FbU0YXgD_auQXq2mlUPeiKb00QZaPgHrZvOPjpwv5W7t-tU9eAZmzDkoX1QPtgRg7STiVsoh2urd3cAb0UKHHtSD-E0"
+                                    src={w4}
                                     alt="Floresta"
                                     className={styles.gallery_image}
                                 />

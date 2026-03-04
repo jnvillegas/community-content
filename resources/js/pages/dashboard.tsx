@@ -86,7 +86,7 @@ export default function Dashboard({ upcomingEvents, activities, stories, courses
             <Head title="Creator Connect - Dashboard" />
 
             <main className="flex background:transparent justify-center w-full max-w-7xl mx-auto">
-                <div className="min-h-screen min-w-0 w-full bg-transparent px-4 md:px-8 md:px-8 dark:bg-transparent max-w-[1024px]">
+                <div className="min-h-screen min-w-0 w-full bg-transparent px-4 md:px-8 dark:bg-transparent max-w-[1024px]">
                     {/* Stories */}
                     <StoriesBar stories={stories} />
 

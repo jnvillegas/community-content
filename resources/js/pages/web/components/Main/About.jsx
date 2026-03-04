@@ -1,6 +1,7 @@
 import styles from "./About.module.css";
 import { Link } from '@inertiajs/react';
 import { PATHROUTES } from "../../helpers/PathRoutes";
+import image from "../../assets/main/about.jpg"
 
 const About = () => {
     return (
@@ -13,7 +14,7 @@ const About = () => {
                     <div className={styles.image_wrapper}>
                         <div className={styles.image_card}>
                             <img
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBl3fxumaL3HWuL_Od0pgWrCODVv3wQ2pV-gq2oTUWhDBEScxk9l5UkT9FMFxz25FY71pa9m62YkYi8iU6UtD758GaPDHXCsrMp7FrspeFa8DVc9T8hGgUlA0y9hs90iMVEv0TxPijD15hK6k4T_cd1Bi6aXNT_hN1fvRzLOq4XWJ_hN8JrVIAMFmX8pJ8msxj5zLkC94eOpPc70c__iundCzM4Uhzyl70YBZUroolwusFMI20BLFr81nWDybeHYw0YlH6I1LJj8ic"
+                                src={image}
                                 alt="Deividi & Paula"
                                 className={styles.image}
                             />

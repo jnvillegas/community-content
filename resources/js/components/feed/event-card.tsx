@@ -55,43 +55,46 @@ export default function EventCard({ activity }: { activity: any }) {
                     </div>
                 </div>
 
-                <div className="p-6 md:p-8">
-                    <div className="flex justify-between items-start gap-4 mb-4">
-                        <h2 className="text-2xl font-bold leading-tight text-zinc-800 dark:text-white transition-colors">
-                            {subject.title}
-                        </h2>
-                        {/* <Bookmark className="h-5 w-5 text-zinc-800 dark:text-white" /> */}
-                    </div>
+                <div className="p-4 md:p-6">
+                    <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-1">
+                        <div>
+                            <h2 className="text-2xl font-bold leading-tight text-zinc-800 dark:text-white transition-colors">
+                                {subject.title}
+                            </h2>
+                            <p className="text-slate-400 text-base leading-relaxed mb-4 line-clamp-3">
+                                {subject.excerpt || subject.description || (isEvent ? `Evento en ${subject.location || 'Location'}. Únete y no te lo pierdas.` : 'Contenido interesante disponible ahora.')}
+                            </p>
 
-                    <p className="text-slate-400 text-base leading-relaxed mb-6 line-clamp-3">
-                        {subject.excerpt || subject.description || (isEvent ? `Evento en ${subject.location || 'Location'}. Únete y no te lo pierdas.` : 'Contenido interesante disponible ahora.')}
-                    </p>
-
-                    <div className="flex flex-wrap items-center gap-5 md:gap-6 mb-8 text-sm text-zinc-800 dark:text-white">
-                        <div className="flex items-center gap-2">
-                            <Calendar className="h-5 w-5 text-zinc-800 dark:text-white" />
-                            <span>
-                                {isEvent && subject.start_date
-                                    ? format(new Date(subject.start_date), "d MMM yyyy", { locale: es })
-                                    : 'Disponible'}
-                            </span>
                         </div>
-
-                        {isEvent && subject.start_date && (
+                        <div className="flex flex-col md:flex-row sm:flex-col gap-5 md:gap-4 mb-6 text-sm text-zinc-800 dark:text-white">
                             <div className="flex items-center gap-2">
-                                <Clock className="h-5 w-5 text-zinc-800 dark:text-white" />
-                                <span>{format(new Date(subject.start_date), "HH:mm 'hs'", { locale: es })}</span>
+                                <Calendar className="h-5 w-5 text-zinc-800 dark:text-white" />
+                                <span>
+                                    {isEvent && subject.start_date
+                                        ? format(new Date(subject.start_date), "d MMM yyyy", { locale: es })
+                                        : 'Disponible'}
+                                </span>
                             </div>
-                        )}
 
-                        <div className="flex items-center gap-2">
-                            <MapPin className="h-5 w-5 text-zinc-800 dark:text-white" />
-                            <span>{subject.location || 'Location'}</span>
+                            {isEvent && subject.start_date && (
+                                <div className="flex items-center gap-2">
+                                    <Clock className="h-5 w-5 text-zinc-800 dark:text-white" />
+                                    <span>{format(new Date(subject.start_date), "HH:mm 'hs'", { locale: es })}</span>
+                                </div>
+                            )}
+
+                            <div className="flex items-center gap-2">
+                                <MapPin className="h-5 w-5 text-zinc-800 dark:text-white" />
+                                <span>{subject.location || 'Location'}</span>
+                            </div>
                         </div>
                     </div>
+
+
+
 
                     <div className="flex items-center justify-between pt-6 border-t border-black/10 dark:border-white/10">
-                        <div className="flex items-center gap-6 md:gap-8">
+                        <div className="flex items-center gap-4 md:gap-4">
                             <button
                                 onClick={handleLike}
                                 className={`flex cursor-pointer items-center gap-2 transition-all ${subject.is_liked
@@ -121,9 +124,9 @@ export default function EventCard({ activity }: { activity: any }) {
                         <Link
                             href={`/events/${subject.slug}`}
                             onClick={(e) => e.stopPropagation()}
-                            className="bg-[#1d9bf0] text-white font-bold py-3 px-6 md:px-8 rounded-xl transition-all transform active:scale-95 flex items-center gap-2 text-base"
+                            className="bg-[#1d9bf0] text-white font-bold py-3 px-6 md:px-8 rounded-sm transition-all transform active:scale-95 flex items-center gap-2 text-base"
                         >
-                            More Details
+                            See More
                             <ArrowRight className="h-5 w-5" />
                         </Link>
                     </div>

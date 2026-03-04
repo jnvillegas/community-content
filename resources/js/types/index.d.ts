@@ -2,6 +2,7 @@ import { InertiaLinkProps } from '@inertiajs/react';
 import { LucideIcon } from 'lucide-react';
 
 export interface Auth {
+    roles: any;
     user: User;
     permissions: string[]; // Added permissions list
     unread_notifications_count: number;

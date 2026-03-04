@@ -49,7 +49,7 @@ export default function Show({ article }: Props) {
                 <meta name="description" content={article.meta_description || article.excerpt} />
             </Head>
 
-            <article className="min-h-screen bg-white dark:bg-gray-950">
+            <article className="min-h-screen bg-white dark:bg-background">
                 {/* Fixed Sub-header for viewing mode */}
                 <div className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-muted bg-background/80 px-4 backdrop-blur-md dark:bg-card/80 md:px-8">
                     <div className="flex items-center gap-4">
@@ -61,14 +61,14 @@ export default function Show({ article }: Props) {
                         </Button>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    {/* <div className="flex items-center gap-3">
                         <Button variant="ghost" size="icon" className="text-gray-500">
                             <Share2 className="h-4 w-4" />
                         </Button>
                         <Button asChild variant="outline" size="sm" className="font-bold border-muted">
                             <Link href={`/articles/${article.id}/edit`}>Edit Post</Link>
                         </Button>
-                    </div>
+                    </div> */}
                 </div>
 
                 <div className="mx-auto max-w-[800px] px-6 py-12 md:py-20">
@@ -91,7 +91,7 @@ export default function Show({ article }: Props) {
                         <div className="flex items-center gap-3">
                             <Avatar className="h-10 w-10 border border-muted">
                                 <AvatarImage src={article.author?.avatar} />
-                                <AvatarFallback className="bg-gray-100 text-gray-700 font-bold">
+                                <AvatarFallback className="bg-gray-100 text-white font-bold">
                                     {article.author?.name?.charAt(0) || 'U'}
                                 </AvatarFallback>
                             </Avatar>

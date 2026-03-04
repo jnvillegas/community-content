@@ -2,6 +2,8 @@ import styles from './Contact.module.css';
 import WebLayout from '../../layout';
 import Banner from '../../components/Banner/Banner';
 import { SOCIAL } from '../../helpers/PathRoutes';
+import img from '../../assets/contact/contact.jpg'
+import banner from '../../assets/contact/banner.jpg'
 
 const Contact = () => {
 
@@ -11,7 +13,7 @@ const Contact = () => {
 
     return (
         <div>
-            <Banner title={'Contato'} />
+            <Banner title={'Contato'} url={banner} />
             <section className={styles.contact_section}>
                 <div className={styles.form_grid}>
                     <div className={styles.form_column}>
@@ -72,7 +74,7 @@ const Contact = () => {
                     <div className={styles.sidebar_column}>
                         <div className={styles.sidebar_image_container}>
                             <img
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDalBudIXT_YVVfXS0kp9NkNFg7jgHumMjZ-Bm9Xh7Pjy4b-xbTqSvxdCNxTtoj26-7AbxZ7BQY1AOyvl6e0JLMt7Jf2B6Zb_UuUtXybMsOmsc9NorCu32sL52EBVe08ONtiwd0dIa-JA_HsTpaYDKSAGR7LLTUgJBOZTyA8U5z9fWKI40FbU0YXgD_auQXq2mlUPeiKb00QZaPgHrZvOPjpwv5W7t-tU9eAZmzDkoX1QPtgRg7STiVsoh2urd3cAb0UKHHtSD-E0"
+                                src={img}
                                 alt="Casal de viajantes profissionais em uma estrada cênica"
                                 className={styles.sidebar_image}
                             />
