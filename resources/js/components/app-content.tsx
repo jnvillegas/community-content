@@ -16,7 +16,7 @@ export function AppContent({
         return (
             <main
                 className={cn(
-                    'flex-1 overflow-y-auto bg-background',
+                    'flex-1 bg-background',
                     className
                 )}
                 {...props}

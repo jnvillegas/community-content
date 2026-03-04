@@ -26,22 +26,25 @@ export function AppSidebarHeader({
     const { auth } = usePage<PageProps>().props;
     const isMobile = useIsMobile();
     const getInitials = useInitials();
+    const userRoles = auth.roles || [];
+    const isAdmin = userRoles.includes('admin');
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 flex h-16 w-full shrink-0 items-center justify-between gap-4 bg-background px-6 transition-[width,height] ease-linear md:px-4">
             {/* Left side: Logo, Trigger, Breadcrumbs */}
             <div className="flex items-center gap-3 flex-1 min-w-0">
 
-                {/* Sidebar Trigger and Breadcrumbs */}
-                <div className="flex items-center gap-2 min-w-0">
-                    <SidebarTrigger className="-ml-1 shrink-0" />
-                    {/* <div className="hidden sm:block">
-                        <Breadcrumbs breadcrumbs={breadcrumbs} />
-                    </div> */}
-                </div>
+                {/* Sidebar Trigger and Breadcrumbs only for admins or desktop users */}
+                {(isAdmin || !isMobile) && (
+                    <>
+                        <div className="flex items-center gap-2 min-w-0">
+                            <SidebarTrigger className="-ml-1 shrink-0" />
+                        </div>
 
-                {/* Divider */}
-                <div className="hidden sm:block w-px h-6 bg-sidebar-border/30" />
+                        {/* Divider */}
+                        <div className="hidden sm:block w-px h-6 bg-sidebar-border/30" />
+                    </>
+                )}
 
                 {/* Logo */}
                 <Link href={dashboard()} prefetch className="shrink-0 hover:opacity-80 transition-opacity">
