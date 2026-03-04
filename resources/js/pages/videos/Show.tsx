@@ -180,7 +180,17 @@ export default function Show({ video, relatedVideos }: Props) {
                                     relatedVideos.map(rel => (
                                         <Link key={rel.id} href={`/videos/${rel.id}`} className="group flex gap-3 items-start p-2 -mx-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                                             <div className="relative w-28 aspect-video rounded-md overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-100">
-                                                <img src={rel.thumbnail_url || `https://img.youtube.com/vi/${rel.youtube_id}/mqdefault.jpg`} className="w-full h-full object-cover" alt={rel.title} />
+                                                <img
+                                                    src={rel.thumbnail_url || `https://img.youtube.com/vi/${rel.youtube_id}/mqdefault.jpg`}
+                                                    className="w-full h-full object-cover"
+                                                    alt={rel.title}
+                                                    onError={(e) => {
+                                                        const target = e.target as HTMLImageElement;
+                                                        if (target.src.includes('mqdefault.jpg')) {
+                                                            target.src = `https://img.youtube.com/vi/${rel.youtube_id}/0.jpg`;
+                                                        }
+                                                    }}
+                                                />
                                                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
                                                 <div className="absolute bottom-1 right-1 bg-black/70 backdrop-blur-sm px-1 py-0.5 rounded-[2px] text-[8px] font-bold text-white">
                                                     {rel.duration || '00:00'}

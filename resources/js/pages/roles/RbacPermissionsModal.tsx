@@ -14,24 +14,36 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Permission, Role } from '@/types';
 import { useForm } from '@inertiajs/react';
 import { Check, Plus, Shield, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Props {
     open: boolean;
     onClose: () => void;
     role: Role | null;
+    permissions: Permission[];
 }
 
-export default function RbacPermissionsModal({ open, onClose, role }: Props) {
+export default function RbacPermissionsModal({
+    open,
+    onClose,
+    role,
+    permissions = [],
+}: Props) {
     const [newPermissionName, setNewPermissionName] = useState('');
 
-    const { data, setData, post, put, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         permissions: [] as number[],
         newPermission: '',
     });
 
-    const { permissions = [] } = (role || {}) as Role;
-    const permissionIds = permissions.map((p: Permission) => p.id);
+    useEffect(() => {
+        if (open && role) {
+            const rolePermissionIds = (role.permissions || []).map(
+                (p: Permission) => p.id,
+            );
+            setData('permissions', rolePermissionIds);
+        }
+    }, [open, role]);
 
     const handleTogglePermission = (permissionId: number) => {
         const currentPermissions = data.permissions || [];
@@ -62,7 +74,7 @@ export default function RbacPermissionsModal({ open, onClose, role }: Props) {
         e.preventDefault();
 
         if (role) {
-            put(`/roles/${role.id}/permissions`, {
+            post(`/roles/${role.id}/permissions`, {
                 onSuccess: () => {
                     reset();
                     onClose();
@@ -121,16 +133,10 @@ export default function RbacPermissionsModal({ open, onClose, role }: Props) {
                         <Label>Permissions</Label>
                         <ScrollArea className="h-[300px] rounded-md border p-4">
                             <div className="space-y-3">
-                                {permissionIds.map((permissionId) => {
-                                    const permission = permissions.find(
-                                        (p: Permission) =>
-                                            p.id === permissionId,
-                                    );
-                                    if (!permission) return null;
-
+                                {permissions.map((permission) => {
                                     const isChecked =
                                         data.permissions?.includes(
-                                            permissionId,
+                                            permission.id,
                                         ) || false;
 
                                     return (
@@ -160,11 +166,10 @@ export default function RbacPermissionsModal({ open, onClose, role }: Props) {
                                                 </p>
                                             </div>
                                             <div
-                                                className={`h-2 w-2 rounded-full ${
-                                                    isChecked
+                                                className={`h-2 w-2 rounded-full ${isChecked
                                                         ? 'bg-green-500'
                                                         : 'bg-gray-300 dark:bg-gray-600'
-                                                }`}
+                                                    }`}
                                             />
                                         </div>
                                     );

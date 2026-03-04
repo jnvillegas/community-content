@@ -48,6 +48,18 @@ const Blog = () => {
                                     src={item.image && (item.image.startsWith('http') || item.image.startsWith('/storage')) ? item.image : `/storage/${item.image}`}
                                     alt={item.title}
                                     className={styles.image}
+                                    onError={(e) => {
+                                        const target = e.target;
+                                        target.style.display = 'none';
+                                        const parent = target.parentElement;
+                                        if (parent) {
+                                            const placeholder = document.createElement('div');
+                                            placeholder.style.width = '100%';
+                                            placeholder.style.height = '100%';
+                                            placeholder.style.background = 'linear-gradient(135deg, #1a2a1a 0%, #0f0f0f 100%)';
+                                            parent.appendChild(placeholder);
+                                        }
+                                    }}
                                 />
 
                                 <div

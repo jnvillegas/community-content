@@ -31,7 +31,14 @@ class RolesAndPermissionsSeeder extends Seeder
             'manage articles',
             'manage videos',
             'manage wallpapers',
-            'view content', // For simple users to consume
+            'view content', // Generic
+            'view articles',
+            'view gallery',
+            'view video gallery',
+            'view videos',
+            'view wallpaper gallery',
+            'view wallpapers',
+            'manage content', // Added for Editor role
 
             // Community
             'manage events',
@@ -76,11 +83,13 @@ class RolesAndPermissionsSeeder extends Seeder
         $editor = Role::findOrCreate('editor'); // Renamed from "Auditor" concept
         $editor->givePermissionTo([
             'view dashboard',
-            'manage articles',
-            'manage videos',
-            'manage wallpapers',
-            'view content',
-            'participate community' // Originally "view community"
+            'view articles',
+            'view gallery',
+            'view video gallery',
+            'view wallpaper gallery',
+            'view videos',
+            'view wallpapers',
+            'manage content'
         ]);
 
         // --- USER (Standard) ---
@@ -88,7 +97,10 @@ class RolesAndPermissionsSeeder extends Seeder
         $standard = Role::findOrCreate('standard');
         $standard->givePermissionTo([
             'view dashboard', // Their own dashboard
-            'view content',
+            // 'view content', // Removed broad permission
+            'view gallery',   // Only gallery as requested
+            'view video gallery',
+            'view wallpaper gallery',
             'participate community',
             'view my membership',
         ]);

@@ -72,7 +72,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function StoriesDashboard({ stats, recentComments, storiesPerformance }: Props) {
     const handleDeleteComment = (id: number) => {
         if (confirm('Are you sure you want to delete this comment?')) {
-            router.delete(route('admin.stories.comments.destroy', id));
+            router.delete(`/admin/stories/comments/${id}`);
         }
     };
 

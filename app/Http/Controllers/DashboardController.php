@@ -57,6 +57,7 @@ class DashboardController extends Controller
             });
 
         $activities = Activity::with(['subject', 'user'])
+            ->whereIn('type', ['created_event', 'created_story'])
             ->latest()
             ->paginate(10);
 
@@ -140,6 +141,7 @@ class DashboardController extends Controller
                     'images' => $story->images->map(fn($img) => $img->image_url),
                     'likes_count' => $story->likes->count(),
                     'is_liked' => auth()->check() ? $story->isLikedBy(auth()->user()) : false,
+                    'is_viewed' => auth()->check() ? $story->isViewedBy(auth()->user()) : false,
                     'comments' => $story->comments->map(function ($comment) {
                         return [
                             'id' => $comment->id,

@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, Users, CheckCircle2, XCircle, Heart, MessageSquare } from 'lucide-react';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 interface Comment {
@@ -129,7 +129,9 @@ export default function Stats({ event, stats }: Props) {
                                                     </div>
                                                 </div>
                                                 <span className="text-xs text-gray-400">
-                                                    {format(new Date(comment.created_at), 'PPPp', { locale: es })}
+                                                    {comment.created_at && isValid(new Date(comment.created_at))
+                                                        ? format(new Date(comment.created_at), 'PPPp', { locale: es })
+                                                        : comment.created_at}
                                                 </span>
                                             </div>
                                             <div className="pl-12">

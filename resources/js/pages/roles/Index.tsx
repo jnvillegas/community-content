@@ -20,9 +20,10 @@ interface RolesPageProps extends PageProps {
         data: Role[];
         links: any[];
     };
+    permissions: any[];
 }
 
-export default function Index({ roles }: RolesPageProps) {
+export default function Index({ roles, permissions }: RolesPageProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingRole, setEditingRole] = useState<Role | null>(null);
     const [isPermissionsModalOpen, setIsPermissionsModalOpen] = useState(false);
@@ -146,11 +147,10 @@ export default function Index({ roles }: RolesPageProps) {
                                 <Link
                                     key={i}
                                     href={link.url || '#'}
-                                    className={`rounded px-3 py-1 text-sm ${
-                                        link.active
-                                            ? 'bg-blue-600 text-white'
-                                            : 'border bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300'
-                                    } ${!link.url ? 'cursor-not-allowed opacity-50' : ''}`}
+                                    className={`rounded px-3 py-1 text-sm ${link.active
+                                        ? 'bg-blue-600 text-white'
+                                        : 'border bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300'
+                                        } ${!link.url ? 'cursor-not-allowed opacity-50' : ''}`}
                                     dangerouslySetInnerHTML={{
                                         __html: link.label,
                                     }}
@@ -170,6 +170,7 @@ export default function Index({ roles }: RolesPageProps) {
                 open={isPermissionsModalOpen}
                 onClose={() => setIsPermissionsModalOpen(false)}
                 role={selectedRoleForPermissions}
+                permissions={permissions}
             />
         </AppLayout>
     );

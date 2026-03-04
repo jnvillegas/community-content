@@ -20,7 +20,12 @@ class StoryDashboardController extends Controller
             'total_views' => Story::sum('views_count'),
         ];
 
-        $recentComments = StoryComment::with(['user', 'story'])
+        $recentComments = StoryComment::with([
+            'user',
+            'story' => function ($query) {
+                $query->withTrashed();
+            }
+        ])
             ->latest()
             ->take(10)
             ->get()
@@ -32,7 +37,7 @@ class StoryDashboardController extends Controller
                         'name' => $comment->user->name,
                         'avatar' => $comment->user->avatar ?? 'https://api.dicebear.com/7.x/avataaars/svg?seed=' . $comment->user->name,
                     ],
-                    'story_title' => $comment->story->title,
+                    'story_title' => $comment->story->title ?? 'Historia eliminada',
                     'created_at' => $comment->created_at->diffForHumans(),
                 ];
             });

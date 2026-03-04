@@ -16,8 +16,18 @@ class VideoController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:manage videos', except: ['index', 'show']),
+            new Middleware('permission:manage videos', except: ['index', 'show', 'gallery']),
+            new Middleware('permission:view video gallery', only: ['gallery']),
         ];
+    }
+
+    public function gallery(): Response
+    {
+        $videos = Video::orderBy('created_at', 'desc')->get();
+
+        return Inertia::render('videos/Gallery', [
+            'videos' => $videos
+        ]);
     }
 
     public function index(Request $request): Response

@@ -51,7 +51,7 @@ class EventService
             // 2. Handle File Upload
             if (isset($data['cover_image']) && $data['cover_image'] instanceof UploadedFile) {
                 $path = $data['cover_image']->store('events/covers', 'public');
-                $data['cover_image'] = '/storage/' . $path;
+                $data['cover_image'] = $path;
             }
 
             // 3. Generate Slug
@@ -108,7 +108,7 @@ class EventService
                 }
 
                 $path = $data['cover_image']->store('events/covers', 'public');
-                $data['cover_image'] = '/storage/' . $path;
+                $data['cover_image'] = $path;
             }
 
             // 4. Update via Repository
@@ -129,9 +129,10 @@ class EventService
     public function deleteEvent(Event $event, User $user): bool
     {
         // 1. Validation
-        if ($event->registrations()->where('status', EventRegistration::STATUS_CONFIRMED)->exists()) {
-            throw new Exception("Cannot delete event with confirmed registrations. Cancel it instead.");
-        }
+        // Permitimno borrar aunque tenga registraciones porque usamos Soft Deletes
+        // if ($event->registrations()->where('status', EventRegistration::STATUS_CONFIRMED)->exists()) {
+        //     throw new Exception("Cannot delete event with confirmed registrations. Cancel it instead.");
+        // }
 
         // 2. Delete Image (Optional - typically kept for history or soft delete ignored)
         // if ($event->cover_image) { ... }
@@ -191,7 +192,7 @@ class EventService
 
         $attendanceRate = ($confirmed + $attended) > 0 ? ($attended / ($confirmed + $attended)) * 100 : 0;
 
-        $availableSlots = $event->max_attendees ? max(0, $event->max_attendees - ($confirmed + $attended)) : null;
+        $availableSlots = $event->max_participants ? max(0, $event->max_participants - ($confirmed + $attended)) : null;
 
         return [
             'total_registrations' => $total,

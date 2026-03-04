@@ -51,12 +51,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('notifications/{id}', [\App\Http\Controllers\NotificationController::class, 'destroy'])->name('notifications.destroy');
 
     // Articles (WordPress-style blog)
+    Route::get('articles/gallery', [\App\Http\Controllers\ArticleController::class, 'gallery'])->name('articles.gallery');
     Route::resource('articles', \App\Http\Controllers\ArticleController::class);
 
     // Videos (Travel Explorer Hub)
+    Route::get('videos/gallery', [\App\Http\Controllers\VideoController::class, 'gallery'])->name('videos.gallery');
     Route::resource('videos', \App\Http\Controllers\VideoController::class);
 
     // Wallpapers
+    Route::get('wallpapers/gallery', [\App\Http\Controllers\WallpaperController::class, 'gallery'])->name('wallpapers.gallery');
     Route::resource('wallpapers', \App\Http\Controllers\WallpaperController::class);
     //
     // // Dynamic Categories (AJAX)
@@ -76,6 +79,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/stories', [\App\Http\Controllers\StoryController::class, 'store'])->name('stories.store');
     Route::post('/stories/{story}/like', [\App\Http\Controllers\StoryController::class, 'like'])->name('stories.like');
     Route::post('/stories/{story}/comments', [\App\Http\Controllers\StoryController::class, 'comment'])->name('stories.comment');
+    Route::post('/stories/{story}/view', [\App\Http\Controllers\StoryController::class, 'markAsViewed'])->name('stories.view');
     Route::delete('/stories/{story}', [\App\Http\Controllers\StoryController::class, 'destroy'])->name('stories.destroy');
 
     // Academy (Courses)
@@ -93,6 +97,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/events/{slug}/attendees/{user}/mark', [AdminEventController::class, 'markAttendance'])->name('events.mark-attendance');
     Route::resource('event-categories', \App\Http\Controllers\Admin\EventCategoryController::class);
     Route::get('/stories', [\App\Http\Controllers\Admin\StoryDashboardController::class, 'index'])->name('stories.index');
+    Route::delete('/stories/comments/{comment}', [\App\Http\Controllers\Admin\StoryDashboardController::class, 'destroyComment'])->name('stories.comments.destroy');
 
     // Academy Dashboard
     Route::group(['prefix' => 'academy', 'as' => 'academy.'], function () {

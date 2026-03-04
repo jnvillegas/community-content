@@ -27,7 +27,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @property \Illuminate\Support\Carbon $start_date
  * @property \Illuminate\Support\Carbon $end_date
  * @property string $timezone
- * @property int|null $max_attendees
+ * @property int|null $max_participants
  * @property \Illuminate\Support\Carbon|null $registration_deadline
  * @property string|null $cover_image
  * @property int $created_by
@@ -61,6 +61,7 @@ class Event extends Model
     const TYPE_MEETUP = 'MEETUP';
     const TYPE_WEBINAR = 'WEBINAR';
     const TYPE_TRIP = 'TRIP';
+    const TYPE_LIVE = 'LIVE';
 
     // Status Enums
     const STATUS_DRAFT = 'draft';
@@ -82,7 +83,7 @@ class Event extends Model
         'start_date',
         'end_date',
         'timezone',
-        'max_attendees',
+        'max_participants',
         'registration_deadline',
         'cover_image',
         'created_by',
@@ -174,14 +175,14 @@ class Event extends Model
 
     public function isFull(): bool
     {
-        if (is_null($this->max_attendees)) {
+        if (is_null($this->max_participants)) {
             return false;
         }
 
         return $this->registrations()->whereIn('status', [
             EventRegistration::STATUS_CONFIRMED,
             EventRegistration::STATUS_ATTENDED
-        ])->count() >= $this->max_attendees;
+        ])->count() >= $this->max_participants;
     }
 
     public function canRegister(User $user): bool
@@ -225,5 +226,37 @@ class Event extends Model
         }
 
         return false;
+    }
+
+    /**
+     * Get the full URL for the cover image.
+     */
+    public function getCoverImageAttribute($value): ?string
+    {
+        if (empty($value))
+            return null;
+
+        // Si ya es una URL completa con protocolo, la devolvemos tal cual
+        if (preg_match('/^https?:\/\//', $value)) {
+            if (app()->isProduction() && str_starts_with($value, 'http://')) {
+                return str_replace('http://', 'https://', $value);
+            }
+            return $value;
+        }
+
+        // Generamos la URL base usando asset()
+        $path = str_starts_with($value, 'storage/') ? $value : 'storage/' . $value;
+        $url = asset($path);
+
+        // Forzamos siempre HTTPS en producción para evitar Mixed Content
+        if (app()->isProduction()) {
+            if (str_starts_with($url, 'http://')) {
+                $url = str_replace('http://', 'https://', $url);
+            } elseif (!str_starts_with($url, 'https://') && !str_starts_with($url, 'http://')) {
+                $url = 'https://' . ltrim($url, '/');
+            }
+        }
+
+        return $url;
     }
 }

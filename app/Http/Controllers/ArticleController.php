@@ -12,19 +12,19 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
+use App\Models\User;
 
 class ArticleController extends Controller implements HasMiddleware
 {
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:manage articles', except: ['index', 'show']),
+            new Middleware('permission:manage articles', except: ['index', 'show', 'gallery']),
+            new Middleware('permission:view articles', only: ['index', 'show']),
+            new Middleware('permission:view gallery', only: ['gallery']),
         ];
     }
 
-    /**
-     * Display a listing of the articles.
-     */
     public function index(): Response
     {
         $articles = Article::with(['categories', 'author'])
@@ -32,6 +32,20 @@ class ArticleController extends Controller implements HasMiddleware
             ->paginate(10);
 
         return Inertia::render('articles/Index', [
+            'articles' => $articles
+        ]);
+    }
+
+    /**
+     * Display a gallery of article images.
+     */
+    public function gallery(): Response
+    {
+        $articles = Article::whereNotNull('featured_image')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return Inertia::render('articles/Gallery', [
             'articles' => $articles
         ]);
     }

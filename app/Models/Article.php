@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 use App\Traits\RecordsActivity;
 
@@ -40,7 +41,16 @@ class Article extends Model
 
         static::creating(function ($article) {
             if (empty($article->slug)) {
-                $article->slug = Str::slug($article->title);
+                $slug = Str::slug($article->title);
+                $originalSlug = $slug;
+                $count = 1;
+
+                while (static::where('slug', $slug)->exists()) {
+                    $slug = "{$originalSlug}-{$count}";
+                    $count++;
+                }
+
+                $article->slug = $slug;
             }
         });
     }
@@ -71,5 +81,44 @@ class Article extends Model
         }
 
         return false;
+    }
+
+    /**
+     * Get the full URL for the featured image.
+     */
+    public function getFeaturedImageAttribute($value): ?string
+    {
+        if (empty($value))
+            return null;
+
+        // Si ya es una URL completa con protocolo, la devolvemos tal cual
+        if (preg_match('/^https?:\/\//', $value)) {
+            if (app()->isProduction() && str_starts_with($value, 'http://')) {
+                return str_replace('http://', 'https://', $value);
+            }
+            return $value;
+        }
+
+        // Limpieza: si contiene el dominio o /storage/, extraemos solo la ruta final
+        if (str_contains($value, '/storage/')) {
+            $value = \Illuminate\Support\Str::after($value, '/storage/');
+        } elseif (str_contains($value, 'railway.app')) {
+            $value = \Illuminate\Support\Str::after($value, 'railway.app');
+            $value = ltrim($value, '/');
+        }
+
+        // Generamos la URL completa usando asset()
+        $url = asset('storage/' . $value);
+
+        // Forzamos siempre HTTPS en producción para evitar Mixed Content
+        if (app()->isProduction()) {
+            if (str_starts_with($url, 'http://')) {
+                $url = str_replace('http://', 'https://', $url);
+            } elseif (!str_starts_with($url, 'https://') && !str_starts_with($url, 'http://')) {
+                $url = 'https://' . ltrim($url, '/');
+            }
+        }
+
+        return $url;
     }
 }

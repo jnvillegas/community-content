@@ -1,5 +1,5 @@
 import { Heart, Calendar, Clock, MapPin, ArrowRight, MessageCircle, Share2, Bookmark } from 'lucide-react';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Link, router } from '@inertiajs/react';
 import { useState } from 'react';
@@ -12,8 +12,8 @@ export default function EventCard({ activity }: { activity: any }) {
 
     if (!subject) return null;
 
-    const isEvent = activity.subject_type?.includes('Event');
-    const isStory = activity.subject_type?.includes('Story');
+    const isEvent = activity.subject_type === 'App\\Models\\Event';
+    const isStory = activity.subject_type === 'App\\Models\\Story';
 
     const handleLike = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -70,16 +70,20 @@ export default function EventCard({ activity }: { activity: any }) {
                             <div className="flex items-center gap-2">
                                 <Calendar className="h-5 w-5 text-zinc-800 dark:text-white" />
                                 <span>
-                                    {isEvent && subject.start_date
+                                    {isEvent && subject.start_date && isValid(new Date(subject.start_date))
                                         ? format(new Date(subject.start_date), "d MMM yyyy", { locale: es })
-                                        : 'Disponible'}
+                                        : 'Por definir'}
                                 </span>
                             </div>
 
                             {isEvent && subject.start_date && (
                                 <div className="flex items-center gap-2">
                                     <Clock className="h-5 w-5 text-zinc-800 dark:text-white" />
-                                    <span>{format(new Date(subject.start_date), "HH:mm 'hs'", { locale: es })}</span>
+                                    <span>
+                                        {isValid(new Date(subject.start_date))
+                                            ? format(new Date(subject.start_date), "HH:mm 'hs'", { locale: es })
+                                            : '--:-- hs'}
+                                    </span>
                                 </div>
                             )}
 
@@ -108,7 +112,7 @@ export default function EventCard({ activity }: { activity: any }) {
                                 <span className="text-sm font-semibold">{likesCount}</span>
                             </button>
 
-                            <Link href={`/events/${subject.slug}`} className="flex items-center gap-2 text-zinc-800 dark:text-white transition-colors">
+                            <Link href={subject.slug ? `/events/${subject.slug}` : '#'} className="flex items-center gap-2 text-zinc-800 dark:text-white transition-colors">
                                 <MessageCircle className="h-6 w-6" />
                                 <span className="text-sm font-semibold">{commentsCount}</span>
                             </Link>
@@ -122,7 +126,7 @@ export default function EventCard({ activity }: { activity: any }) {
                         </div>
 
                         <Link
-                            href={`/events/${subject.slug}`}
+                            href={subject.slug ? `/events/${subject.slug}` : '#'}
                             onClick={(e) => e.stopPropagation()}
                             className="bg-[#1d9bf0] text-white font-bold py-3 px-6 md:px-8 rounded-sm transition-all transform active:scale-95 flex items-center gap-2 text-base"
                         >

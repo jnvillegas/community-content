@@ -11,7 +11,7 @@ export default function ArticleCard({ activity }: { activity: any }) {
                 className="relative aspect-video overflow-hidden">
                 {subject.cover_image || subject.content_url || subject.featured_image ? (
                     <img
-                        src={subject.cover_image || subject.content_url || `storage/${subject.featured_image}`}
+                        src={subject.cover_image || subject.content_url || subject.featured_image}
                         alt={subject.title}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />

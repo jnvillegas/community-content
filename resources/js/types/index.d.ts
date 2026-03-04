@@ -124,12 +124,12 @@ export interface Event {
     title: string;
     slug: string;
     description: string;
-    type: 'WORKSHOP' | 'MEETUP' | 'WEBINAR' | 'TRIP';
-    status: 'DRAFT' | 'PUBLISHED' | 'COMPLETED' | 'CANCELLED';
+    type: 'WORKSHOP' | 'MEETUP' | 'WEBINAR' | 'TRIP' | 'LIVE';
+    status: 'draft' | 'published' | 'completed' | 'cancelled';
     start_date: string;
     end_date: string;
     registration_deadline: string | null;
-    max_attendees: number | null;
+    max_participants: number | null;
     active_registrations_count?: number;
     requires_subscription: boolean;
     location: string | null;

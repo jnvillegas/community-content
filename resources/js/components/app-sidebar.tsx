@@ -25,6 +25,7 @@ import {
     SidebarGroup,
     SidebarGroupLabel,
     SidebarTrigger,
+    SidebarHeader,
 } from '@/components/ui/sidebar';
 import AppLogo from '@/components/app-logo';
 import { dashboard } from '@/routes';
@@ -98,19 +99,37 @@ const contentItems: NavItem[] = [
         title: 'Articles',
         href: '/articles',
         icon: FileText,
-        permission: 'view content',
+        permission: 'view articles',
+    },
+    {
+        title: 'Articles Gallery',
+        href: '/articles/gallery',
+        icon: Image,
+        permission: 'view gallery',
     },
     {
         title: 'Videos',
         href: '/videos',
         icon: VideoIcon,
-        permission: 'view content',
+        permission: 'view videos',
+    },
+    {
+        title: 'Videos Gallery',
+        href: '/videos/gallery',
+        icon: Image,
+        permission: 'view video gallery',
     },
     {
         title: 'Wallpapers',
         href: '/wallpapers',
         icon: Image,
-        permission: 'view content',
+        permission: 'view wallpapers',
+    },
+    {
+        title: 'Wallpapers Gallery',
+        href: '/wallpapers/gallery',
+        icon: Image,
+        permission: 'view wallpaper gallery',
     },
 
 ];
@@ -152,13 +171,13 @@ const academyItems: NavItem[] = [
         title: 'Academy Dashboard',
         href: '/admin/academy',
         icon: LayoutGrid,
-        // permission: 'manage academy',
+        permission: 'manage courses',
     },
     {
         title: 'Manage Courses',
         href: '/admin/academy/courses',
         icon: BookOpen,
-        // permission: 'manage academy',
+        permission: 'manage courses',
     },
 ];
 
@@ -208,7 +227,7 @@ export function AppSidebar() {
                 </Link>
             </div>
 
-            <SidebarContent className="px-2">
+            <SidebarContent className="px-2 pt-4">
                 {/* Platform Section */}
                 <SidebarGroup>
                     {/* <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">

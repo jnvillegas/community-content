@@ -1,6 +1,6 @@
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Event, PageProps } from '@/types';
 import { Button } from '@/components/ui/button';
@@ -31,9 +31,11 @@ interface Props extends PageProps {
 }
 
 export default function Index({ events }: Props) {
+    const { flash } = usePage<any>().props;
+
     const handleDelete = (slug: string) => {
         if (confirm('Are you sure you want to delete this event?')) {
-            router.delete(`/ admin / events / ${slug} `);
+            router.delete(`/admin/events/${slug}`);
         }
     };
 
@@ -68,6 +70,18 @@ export default function Index({ events }: Props) {
                     </div>
                 </div>
 
+                {flash?.success && (
+                    <div className="mb-4 p-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-900/30 dark:text-green-400">
+                        {flash.success}
+                    </div>
+                )}
+
+                {flash?.error && (
+                    <div className="mb-4 p-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-900/30 dark:text-red-400">
+                        {flash.error}
+                    </div>
+                )}
+
                 <div className="border rounded-lg bg-card">
                     <Table>
                         <TableHeader>
@@ -94,17 +108,21 @@ export default function Index({ events }: Props) {
                                             <Badge variant="outline">{event.type}</Badge>
                                         </TableCell>
                                         <TableCell>
-                                            <Badge variant={event.status === 'PUBLISHED' ? 'default' : 'secondary'}>
+                                            <Badge variant={event.status === 'published' ? 'default' : 'secondary'}>
                                                 {event.status}
                                             </Badge>
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex flex-col">
                                                 <div className="text-sm font-bold text-foreground">
-                                                    {format(new Date(event.start_date.replace('Z', '').replace('T', ' ')), "d/M/yyyy", { locale: es })}
+                                                    {event.start_date && isValid(new Date(event.start_date))
+                                                        ? format(new Date(event.start_date), "d/M/yyyy", { locale: es })
+                                                        : 'N/A'}
                                                 </div>
                                                 <div className="text-xs text-muted-foreground">
-                                                    {format(new Date(event.start_date.replace('Z', '').replace('T', ' ')), "hh:mm a", { locale: es })}
+                                                    {event.start_date && isValid(new Date(event.start_date))
+                                                        ? format(new Date(event.start_date), "HH:mm", { locale: es })
+                                                        : '--:--'}
                                                 </div>
                                             </div>
                                         </TableCell>
@@ -112,9 +130,9 @@ export default function Index({ events }: Props) {
                                             <span className="font-bold text-foreground">
                                                 {event.active_registrations_count ?? 0}
                                             </span>
-                                            {event.max_attendees && (
+                                            {event.max_participants && (
                                                 <span className="text-xs text-muted-foreground ml-1">
-                                                    / {event.max_attendees}
+                                                    / {event.max_participants}
                                                 </span>
                                             )}
                                         </TableCell>

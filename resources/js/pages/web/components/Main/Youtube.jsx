@@ -54,7 +54,16 @@ const Youtube = () => {
                         return (
                             <a href={`https://www.youtube.com/watch?v=${item.youtube_id}`} className={styles.card} key={index} target="_blank">
                                 <div className={styles.image}>
-                                    <img src={item.thumbnail} className={styles.thumbnail} />
+                                    <img
+                                        src={item.thumbnail}
+                                        className={styles.thumbnail}
+                                        onError={(e) => {
+                                            const target = e.target;
+                                            if (target.src.includes('maxresdefault.jpg')) {
+                                                target.src = target.src.replace('maxresdefault.jpg', 'hqdefault.jpg');
+                                            }
+                                        }}
+                                    />
                                     <div className={styles.overlay}>
                                         <div className={styles.play_button}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="36" viewBox="0 0 30 36" fill="none">
