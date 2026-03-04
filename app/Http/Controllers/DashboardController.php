@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use App\Models\Activity;
 use App\Models\Course;
 use App\Models\Event;
 use App\Models\Story;
+use App\Models\Video;
+use App\Models\Wallpaper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -57,13 +60,16 @@ class DashboardController extends Controller
             });
 
         $activities = Activity::with(['subject', 'user'])
-            ->whereIn('type', ['created_event', 'created_story'])
+            ->whereIn('type', ['created_event', 'created_story', 'created_article', 'created_video', 'created_wallpaper'])
             ->latest()
             ->paginate(10);
 
         $activities->loadMorph('subject', [
             Event::class => ['likes', 'comments.user', 'createdBy'],
             Story::class => ['likes', 'comments.user', 'user', 'images'],
+            Article::class => ['author', 'categories'],
+            Video::class => ['author', 'categories'],
+            Wallpaper::class => ['author'],
         ]);
 
         // Map activities to include likes data and relations for subjects
@@ -120,6 +126,17 @@ class DashboardController extends Controller
                     }
                     if ($subject->created_at instanceof \Carbon\Carbon) {
                         $subject->created_at = $subject->created_at->diffForHumans();
+                    }
+                } elseif ($subject instanceof \App\Models\Article || $subject instanceof \App\Models\Video || $subject instanceof \App\Models\Wallpaper) {
+                    $subject->likes_count = 0; // Articles/Videos might not have likes yet
+                    $subject->is_liked = false;
+
+                    if (!isset($subject->author) && isset($subject->author_id)) {
+                        $author = $subject->author;
+                        $subject->author = [
+                            'name' => $author->name ?? 'Admin',
+                            'avatar' => $author->profile_photo_url ?? 'https://api.dicebear.com/7.x/avataaars/svg?seed=' . ($author->name ?? 'Admin'),
+                        ];
                     }
                 } else {
                     $subject->likes_count = 0;
