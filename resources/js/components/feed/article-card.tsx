@@ -1,45 +1,89 @@
-import { ArrowRight } from 'lucide-react';
+import { Share2, ArrowRight } from 'lucide-react';
 import { Link } from '@inertiajs/react';
 
 export default function ArticleCard({ activity }: { activity: any }) {
     const { subject } = activity;
     if (!subject) return null;
 
+    const handleShare = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (navigator.share) {
+            navigator.share({
+                title: subject.title,
+                url: `/articles/${subject.id}`,
+            }).catch(() => {
+                // Fallback or silent fail
+            });
+        } else {
+            // Fallback: Copy to clipboard
+            navigator.clipboard.writeText(`${window.location.origin}/articles/${subject.id}`);
+            alert('Enlace copiado al portapapeles');
+        }
+    };
+
     return (
-        <article className="glass-card rounded-xl overflow-hidden group transition-all duration-500 hover:shadow-2xs hover:shadow-black/40 bg-background border border-gray-200 dark:border-white/5 w-[100%] mb-10">
-            <div
-                className="relative aspect-video overflow-hidden">
+        <article className="glass-card rounded-2xl overflow-hidden group transition-all duration-500 hover:shadow-xl hover:shadow-black/10 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-white/5 w-full mb-8 flex flex-col md:flex-row gap-6 p-4 md:p-6 text-left">
+            {/* Left side: Image */}
+            <div className="relative w-full md:w-1/3 aspect-video md:aspect-square shrink-0">
                 {subject.cover_image || subject.content_url || subject.featured_image ? (
                     <img
                         src={subject.cover_image || subject.content_url || subject.featured_image}
                         alt={subject.title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        className="w-full h-full rounded-2xl object-cover transition-transform duration-700 group-hover:scale-105 shadow-sm"
                     />
                 ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-[#1a2a1a] to-[#0f0f0f]" />
+                    <div className="w-full h-full rounded-2xl bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 border border-gray-100 dark:border-white/5" />
                 )}
-
-                <div className="absolute bottom-0 left-0 p-2 md:p-4 bg-black/30 w-full">
-                    <div className="flex flex-col items-start gap-1">
-                        <h2 className="text-2xl font-bold leading-tight text-zinc-800 dark:text-white transition-colors">
-                            {subject.title}
-                        </h2>
-                        {/* <p className="text-gray-300 text-base leading-relaxed mb-6 line-clamp-3">
-                            {subject.excerpt || subject.description || 'Contenido disponible ahora.'}
-                        </p> */}
-                    </div>
-                </div>
             </div>
 
-            <div className="m-2">
-                <Link
-                    href={`/articles/${subject.id}`}
-                    onClick={(e) => e.stopPropagation()}
-                    className="bg-[#1d9bf0] felx justify-center items-center text-white font-bold py-3 px-6 md:px-8 rounded-xl transition-all transform active:scale-95 flex gap-2"
-                >
-                    Read Article
-                    <ArrowRight className="h-5 w-5" />
-                </Link>
+            {/* Right side: Content */}
+            <div className="flex flex-col flex-1 justify-between py-1">
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <Link href={`/articles/${subject.id}`}>
+                            <h2 className="text-2xl md:text-3xl font-bold leading-tight text-zinc-900 dark:text-white hover:text-[#1d9bf0] transition-colors cursor-pointer">
+                                {subject.title}
+                            </h2>
+                        </Link>
+                        <p className="text-zinc-500 dark:text-zinc-400 text-sm md:text-base leading-relaxed line-clamp-2 md:line-clamp-3">
+                            {subject.excerpt || subject.description || 'Explora nuestro último contenido de la comunidad.'}
+                        </p>
+                    </div>
+                </div>
+
+                {/* Simplified Footer: Framed Metadata and Read More */}
+                <div className="mt-8">
+                    {/* Metadata (Article / Date) row between two 1px lines */}
+                    <div className="border-t border-b border-zinc-100 dark:border-white/10 py-2 mb-1">
+                        <div className="flex items-center gap-3 px-1">
+                            <span className="text-zinc-800 dark:text-zinc-200 text-sm font-semibold italic">Article</span>
+                            <span className="text-zinc-300 dark:text-zinc-600">•</span>
+                            <span className="text-zinc-800 dark:text-zinc-200 text-sm font-semibold">
+                                {subject.formatted_date || 'Recientemente'}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Bottom Actions Row */}
+                    <div className="flex items-center justify-between">
+                        <Link
+                            href={`/articles/${subject.id}`}
+                            className="text-[#1d9bf0] hover:text-[#1d9bf0]/80 font-bold text-[15px] flex items-center gap-2 transition-all hover:translate-x-1"
+                        >
+                            Read Article
+                            <ArrowRight className="h-4 w-4" />
+                        </Link>
+
+                        <button
+                            onClick={handleShare}
+                            className="p-2.5 rounded-xl bg-zinc-50 dark:bg-white/5 text-zinc-500 hover:text-[#1d9bf0] hover:bg-zinc-100 dark:hover:bg-white/10 transition-all transform active:scale-95 border border-zinc-100 dark:border-white/5"
+                            title="Share Article"
+                        >
+                            <Share2 className="h-5 w-5" />
+                        </button>
+                    </div>
+                </div>
             </div>
         </article>
     );

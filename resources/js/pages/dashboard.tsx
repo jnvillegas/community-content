@@ -83,10 +83,10 @@ export default function Dashboard({ upcomingEvents, activities, stories, courses
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Creator Connect - Dashboard" />
+            <Head title="Community - Dashboard" />
 
-            <main className="flex background:transparent justify-center w-full max-w-7xl mx-auto">
-                <div className="min-h-screen min-w-0 w-full bg-transparent px-4 md:px-8 dark:bg-transparent max-w-[1024px]">
+            <div className="flex bg-transparent justify-center w-full max-w-[1400px] mx-auto gap-8">
+                <div className="min-h-screen min-w-0 w-full bg-transparent px-4 md:px-0 dark:bg-transparent max-w-[1024px]">
                     {/* Stories */}
                     <StoriesBar stories={stories} />
 
@@ -97,8 +97,8 @@ export default function Dashboard({ upcomingEvents, activities, stories, courses
                 </div>
 
                 {/* Right Column - Widgets */}
-                <aside className="bg-white p-6 pt-10 dark:bg-transparent hidden lg:block w-[312px] min-w-[312px]">
-                    <div className="space-y-6 h-full sticky top-24">
+                <aside className="p-0 pt-10 dark:bg-transparent hidden lg:block w-[312px] min-w-[312px]">
+                    <div className="space-y-8 h-full sticky top-24">
 
                         <div className="flex items-center p-1 bg-gray-100 dark:bg-zinc-900 rounded-xl">
                             <button
@@ -175,7 +175,7 @@ export default function Dashboard({ upcomingEvents, activities, stories, courses
 
                     </div>
                 </aside>
-            </main >
+            </div>
         </AppLayout >
     );
 }

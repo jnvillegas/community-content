@@ -67,7 +67,7 @@ class DashboardController extends Controller
         $activities->loadMorph('subject', [
             Event::class => ['likes', 'comments.user', 'createdBy'],
             Story::class => ['likes', 'comments.user', 'user', 'images'],
-            Article::class => ['author', 'categories'],
+            Article::class => ['author', 'categories'], // Fixed: removed non-existent relations
             Video::class => ['author', 'categories'],
             Wallpaper::class => ['author'],
         ]);
@@ -127,8 +127,21 @@ class DashboardController extends Controller
                     if ($subject->created_at instanceof \Carbon\Carbon) {
                         $subject->created_at = $subject->created_at->diffForHumans();
                     }
-                } elseif ($subject instanceof \App\Models\Article || $subject instanceof \App\Models\Video || $subject instanceof \App\Models\Wallpaper) {
-                    $subject->likes_count = 0; // Articles/Videos might not have likes yet
+                } elseif ($subject instanceof \App\Models\Article) {
+                    $subject->likes_count = 0; // Fixed: relationships do not exist yet
+                    $subject->comments_count = 0;
+                    $subject->is_liked = false;
+                    $subject->formatted_date = $subject->created_at->format('M j · g:i A');
+
+                    if (!isset($subject->author) && isset($subject->author_id)) {
+                        $author = $subject->author;
+                        $subject->author = [
+                            'name' => $author->name ?? 'Admin',
+                            'avatar' => $author->profile_photo_url ?? 'https://api.dicebear.com/7.x/avataaars/svg?seed=' . ($author->name ?? 'Admin'),
+                        ];
+                    }
+                } elseif ($subject instanceof \App\Models\Video || $subject instanceof \App\Models\Wallpaper) {
+                    $subject->likes_count = 0; // Keeping simple for non-articles as per request
                     $subject->is_liked = false;
 
                     if (!isset($subject->author) && isset($subject->author_id)) {
