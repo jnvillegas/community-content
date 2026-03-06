@@ -12,6 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { SidebarMenuButton, useSidebar } from '@/components/ui/sidebar';
 import { type PageProps } from '@/types';
 import { cn } from '@/lib/utils';
 import axios from 'axios';
@@ -29,11 +30,25 @@ interface NotificationData {
     created_at: string;
 }
 
-export function NotificationDropdown() {
+interface NotificationDropdownProps {
+    variant?: 'header' | 'sidebar' | 'nav';
+}
+
+export function NotificationDropdown({ variant = 'header' }: NotificationDropdownProps) {
     const { auth } = usePage<PageProps>().props;
     const [notifications, setNotifications] = useState<NotificationData[]>([]);
     const [loading, setLoading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+
+    // We conditionally try to grab sidebar context to use its state
+    // But we must handle it inside a generic component if needed
+    let isMobile = false;
+    let state = 'expanded';
+    try {
+        const sidebar = useSidebar();
+        isMobile = sidebar.isMobile;
+        state = sidebar.state;
+    } catch (e) { }
 
     const fetchNotifications = async () => {
         setLoading(true);
@@ -98,16 +113,52 @@ export function NotificationDropdown() {
     return (
         <DropdownMenu onOpenChange={setIsOpen}>
             <DropdownMenuTrigger asChild>
-                <button className="relative p-2 rounded-xl text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-all duration-300 group/bell">
-                    <Bell className="size-5 group-hover/bell:scale-110 transition-transform" />
-                    {auth.unread_notifications_count > 0 && (
-                        <div className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white border-2 border-white dark:border-gray-950">
-                            {auth.unread_notifications_count}
+                {variant === 'sidebar' ? (
+                    <SidebarMenuButton
+                        tooltip={{ children: 'Notifications' }}
+                        className={state === 'collapsed' && !isMobile ? 'justify-center' : ''}
+                    >
+                        <div className={`flex items-center gap-1 w-full ${state === "collapsed" ? "justify-center" : ""}`}>
+                            <div className="relative flex items-center justify-center">
+                                <Bell className="w-4 h-4" />
+                                {auth.unread_notifications_count > 0 && (
+                                    <div className="absolute -top-1.5 -right-1.5 flex h-3 w-3 items-center justify-center rounded-full bg-red-500 text-[8px] font-bold text-white border border-white dark:border-gray-950">
+                                        {auth.unread_notifications_count > 9 ? '9+' : auth.unread_notifications_count}
+                                    </div>
+                                )}
+                            </div>
+                            {(state !== 'collapsed' || isMobile) && <span className="ml-1">Notifications</span>}
                         </div>
-                    )}
-                </button>
+                    </SidebarMenuButton>
+                ) : variant === 'nav' ? (
+                    <button className="flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground relative">
+                        <div className="relative">
+                            <Bell className="w-5 h-5" />
+                            {auth.unread_notifications_count > 0 && (
+                                <div className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-red-500 text-[8px] font-bold text-white border border-white dark:border-gray-950">
+                                    {auth.unread_notifications_count > 9 ? '9+' : auth.unread_notifications_count}
+                                </div>
+                            )}
+                        </div>
+                        <span className="text-[10px] font-medium">Alertas</span>
+                    </button>
+                ) : (
+                    <button className="relative p-2 rounded-xl text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-all duration-300 group/bell">
+                        <Bell className="size-5 group-hover/bell:scale-110 transition-transform" />
+                        {auth.unread_notifications_count > 0 && (
+                            <div className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white border-2 border-white dark:border-gray-950">
+                                {auth.unread_notifications_count}
+                            </div>
+                        )}
+                    </button>
+                )}
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-80 p-0" align="end">
+            <DropdownMenuContent
+                className="w-[90vw] sm:w-80 p-0"
+                align={variant === 'sidebar' ? 'start' : 'end'}
+                side={variant === 'sidebar' ? 'right' : variant === 'nav' ? 'top' : 'bottom'}
+                sideOffset={variant === 'nav' ? 12 : 4}
+            >
                 <DropdownMenuLabel className="p-4 flex items-center justify-between">
                     <span className="font-bold">Notifications</span>
                     {auth.unread_notifications_count > 0 && (

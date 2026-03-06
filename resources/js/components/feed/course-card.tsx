@@ -18,22 +18,20 @@ interface CourseCardProps {
 
 export default function CourseCard({ course }: CourseCardProps) {
     return (
-        <article className="glass-card rounded-xl overflow-hidden group transition-all duration-500 hover:shadow-2xs hover:shadow-black/40 bg-background border border-gray-200 dark:border-white/5 w-[100%] mb-10">
-            {/* Imagen superior - aspect-video */}
-            <div className="relative aspect-video overflow-hidden">
+        <article className="glass-card bg-card rounded-xl overflow-hidden group transition-all duration-500 p-5">
+            <div className="relative aspect-video overflow-hidden rounded-xl">
                 {course.cover_image ? (
-                    <img
-                        src={course.cover_image}
-                        alt={course.title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
+                    <Link href={`/academy/${course.slug}`}>
+                        <img
+                            src={course.cover_image}
+                            alt={course.title}
+                            className="w-full h-full rounded-xl object-cover transition-transform duration-700 group-hover:scale-102"
+                        />
+                    </Link>
                 ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-[#1a2a1a] to-[#0f0f0f] flex items-center justify-center">
-                        <BookOpen className="w-12 h-12 text-white/30" />
-                    </div>
+                    <div className="w-full h-full bg-gradient-to-br from-[#000000] to-[#0f0f0f]" />
                 )}
 
-                {/* Tag superior izquierdo */}
                 <div className="absolute top-4 left-4">
                     <span className="px-3 py-1.5 bg-zinc-900/20 backdrop-blur-md rounded-lg text-xs font-bold text-white border border-white/10">
                         COURSE
@@ -41,50 +39,13 @@ export default function CourseCard({ course }: CourseCardProps) {
                 </div>
             </div>
 
-            {/* Contenido inferior */}
-            <div className="p-4 md:p-6">
-                {/* Título */}
-                <h2 className="text-2xl font-bold leading-tight text-zinc-800 dark:text-white transition-colors mb-1">
+            <div className='flex flex-col sm:flex-row justify-between sm:items-center my-4 mb-0 gap-4'>
+                <h2 className="text-xl sm:text-2xl m-0 font-bold leading-tight text-zinc-800 dark:text-white transition-colors">
                     {course.title}
                 </h2>
-
-                {/* Descripción */}
-                {course.description ? (
-                    <p className="text-slate-400 text-base leading-relaxed mb-4 line-clamp-3">
-                        {course.description}
-                    </p>
-                ) : (
-                    <p className="text-slate-500 text-base mb-6 line-clamp-3">
-                        Curso disponible para aprender
-                    </p>
-                )}
-
-                {/* Info del instructor y módulos */}
-                {/* <div className="flex flex-wrap items-center gap-5 md:gap-6 mb-8 text-sm text-zinc-800 dark:text-white">
-                    <div className="flex items-center gap-2">
-                        <span className="font-medium">{course.instructor.name}</span>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                        <BookOpen className="h-5 w-5" />
-                        <span>{course.modules_count} módulos</span>
-                    </div>
-                </div> */}
-
-                {/* Footer: botón principal */}
-                <div className="flex items-center justify-between pt-6 border-t border-black/10 dark:border-white/10">
-                    <div className="flex items-center gap-2">
-                        <BookOpen className="h-5 w-5" />
-                        <span>{course.modules_count} módulos</span>
-                    </div>
-                    <Link
-                        href={`/academy/${course.slug}`}
-                        className="bg-[#1d9bf0] text-white font-bold py-3 px-6 md:px-8 rounded-sm transition-all transform active:scale-95 flex items-center gap-2 text-base"
-                    >
-                        See More
-                        <ArrowRight className="h-5 w-5" />
-                    </Link>
-                </div>
+                <Link href={`/academy/${course.slug}`} className='flex justify-center bg-background p-2 px-4 rounded-xl border-2 border-solid border-border cursor-pointer items-center gap-2 transition-all hover:bg-accent text-sm font-semibold whitespace-nowrap'>
+                    Start Learning
+                </Link>
             </div>
         </article>
     );

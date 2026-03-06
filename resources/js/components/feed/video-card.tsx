@@ -3,8 +3,8 @@ export default function VideoCard({ activity }: { activity: any }) {
     if (!subject) return null;
 
     return (
-        <article className="glass-card rounded-xl overflow-hidden group transition-all duration-500 hover:shadow-2xs hover:shadow-black/40 bg-background border border-gray-200 dark:border-white/5 w-[100%] mb-10">
-            <div className="relative aspect-video">
+        <article className="glass-card bg-card rounded-xl overflow-hidden group transition-all duration-500 p-5">
+            <div className="relative aspect-video overflow-hidden rounded-xl">
                 {subject.youtube_id ? (
                     <iframe
                         src={`https://www.youtube.com/embed/${subject.youtube_id}`}
@@ -14,7 +14,7 @@ export default function VideoCard({ activity }: { activity: any }) {
                         allowFullScreen
                     />
                 ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-[#1a2a1a] to-[#0f0f0f]" />
+                    <div className="w-full h-full bg-gradient-to-br from-[#000000] to-[#0f0f0f]" />
                 )}
             </div>
         </article>

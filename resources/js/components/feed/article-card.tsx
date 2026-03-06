@@ -5,40 +5,36 @@ export default function ArticleCard({ activity }: { activity: any }) {
     const { subject } = activity;
     if (!subject) return null;
 
+    console.log("article", subject)
+
     return (
-        <article className="glass-card rounded-xl overflow-hidden group transition-all duration-500 hover:shadow-2xs hover:shadow-black/40 bg-background border border-gray-200 dark:border-white/5 w-[100%] mb-10">
-            <div
-                className="relative aspect-video overflow-hidden">
+        <article className="glass-card bg-card rounded-xl overflow-hidden group transition-all duration-500 p-5">
+            <div className="relative aspect-video overflow-hidden rounded-xl">
                 {subject.cover_image || subject.content_url || subject.featured_image ? (
-                    <img
-                        src={subject.cover_image || subject.content_url || subject.featured_image}
-                        alt={subject.title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
+                    <Link href={subject.slug ? `/events/${subject.slug}` : '#'} >
+                        <img
+                            src={subject.cover_image || subject.content_url || subject.featured_image}
+                            alt={subject.title}
+                            className="w-full h-full rounded-xl object-cover transition-transform duration-700 group-hover:scale-102"
+                        />
+                    </Link>
                 ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-[#1a2a1a] to-[#0f0f0f]" />
+                    <div className="w-full h-full bg-gradient-to-br from-[#000000] to-[#0f0f0f]" />
                 )}
 
-                <div className="absolute bottom-0 left-0 p-2 md:p-4 bg-black/30 w-full">
-                    <div className="flex flex-col items-start gap-1">
-                        <h2 className="text-2xl font-bold leading-tight text-zinc-800 dark:text-white transition-colors">
-                            {subject.title}
-                        </h2>
-                        {/* <p className="text-gray-300 text-base leading-relaxed mb-6 line-clamp-3">
-                            {subject.excerpt || subject.description || 'Contenido disponible ahora.'}
-                        </p> */}
-                    </div>
+                <div className="absolute top-4 left-4">
+                    <span className="px-3 py-1.5 bg-zinc-900/20 backdrop-blur-md rounded-lg text-xs font-bold text-white border border-white/10">
+                        ARTICLE
+                    </span>
                 </div>
             </div>
 
-            <div className="m-2">
-                <Link
-                    href={`/articles/${subject.id}`}
-                    onClick={(e) => e.stopPropagation()}
-                    className="bg-[#1d9bf0] felx justify-center items-center text-white font-bold py-3 px-6 md:px-8 rounded-xl transition-all transform active:scale-95 flex gap-2"
-                >
-                    Read Article
-                    <ArrowRight className="h-5 w-5" />
+            <div className='flex justify-between items-center my-4 mb-0'>
+                <h2 className="text-2xl m-0 font-bold leading-tight text-zinc-800 dark:text-white transition-colors">
+                    {subject.title}
+                </h2>
+                <Link href={subject.slug ? `/events/${subject.slug}` : '#'} className='flex bg-background p-2 rounded-2xl border-2 border-solid border-border cursor-pointer items-center gap-2 transition-all'>
+                    Reading
                 </Link>
             </div>
         </article>

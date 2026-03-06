@@ -52,7 +52,7 @@ const Wallpaper = () => {
                                 className={styles.phone_image}
                             />
 
-                            {/* <div className={styles.phone_time}>09:41</div> */}
+                            <div className={styles.phone_time}>09:41</div>
                         </div>
                     </div>
                 </div>

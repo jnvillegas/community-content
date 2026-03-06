@@ -27,9 +27,6 @@ const Banner = ({ title, subtitle, url }) => {
                 src={imageUrl}
                 alt={title || "Banner background"}
                 className={styles.background}
-                onError={(e) => {
-                    e.currentTarget.src = '/fallback.jpg'; // imagen de respaldo local
-                }}
             />
 
             <div className={styles.content}>

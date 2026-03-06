@@ -3,6 +3,7 @@ import styles from './Wallpaper.module.css';
 import WebLayout from '../../layout';
 import { usePage } from '@inertiajs/react';
 import Banner from '../../components/Banner/Banner';
+import WallpaperBanner from '../../assets/about/w4.jpg'
 
 const Wallpaper = () => {
     const { wallpapers } = usePage().props;
@@ -11,7 +12,7 @@ const Wallpaper = () => {
 
     return (
         <div >
-            <Banner title={'Wallpapers'} />
+            <Banner title={'Wallpapers'} url={WallpaperBanner} />
 
             <section className={styles.intro_section}>
                 <h2 className={styles.intro_title}>Conecte-se com a Estrada</h2>
