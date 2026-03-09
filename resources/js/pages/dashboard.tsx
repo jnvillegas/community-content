@@ -69,6 +69,7 @@ interface DashboardProps {
 
 import StoriesBar from '@/components/feed/stories-bar';
 import ActivityFeed from '@/components/feed/activity-feed';
+import AppLogo from '@/components/app-logo';
 
 export default function Dashboard({ upcomingEvents, activities, stories, courses, auth }: DashboardProps) {
     const [date, setDate] = useState<Date | undefined>(new Date());
@@ -83,28 +84,26 @@ export default function Dashboard({ upcomingEvents, activities, stories, courses
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Community - Dashboard" />
+            {/* <Head title="Creator Connect - Dashboard" /> */}
 
-            <div className="flex bg-transparent justify-center w-full max-w-[1400px] mx-auto gap-8">
-                <div className="min-h-screen min-w-0 w-full bg-transparent px-4 md:px-0 dark:bg-transparent max-w-[1024px]">
-                    {/* Stories */}
-                    <StoriesBar stories={stories} />
-
-                    {/* Feed */}
-                    <div className="mb-8 w-full">
-                        <ActivityFeed activities={activities} courses={courses} />
+            <main className="flex justify-center items-start w-full max-w-7xl mx-auto gap-1 md:gap-6 px-0 md:px-6 lg:px-8 md:mt-5 md:mb-5">
+                <div className="flex-1 w-full bg-sidebar min-h-[90vh] md:rounded-2xl px-3 md:px-8 pt-6 overflow-hidden pb-[100px] md:pb-8">
+                    <div className='mb-6 px-1 md:px-0'>
+                        <AppLogo></AppLogo>
                     </div>
+                    <StoriesBar stories={stories} />
+                    <ActivityFeed activities={activities} courses={courses} />
                 </div>
 
                 {/* Right Column - Widgets */}
-                <aside className="p-0 pt-10 dark:bg-transparent hidden lg:block w-[312px] min-w-[312px]">
-                    <div className="space-y-8 h-full sticky top-24">
+                <aside className="bg-transparent hidden lg:block w-[312px] min-w-[312px]">
+                    <div className="space-y-6 h-full sticky top-5">
 
-                        <div className="flex items-center p-1 bg-gray-100 dark:bg-zinc-900 rounded-xl">
+                        <div className="flex items-center p-1 bg-sidebar rounded-xl">
                             <button
                                 onClick={() => setSidebarTab('calendar')}
                                 className={`flex-1 flex items-center justify-center gap-2 p-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${sidebarTab === 'calendar'
-                                    ? 'bg-white dark:bg-zinc-700 text-[#1d9bf0]shadow-sm'
+                                    ? 'bg-card text-white shadow-sm'
                                     : 'text-gray-500 hover:text-gray-900 dark:hover:text-gray-300'
                                     }`}
                             >
@@ -114,7 +113,7 @@ export default function Dashboard({ upcomingEvents, activities, stories, courses
                             <button
                                 onClick={() => setSidebarTab('upcoming')}
                                 className={`flex-1 flex items-center justify-center gap-2 p-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all ${sidebarTab === 'upcoming'
-                                    ? 'bg-white dark:bg-zinc-700 text-[#1d9bf0]shadow-sm'
+                                    ? 'bg-card text-white shadow-sm'
                                     : 'text-gray-500 hover:text-gray-900 dark:hover:text-gray-300'
                                     }`}
                             >
@@ -125,27 +124,26 @@ export default function Dashboard({ upcomingEvents, activities, stories, courses
 
                         {sidebarTab === 'calendar' && (
                             <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                                <div className="rounded-2xl border border-gray-100 p-2 shadow-sm dark:border-gray-900 bg-gray-50/30 dark:bg-gray-900/40">
+                                <div className="rounded-2xl p-4 shadow-sm bg-sidebar">
                                     <Calendar
                                         mode="single"
                                         selected={date}
                                         onSelect={setDate}
-                                        className="rounded-xl mx-auto"
+                                        className="rounded-xl mx-auto w-full"
                                     />
                                 </div>
                             </div>
                         )}
 
                         {sidebarTab === 'upcoming' && (
-                            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300 bg-sidebar rounded-2xl p-4">
                                 <div className="flex items-center justify-between">
                                     <h4 className="text-sm font-black uppercase tracking-widest text-gray-500">Next Events</h4>
-                                    {/* <Plus className="h-4 w-4 text-gray-400 cursor-pointer hover:text-[#1d9bf0] transition-colors" /> */}
                                 </div>
                                 <div className="space-y-3">
                                     {upcomingEvents.length > 0 ? (
                                         upcomingEvents.map((event) => (
-                                            <div key={event.id} className="flex gap-3 group cursor-pointer hover:bg-gray-50 p-2 rounded-xl transition-colors dark:hover:bg-zinc-900">
+                                            <div key={event.id} className="flex gap-3 group cursor-pointer hover:bg-gray-50 p-2 rounded-xl transition-colors dark:hover:bg-card">
                                                 <div className={`mt-1.5 size-2 rounded-full shrink-0 bg-[#1d9bf0]`}></div>
                                                 <div className="flex flex-col">
                                                     <span className="text-sm font-bold text-gray-900 dark:text-gray-100 leading-tight group-hover:text-[#1d9bf0] transition-colors">
@@ -164,18 +162,11 @@ export default function Dashboard({ upcomingEvents, activities, stories, courses
                                         <p className="text-sm text-gray-500 text-center py-4">No upcoming events</p>
                                     )}
                                 </div>
-                                {/* <Button variant="ghost" className="w-full text-[#1d9bf0] font-bold text-[11px] uppercase tracking-widest gap-2 mt-2 hover:bg-zinc-700 hover:text-[#1d9bf0] ">
-                                    See all events
-                                    <ArrowRight className="h-3 w-3" />
-                                </Button> */}
                             </div>
                         )}
-
-
-
                     </div>
                 </aside>
-            </div>
+            </main>
         </AppLayout >
     );
 }

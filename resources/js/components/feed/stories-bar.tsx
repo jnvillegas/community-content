@@ -269,14 +269,14 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
     return (
         <div className="group relative mb-10 w-full mx-auto overflow-hidden">
             <div className="flex items-center justify-between mb-4">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Historias</h3>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Stories</h3>
                 <div className="flex items-center gap-2">
                     <Button
                         variant="ghost"
                         size="icon"
                         disabled={!canScrollLeft}
                         onClick={() => scroll('left')}
-                        className={`h-10 w-10 rounded-full bg-white shadow-md dark:bg-background transition-opacity ${!canScrollLeft ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-50'}`}
+                        className={`h-8 w-8 rounded-full bg-white shadow-md dark:bg-background transition-opacity ${!canScrollLeft ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-50'}`}
                     >
                         <ChevronLeft className="h-6 w-6 text-gray-600 dark:text-gray-300" />
                     </Button>
@@ -285,7 +285,7 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
                         size="icon"
                         disabled={!canScrollRight}
                         onClick={() => scroll('right')}
-                        className={`h-10 w-10 rounded-full bg-white shadow-md dark:bg-background transition-opacity ${!canScrollRight ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-50'}`}
+                        className={`h-8 w-8 rounded-full bg-white shadow-md dark:bg-background transition-opacity ${!canScrollRight ? 'opacity-40 pointer-events-none' : 'hover:bg-gray-50'}`}
                     >
                         <ChevronRight className="h-6 w-6 text-gray-600 dark:text-gray-300" />
                     </Button>
@@ -323,22 +323,22 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
                     <div key="create" className="snap-start">
                         <div
                             onClick={() => setIsCreateModalOpen(true)}
-                            className='relative w-24 h-32 z-10 cursor-pointer p-[2px] rounded-2xl bg-gradient-to-b from-black to-gray-400 hover:shadow-md transition-all duration-300 group/add'
+                            className='relative w-24 h-32 z-10 cursor-pointer p-[2px] rounded-2xl transition-all duration-300 group/add'
                         >
-                            <div className="w-full h-full rounded-[14px] bg-white dark:bg-gray-900 flex items-center justify-center transition-all duration-300 group-hover/add:bg-gray-50 dark:group-hover/add:bg-gray-800">
-                                <div className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-400 dark:border-gray-500 group-hover/add:border-blue-500 transition-colors">
-                                    <Plus className='h-5 w-5 text-gray-500 dark:text-gray-400 group-hover/add:text-blue-500' />
+                            <div className="w-full h-full rounded-[14px] bg-card flex items-center justify-center transition-all duration-300">
+                                <div className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-400 dark:border-white group-hover/add:border-blue-500 transition-colors">
+                                    <Plus className='h-5 w-5 text-gray-500 dark:text-white group-hover/add:text-blue-500' />
                                 </div>
                             </div>
                         </div>
-                        <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mt-2 text-center">add stories</p>
+                        <p className="text-xs font-medium text-gray-600 dark:text-white mt-2 text-center">Add Storie</p>
                     </div>
                 )}
                 {localStories.map((story) => (
                     <div key={story.id} className="snap-start">
                         <div
                             onClick={() => handleCardClick(story.id)}
-                            className={`relative group/story flex items-center justify-center w-24 h-32 z-10 cursor-pointer rounded-2xl transition-all duration-300 ${!story.is_viewed ? 'p-[2px] bg-gradient-to-b from-black to-gray-400' : ''}`}
+                            className={`relative group/story flex items-center justify-center w-24 h-32 z-10 cursor-pointer rounded-2xl transition-all duration-300 ${!story.is_viewed ? '' : ''}`}
                         >
                             <div className={`absolute inset-0 rounded-2xl overflow-hidden ${!story.is_viewed ? 'm-[2px] rounded-[14px]' : 'rounded-2xl'}`}>
                                 <img
@@ -351,8 +351,8 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
                             </div>
 
                             {!story.is_viewed && (story.likes_count > 0 || (story.comments && story.comments.length > 0)) && (
-                                <div className="absolute -top-2 -right-2 z-20 animate-in fade-in zoom-in duration-300">
-                                    <div className="flex items-center justify-center w-6 h-6 bg-blue-600 backdrop-blur-sm rounded-full border-2 border-white shadow-lg">
+                                <div className="absolute -top-1 -right-1 z-20 animate-in fade-in zoom-in duration-300">
+                                    <div className="flex items-center justify-center w-5 h-5 bg-red-500 backdrop-blur-sm rounded-full">
                                         <span className="text-[10px] font-bold text-white leading-none">
                                             {(story.likes_count || 0) + (story.comments?.length || 0)}
                                         </span>

@@ -3,7 +3,7 @@
     height: 100vh;
     width: 100%;
     display: flex;
-    align-items: center;
+    align-items: start;
     justify-content: center;
     background-color: black;
 }
@@ -15,16 +15,18 @@
 }
 
 .hero_background_image {
+    position: relative;
     width: 100%;
     height: 100%;
     object-fit: cover;
     opacity: 0.6;
+    object-position: bottom;
 }
 
 .hero_gradient_overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to bottom, black, transparent, black);
+    background: linear-gradient(to bottom, #00000071, transparent, #00000071);
 }
 
 .hero_vignette_overlay {
@@ -39,11 +41,11 @@
     text-align: center;
     padding: 0 1.5rem;
     max-width: 80rem;
-    margin: 0 auto;
+    margin-top: 150px;
 }
 
 .hero_title {
-    font-size: 3.75rem;
+    font-size: 2.75rem;
     line-height: 1.05;
     font-weight: bold;
     letter-spacing: -0.025em;
@@ -52,7 +54,7 @@
 
 @media (min-width: 768px) {
     .hero_title {
-        font-size: 5.5rem;
+        font-size: 3.5rem;
     }
 }
 
@@ -67,16 +69,16 @@
 }
 
 .hero_subtitle {
-    font-size: 1.125rem;
+    font-size: .725rem;
     line-height: 1.6;
     max-width: 48rem;
-    margin: 0 auto 3rem;
+    margin-top: 10px;
     font-weight: 400;
 }
 
 @media (min-width: 768px) {
     .hero_subtitle {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
     }
 }
 
@@ -90,12 +92,13 @@
     color: var(--web-white);
     font-size: 1.125rem;
     font-weight: 600;
-    padding: 1.25rem 3rem;
+    padding: .7rem 2rem;
     border-radius: 9999px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     transition: all 0.3s;
     border: none;
     cursor: pointer;
+    margin-top: 30px;
 }
 
 .link:hover {

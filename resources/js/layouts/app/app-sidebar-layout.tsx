@@ -15,16 +15,16 @@ export default function AppSidebarLayout({
     return (
         <AppShell variant="sidebar">
             {/* Header fijo en la parte superior */}
-            {header || <AppSidebarHeader breadcrumbs={breadcrumbs} />}
+            {/* {header || <AppSidebarHeader breadcrumbs={breadcrumbs} />} */}
 
             {/* Contenedor con sidebar y contenido principal - pt-16 para hacer espacio al header fijo */}
-            <div className="flex flex-1 pt-16">
+            <div className="flex flex-1">
                 {/* Sidebar fijo a la izquierda */}
                 <AppSidebar />
                 <AppNavUser></AppNavUser>
 
                 {/* Contenido principal scrollable - con margin dinámico para el sidebar fixed */}
-                <AppContent variant="sidebar" className="peer-data-[state=expanded]:ml-4 peer-data-[state=collapsed]:ml-4 transition-[margin-left] duration-200 ease-linear">
+                <AppContent variant="sidebar" className="peer-data-[state=expanded]:ml-4 peer-data-[state=collapsed]:ml-1 transition-[margin-left] duration-200 ease-linear">
                     {children}
                 </AppContent>
             </div>

@@ -17,7 +17,7 @@
 
 .filter {
     position: absolute;
-    background-color: #0000009d;
+    background-color: #0000006b;
     width: 100%;
     height: 100%;
     z-index: 1;
@@ -28,17 +28,24 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    height: 100%;
     position: absolute;
+    bottom: 50px;
+    left: 50px;
     z-index: 2;
+    /* background-color: red; */
+}
+
+@media (max-width: 1024px) {
+    .text_content {
+        left: 0;
+    }
 }
 
 .title_first,
 .title_second {
     color: #fff;
     text-align: center;
-    font-size: 90px;
+    font-size: 80px;
     line-height: 1.1;
     margin: 0 2%;
 }

@@ -13,7 +13,7 @@ const Contact = () => {
 
     return (
         <div>
-            <Banner title={'Contato'} url={banner} />
+            {/* <Banner title={'Contato'} url={banner} /> */}
             <section className={styles.contact_section}>
                 <div className={styles.form_grid}>
                     <div className={styles.form_column}>

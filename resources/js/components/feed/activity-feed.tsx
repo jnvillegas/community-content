@@ -1,7 +1,4 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import FeedItem from './feed-item';
-import CourseCard from './course-card';
-import { Button } from '@/components/ui/button';
 import {
     Select,
     SelectContent,
@@ -36,10 +33,10 @@ export default function ActivityFeed({ activities, courses = [] }: ActivityFeedP
     const [filter, setFilter] = useState<ActivityFilterType>('all');
 
     const filterOptions: { value: ActivityFilterType; label: string }[] = [
-        { value: 'all', label: 'Todos' },
-        { value: 'events', label: 'Eventos' },
-        { value: 'courses', label: 'Cursos' },
-        { value: 'articles', label: 'Artículos' },
+        { value: 'all', label: 'All' },
+        { value: 'events', label: 'Events' },
+        { value: 'courses', label: 'Courses' },
+        { value: 'articles', label: 'Articles' },
         { value: 'videos', label: 'Videos' },
     ];
 
@@ -81,13 +78,25 @@ export default function ActivityFeed({ activities, courses = [] }: ActivityFeedP
         return true;   // o return false; si preferís ocultarlos
     });
 
+    const feedItems = [
+        ...upcoming.map((activity) => ({ type: 'activity', id: `act-${activity.id}`, data: activity })),
+        ...courses.map((course) => ({ type: 'course', id: `course-${course.id}`, data: course })),
+    ].sort((a, b) => {
+        const dateA = new Date(a.data.created_at || 0).getTime();
+        const dateB = new Date(b.data.created_at || 0).getTime();
+        return dateB - dateA; // Descending
+    });
+
     return (
         <div className="space-y-6 w-full">
             {/* Filter Header */}
-            <div className="flex items-center gap-4">
-                <div className="h-[2px] bg-gradient-to-r from-gray-600 to-transparent flex-grow rounded-full"></div>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 my-8">
+                <div className="flex items-center gap-4 flex-1">
+                    <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 shrink-0">Feed</h3>
+                    <div className="h-[1px] bg-gradient-to-r from-white to-transparent flex-grow rounded-full hidden sm:block"></div>
+                </div>
                 <Select value={filter} onValueChange={(value) => setFilter(value as ActivityFilterType)}>
-                    <SelectTrigger className="w-40">
+                    <SelectTrigger className="w-full sm:w-40 bg-background/50 backdrop-blur-sm border-2">
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -100,44 +109,23 @@ export default function ActivityFeed({ activities, courses = [] }: ActivityFeedP
                 </Select>
             </div>
 
-            {/* Actividades (Eventos, Artículos, Videos) */}
-            {filter !== 'courses' && (
-                <div className="space-y-8 w-full">
-                    <div className="flex flex-col items-stretch w-full gap-6">
-                        {upcoming.length > 0 ? (
-                            upcoming.map((activity) => (
-                                <FeedItem key={activity.id} activity={activity} filter={filter} />
-                            ))
-                        ) : (
-                            <div className="text-center py-10 w-full text-gray-500">
-                                <p>No hay actividad para mostrar</p>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            )}
-
-            {/* Content */}
+            {/* Combined Feed Content */}
             <div className="space-y-8 w-full">
-                {/* Cursos Disponibles */}
-                {(filter === 'all' || filter === 'courses') && courses.length > 0 && (
-                    <div className="space-y-4 w-full">
-                        {/* <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                            Cursos Disponibles
-                        </h3> */}
-                        <div className="flex flex-col items-stretch w-full gap-6">
-                            {courses.map((course) => (
-                                <CourseCard key={course.id} course={course} />
-                            ))}
-                        </div>
-                    </div>
-                )}
+                <div className="flex flex-col items-stretch w-full gap-6">
+                    {feedItems.map((item) => (
+                        <FeedItem
+                            key={item.id}
+                            activity={item.type === 'activity' ? item.data : undefined}
+                            course={item.type === 'course' ? item.data : undefined}
+                            filter={filter}
+                        />
+                    ))}
+                </div>
 
-
-                {/* Empty State */}
-                {filter === 'courses' && courses.length === 0 && (
-                    <div className="text-center py-10 text-gray-500">
-                        <p>No hay cursos disponibles</p>
+                {/* Fallback for empty state based on arrays (doesn't account for filter results returning null, but preserves structure) */}
+                {feedItems.length === 0 && (
+                    <div className="text-center py-10 w-full text-gray-500">
+                        <p>No hay contenido para mostrar</p>
                     </div>
                 )}
             </div>

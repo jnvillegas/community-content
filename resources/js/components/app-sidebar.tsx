@@ -16,6 +16,7 @@ import {
     Tags,
     Plus,
     Home,
+    User as UserIcon,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/nav-main';
@@ -26,14 +27,18 @@ import {
     SidebarGroupLabel,
     SidebarTrigger,
     SidebarHeader,
+    SidebarMenu,
+    SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import AppLogo from '@/components/app-logo';
 import { dashboard } from '@/routes';
+import { edit as profileEdit } from '@/routes/profile';
 import { type NavItem } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { type SharedData } from '@/types';
 import CreateStoryModal from './feed/CreateStoryModal';
 import { useState } from 'react';
+import { NotificationDropdown } from './notification-dropdown';
 
 // Platform Section
 const platformItems: NavItem[] = [
@@ -41,13 +46,17 @@ const platformItems: NavItem[] = [
         title: 'Home',
         href: dashboard(),
         icon: Home,
-    },
-    // {
-    //     title: 'Save',
-    //     href: '#',
-    //     icon: Bookmark,
-    // },
+    }
 ];
+
+const userItems: NavItem[] = [
+    {
+        title: 'Profile',
+        href: profileEdit(),
+        icon: UserIcon,
+    }
+];
+
 
 
 
@@ -216,18 +225,18 @@ export function AppSidebar() {
     return (
         <Sidebar
             collapsible="icon"
-            className="bg-transparent dark:bg-transparent mt-[64px] pb-[64px] [&>[data-slot=sidebar]]:!top-16 [&>[data-slot=sidebar]]:!h-[calc(100vh-64px)]"
+            className="bg-section dark:bg-section h-[calc(100vh-2.5rem)] mt-5 mb-5 mx-2 rounded-xl"
         >
 
-            {/* Mobile header inside the Sheet: logo + trigger */}
-            <div className="flex items-center gap-2 px-4 py-3 md:hidden">
+            {/* <div className="flex items-center gap-2 px-4 py-3 md:hidden">
                 <SidebarTrigger />
                 <Link href={dashboard()} prefetch className="shrink-0 hover:opacity-80 transition-opacity">
                     <AppLogo />
                 </Link>
-            </div>
+            </div> */}
 
             <SidebarContent className="px-2 pt-4">
+                <SidebarTrigger className='mb-2' />
                 {/* Platform Section */}
                 <SidebarGroup>
                     {/* <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
@@ -236,52 +245,69 @@ export function AppSidebar() {
                     <NavMain items={filterItems(platformItems)} />
                 </SidebarGroup>
 
+                {filterItems(userItems).length > 0 && (
+                    <SidebarGroup>
+                        {/* <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
+                            Members
+                        </SidebarGroupLabel> */}
+                        <NavMain items={filterItems(userItems)} />
+                    </SidebarGroup>
+                )}
+
+                <SidebarGroup>
+                    <SidebarMenu>
+                        <SidebarMenuItem>
+                            <NotificationDropdown variant="sidebar" />
+                        </SidebarMenuItem>
+                    </SidebarMenu>
+                </SidebarGroup>
+
                 {/* Members Section - Hide group if empty (render as regular nav) */}
                 {filterItems(membersItems).length > 0 && (
-                    <SidebarGroup className="border-t border-gray-200 dark:border-neutral-700">
-                        <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
+                    <SidebarGroup>
+                        {/* <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
                             Members
-                        </SidebarGroupLabel>
+                        </SidebarGroupLabel> */}
                         <NavMain items={filterItems(membersItems)} />
                     </SidebarGroup>
                 )}
 
                 {/* Stories Section */}
                 {filterItems(storiesItems).length > 0 && (
-                    <SidebarGroup className="border-t border-gray-200 dark:border-neutral-700">
-                        <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
+                    <SidebarGroup>
+                        {/* <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
                             Stories
-                        </SidebarGroupLabel>
+                        </SidebarGroupLabel> */}
                         <NavMain items={filterItems(storiesItems)} />
                     </SidebarGroup>
                 )}
 
                 {/* Event Management Section */}
                 {filterItems(eventManagementItems).length > 0 && (
-                    <SidebarGroup className="border-t border-gray-200 dark:border-neutral-700">
-                        <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
+                    <SidebarGroup>
+                        {/* <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
                             Event Management
-                        </SidebarGroupLabel>
+                        </SidebarGroupLabel> */}
                         <NavMain items={filterItems(eventManagementItems)} />
                     </SidebarGroup>
                 )}
 
                 {/* Academy Section */}
                 {filterItems(academyItems).length > 0 && (
-                    <SidebarGroup className="border-t border-gray-200 dark:border-neutral-700">
-                        <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
+                    <SidebarGroup>
+                        {/* <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
                             Academy
-                        </SidebarGroupLabel>
+                        </SidebarGroupLabel> */}
                         <NavMain items={filterItems(academyItems)} />
                     </SidebarGroup>
                 )}
 
                 {/* Content Section - Hide group if empty */}
                 {filterItems(contentItems).length > 0 && (
-                    <SidebarGroup className="border-t border-gray-200 dark:border-neutral-700">
-                        <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
+                    <SidebarGroup>
+                        {/* <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
                             Content
-                        </SidebarGroupLabel>
+                        </SidebarGroupLabel> */}
                         <NavMain items={filterItems(contentItems)} />
                     </SidebarGroup>
                 )}
