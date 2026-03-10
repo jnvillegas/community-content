@@ -79,12 +79,12 @@ export default function Index({ events, categories, filters, auth }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Events" />
 
-            <div className="p-4 md:p-8 max-w-7xl mx-auto w-full">
+            <div className="p-4 md:p-8 space-y-6">
                 {/* Header */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
-                        <h1 className="text-3xl font-black tracking-tight text-foreground">Community Events</h1>
-                        <p className="text-muted-foreground mt-1">Discover workshops, meetups, and trips happening near you.</p>
+                        <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">Community Events</h1>
+                        <p className="text-gray-500 dark:text-gray-400 mt-1">Discover workshops, meetups, and trips happening near you.</p>
                     </div>
 
                     {/* Admin/Creator Action - Check permission if needed, currently checking role via auth user logic if available, or just valid user */}

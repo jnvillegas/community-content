@@ -17,6 +17,7 @@ import {
     Plus,
     Home,
     User as UserIcon,
+    Sparkles,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/nav-main';
@@ -84,19 +85,23 @@ const membersItems: NavItem[] = [
         title: 'Users',
         href: '/users',
         icon: Users,
-        permission: 'view users',
-    },
-    {
-        title: 'Roles',
-        href: '/roles',
-        icon: Shield,
-        permission: 'manage roles',
-    },
-    {
-        title: 'Permissions',
-        href: '/permissions',
-        icon: Key,
-        permission: 'manage permissions',
+        items: [
+            {
+                title: 'Users',
+                href: '/users',
+                permission: 'view users',
+            },
+            {
+                title: 'Roles',
+                href: '/roles',
+                permission: 'manage roles',
+            },
+            {
+                title: 'Permissions',
+                href: '/permissions',
+                permission: 'manage permissions',
+            },
+        ],
     },
 ];
 
@@ -108,39 +113,53 @@ const contentItems: NavItem[] = [
         title: 'Articles',
         href: '/articles',
         icon: FileText,
-        permission: 'view articles',
-    },
-    {
-        title: 'Articles Gallery',
-        href: '/articles/gallery',
-        icon: Image,
-        permission: 'view gallery',
+        items: [
+            {
+                title: 'List',
+                href: '/articles',
+                permission: 'view articles',
+            },
+            {
+                title: 'Gallery',
+                href: '/articles/gallery',
+                permission: 'view gallery',
+            },
+        ],
     },
     {
         title: 'Videos',
         href: '/videos',
         icon: VideoIcon,
-        permission: 'view videos',
-    },
-    {
-        title: 'Videos Gallery',
-        href: '/videos/gallery',
-        icon: Image,
-        permission: 'view video gallery',
+        items: [
+            {
+                title: 'List',
+                href: '/videos',
+                permission: 'view videos',
+            },
+            {
+                title: 'Gallery',
+                href: '/videos/gallery',
+                permission: 'view video gallery',
+            },
+        ],
     },
     {
         title: 'Wallpapers',
         href: '/wallpapers',
         icon: Image,
-        permission: 'view wallpapers',
+        items: [
+            {
+                title: 'List',
+                href: '/wallpapers',
+                permission: 'view wallpapers',
+            },
+            {
+                title: 'Gallery',
+                href: '/wallpapers/gallery',
+                permission: 'view wallpaper gallery',
+            },
+        ],
     },
-    {
-        title: 'Wallpapers Gallery',
-        href: '/wallpapers/gallery',
-        icon: Image,
-        permission: 'view wallpaper gallery',
-    },
-
 ];
 
 // Event Management Section
@@ -149,18 +168,22 @@ const eventManagementItems: NavItem[] = [
         title: 'Events',
         href: '/events',
         icon: Calendar,
-    },
-    {
-        title: 'Dashboard',
-        href: '/admin/events',
-        icon: LayoutGrid,
-        permission: 'manage events',
-    },
-    {
-        title: 'Categories',
-        href: '/admin/event-categories',
-        icon: Tags,
-        permission: 'manage events',
+        items: [
+            {
+                title: 'All Events',
+                href: '/events',
+            },
+            {
+                title: 'Dashboard',
+                href: '/admin/events',
+                permission: 'manage events',
+            },
+            {
+                title: 'Categories',
+                href: '/admin/event-categories',
+                permission: 'manage events',
+            },
+        ],
     },
 ];
 
@@ -170,23 +193,22 @@ const academyItems: NavItem[] = [
         title: 'Academy',
         href: '/academy',
         icon: GraduationCap,
-    },
-    // {
-    //     title: 'My Courses',
-    //     href: '#',
-    //     icon: Bookmark,
-    // },
-    {
-        title: 'Academy Dashboard',
-        href: '/admin/academy',
-        icon: LayoutGrid,
-        permission: 'manage courses',
-    },
-    {
-        title: 'Manage Courses',
-        href: '/admin/academy/courses',
-        icon: BookOpen,
-        permission: 'manage courses',
+        items: [
+            {
+                title: 'Courses',
+                href: '/academy',
+            },
+            {
+                title: 'Dashboard',
+                href: '/admin/academy',
+                permission: 'manage courses',
+            },
+            {
+                title: 'Manage',
+                href: '/admin/academy/courses',
+                permission: 'manage courses',
+            },
+        ],
     },
 ];
 
@@ -194,22 +216,29 @@ export function AppSidebar() {
     const { auth } = usePage<any>().props;
     const userPermissions = auth.permissions || [];
     const userRoles = auth.roles || [];
+    const isAdmin = userRoles.includes('admin');
     const [isCreateStoryOpen, setIsCreateStoryOpen] = useState(false);
+    const [openItem, setOpenItem] = useState<string | null>(null);
 
     // Stories Section
     const storiesItems: NavItem[] = [
         {
-            title: 'Dashboard',
+            title: 'Stories',
             href: '/admin/stories',
-            icon: LayoutGrid,
-            permission: 'manage stories',
-        },
-        {
-            title: 'Crear Historia',
-            href: '/admin/stories',
-            icon: Plus,
-            onClick: () => setIsCreateStoryOpen(true),
-            permission: 'manage stories',
+            icon: Sparkles,
+            items: [
+                {
+                    title: 'Dashboard',
+                    href: '/admin/stories',
+                    permission: 'manage stories',
+                },
+                {
+                    title: 'Create Story',
+                    href: '#',
+                    onClick: () => setIsCreateStoryOpen(true),
+                    permission: 'manage stories',
+                },
+            ],
         },
     ];
 
@@ -217,10 +246,41 @@ export function AppSidebar() {
         if (!item.permission) return true;
         return userPermissions.includes(item.permission) ||
             userPermissions.includes('manage all') ||
-            userRoles.includes('admin'); // Fallback for admin role
+            isAdmin;
     };
 
-    const filterItems = (items: NavItem[]) => items.filter(hasPermission);
+    const filterItems = (items: NavItem[]): NavItem[] => {
+        return items
+            .filter((item) => {
+                // If not admin, only show specific core sections
+                if (!isAdmin) {
+                    const allowedTitles = ['Home', 'Profile', 'Events', 'Academy'];
+                    if (!allowedTitles.includes(item.title)) return false;
+                }
+                return hasPermission(item);
+            })
+            .map((item) => {
+                if (item.items) {
+                    const filteredSubItems = item.items.filter(hasPermission);
+
+                    // For common users, never show dropdowns
+                    if (!isAdmin) {
+                        const { items: _, ...rest } = item;
+                        return rest;
+                    }
+
+                    // For admins, only show dropdown if there are 2+ items
+                    if (filteredSubItems.length > 1) {
+                        return { ...item, items: filteredSubItems };
+                    }
+
+                    // Otherwise flatten (0 or 1 item)
+                    const { items: _, ...rest } = item;
+                    return rest;
+                }
+                return item;
+            });
+    };
 
     return (
         <Sidebar
@@ -242,15 +302,12 @@ export function AppSidebar() {
                     {/* <SidebarGroupLabel className="px-4 text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
                         Platform
                     </SidebarGroupLabel> */}
-                    <NavMain items={filterItems(platformItems)} />
+                    <NavMain items={filterItems(platformItems)} openItem={openItem} setOpenItem={setOpenItem} />
                 </SidebarGroup>
 
                 {filterItems(userItems).length > 0 && (
                     <SidebarGroup>
-                        {/* <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
-                            Members
-                        </SidebarGroupLabel> */}
-                        <NavMain items={filterItems(userItems)} />
+                        <NavMain items={filterItems(userItems)} openItem={openItem} setOpenItem={setOpenItem} />
                     </SidebarGroup>
                 )}
 
@@ -265,50 +322,35 @@ export function AppSidebar() {
                 {/* Members Section - Hide group if empty (render as regular nav) */}
                 {filterItems(membersItems).length > 0 && (
                     <SidebarGroup>
-                        {/* <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
-                            Members
-                        </SidebarGroupLabel> */}
-                        <NavMain items={filterItems(membersItems)} />
+                        <NavMain items={filterItems(membersItems)} openItem={openItem} setOpenItem={setOpenItem} />
                     </SidebarGroup>
                 )}
 
                 {/* Stories Section */}
                 {filterItems(storiesItems).length > 0 && (
                     <SidebarGroup>
-                        {/* <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
-                            Stories
-                        </SidebarGroupLabel> */}
-                        <NavMain items={filterItems(storiesItems)} />
+                        <NavMain items={filterItems(storiesItems)} openItem={openItem} setOpenItem={setOpenItem} />
                     </SidebarGroup>
                 )}
 
                 {/* Event Management Section */}
                 {filterItems(eventManagementItems).length > 0 && (
                     <SidebarGroup>
-                        {/* <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
-                            Event Management
-                        </SidebarGroupLabel> */}
-                        <NavMain items={filterItems(eventManagementItems)} />
+                        <NavMain items={filterItems(eventManagementItems)} openItem={openItem} setOpenItem={setOpenItem} />
                     </SidebarGroup>
                 )}
 
                 {/* Academy Section */}
                 {filterItems(academyItems).length > 0 && (
                     <SidebarGroup>
-                        {/* <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
-                            Academy
-                        </SidebarGroupLabel> */}
-                        <NavMain items={filterItems(academyItems)} />
+                        <NavMain items={filterItems(academyItems)} openItem={openItem} setOpenItem={setOpenItem} />
                     </SidebarGroup>
                 )}
 
                 {/* Content Section - Hide group if empty */}
                 {filterItems(contentItems).length > 0 && (
                     <SidebarGroup>
-                        {/* <SidebarGroupLabel className="text-[11px] font-bold tracking-wider text-gray-400 uppercase peer-data-[state=collapsed]:hidden">
-                            Content
-                        </SidebarGroupLabel> */}
-                        <NavMain items={filterItems(contentItems)} />
+                        <NavMain items={filterItems(contentItems)} openItem={openItem} setOpenItem={setOpenItem} />
                     </SidebarGroup>
                 )}
 

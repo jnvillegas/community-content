@@ -63,7 +63,7 @@ export default function CreateStoryModal({ isOpen, onClose }: CreateStoryModalPr
 
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-            <DialogContent className="sm:max-w-[425px] bg-white dark:bg-black p-0 overflow-hidden">
+            <DialogContent className="sm:max-w-[425px] bg-white dark:bg-sidebar p-0 overflow-hidden">
                 <DialogHeader className="p-6 pb-0">
                     <DialogTitle className="text-xl font-bold">Crea una nueva historia</DialogTitle>
                     <DialogDescription>

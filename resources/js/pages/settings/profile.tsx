@@ -3,6 +3,7 @@ import { Form, Head, Link, usePage } from '@inertiajs/react';
 
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/components/delete-user';
+import LogoutUser from '@/components/logout-user';
 import HeadingSmall from '@/components/heading-small';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -191,6 +192,7 @@ export default function Profile({
                     </Form>
                 </div>
 
+                <LogoutUser />
                 <DeleteUser />
             </SettingsLayout>
         </AppLayout>

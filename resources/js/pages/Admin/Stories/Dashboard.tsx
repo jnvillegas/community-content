@@ -80,7 +80,13 @@ export default function StoriesDashboard({ stats, recentComments, storiesPerform
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Stories Dashboard" />
 
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+            <div className="p-4 md:p-8 space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">Stories Dashboard</h1>
+                        <p className="text-gray-500 dark:text-gray-400 mt-1">Overview of your community stories and engagement metrics.</p>
+                    </div>
+                </div>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

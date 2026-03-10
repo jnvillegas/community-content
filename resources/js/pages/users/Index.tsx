@@ -54,9 +54,12 @@ export default function Index({ auth, users, roles }: UsersPageProps) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Users" />
 
-            <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                    <h1 className="text-2xl font-semibold">User Management</h1>
+            <div className="p-4 md:p-8 space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">User Management</h1>
+                        <p className="text-gray-500 dark:text-gray-400 mt-1">Manage platform users, their roles, and account statuses.</p>
+                    </div>
                     <Button onClick={handleCreate}>
                         <Plus className="w-4 h-4 mr-2" />
                         New User

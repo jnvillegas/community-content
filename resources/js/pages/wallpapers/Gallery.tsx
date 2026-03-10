@@ -41,9 +41,7 @@ export default function Gallery({ wallpapers }: Props) {
             <div className="p-4 md:p-8 space-y-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-black tracking-tight text-gray-900 dark:text-white uppercase italic">
-                            Wallpaper <span className="text-primary-500">Gallery</span>
-                        </h1>
+                        <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">Wallpaper Gallery</h1>
                         <p className="text-gray-500 dark:text-gray-400 mt-1">Stunning visuals for your devices, captured by our explorers.</p>
                     </div>
                     <Button asChild>
@@ -96,7 +94,7 @@ export default function Gallery({ wallpapers }: Props) {
                                                 <Download className="h-5 w-5" />
                                             </a>
                                         </Button>
-                                        <Button size="icon" variant="primary" className="rounded-full h-10 w-10" asChild>
+                                        <Button size="icon" variant="default" className="rounded-full h-10 w-10" asChild>
                                             <Link href={`/wallpapers/${wallpaper.id}`}>
                                                 <Eye className="h-5 w-5" />
                                             </Link>

@@ -41,9 +41,7 @@ export default function Gallery({ videos }: Props) {
             <div className="p-4 md:p-8 space-y-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-black tracking-tight text-gray-900 dark:text-white uppercase italic">
-                            Video <span className="text-primary-500">Gallery</span>
-                        </h1>
+                        <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">Video Gallery</h1>
                         <p className="text-gray-500 dark:text-gray-400 mt-1">Browse our collection of travel expeditions and adventures.</p>
                     </div>
                     <Button asChild>
