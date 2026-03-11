@@ -88,7 +88,9 @@ export default function Create({ categories, tags }: Props) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post('/articles');
+        post('/articles', {
+            forceFormData: true,
+        });
     };
 
     return (
@@ -153,47 +155,6 @@ export default function Create({ categories, tags }: Props) {
 
                         {/* Excerpt Section Removed */}
 
-                        {/* SEO Section */}
-                        <Card className="border-none shadow-sm overflow-hidden border-t-4 border-t-blue-500">
-                            <CardHeader className="p-6 bg-blue-50/20">
-                                <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-blue-600">
-                                    <BarChart3 className="h-4 w-4" />
-                                    SEO Configuration
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-6 space-y-6">
-                                <div className="space-y-2">
-                                    <Label className="text-xs font-bold uppercase text-gray-500">Google Result View</Label>
-                                    <div className="rounded-lg border border-gray-100 bg-white p-4 shadow-sm dark:bg-gray-950 dark:border-gray-800">
-                                        <div className="text-blue-700 text-xl font-medium mb-1 truncate">{data.meta_title || (data.title || 'Page Title')}</div>
-                                        <div className="text-green-700 text-sm mb-1">yourdomain.com › blog › {data.title ? data.title.toLowerCase().replace(/ /g, '-') : 'slug'}</div>
-                                        <div className="text-gray-500 text-sm line-clamp-2">{data.meta_description || 'Write a description to see how it looks in search results...'}</div>
-                                    </div>
-                                </div>
-                                <div className="grid gap-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="meta_title" className="text-sm font-medium">Meta Title</Label>
-                                        <Input
-                                            id="meta_title"
-                                            placeholder="SEO Specific Title"
-                                            className="border-gray-100 bg-gray-50/30"
-                                            value={data.meta_title}
-                                            onChange={e => setData('meta_title', e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="meta_description" className="text-sm font-medium">Meta Description</Label>
-                                        <Textarea
-                                            id="meta_description"
-                                            placeholder="Write a meta description for search engines..."
-                                            className="border-gray-100 bg-gray-50/30"
-                                            value={data.meta_description}
-                                            onChange={e => setData('meta_description', e.target.value)}
-                                        />
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
                     </div>
 
                     {/* Sidebar Settings Area */}

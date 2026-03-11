@@ -76,7 +76,6 @@ export default function Edit({ article, categories, tags }: Props) {
     ];
 
     const { data, setData, post, processing, errors } = useForm({
-        _method: 'put',
         title: article.title || '',
         content: article.content || '',
         excerpt: article.excerpt || '',
@@ -107,8 +106,9 @@ export default function Edit({ article, categories, tags }: Props) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // We use POST with _method: 'put' to allow file uploads
-        post(`/articles/${article.id}`);
+        post(`/articles/${article.id}`, {
+            forceFormData: true,
+        });
     };
 
     return (
@@ -171,51 +171,12 @@ export default function Edit({ article, categories, tags }: Props) {
                             </CardHeader>
                             <TipTapEditor
                                 content={data.content}
-                                onChange={(html) => setData('content', html)}
+                                onChange={(html: string) => setData('content', html)}
                                 placeholder="Start editing..."
                             />
                             {errors.content && <p className="text-sm text-red-500 p-6">{errors.content}</p>}
                         </Card>
 
-                        {/* SEO Section */}
-                        <Card className="border-none shadow-sm overflow-hidden border-t-4 border-t-blue-500">
-                            <CardHeader className="p-6 bg-background/50">
-                                <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-blue-600">
-                                    <BarChart3 className="h-4 w-4" />
-                                    SEO Configuration
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-6 space-y-6">
-                                <div className="space-y-2">
-                                    <Label className="text-xs font-bold uppercase text-gray-500">Google Result View</Label>
-                                    <div className="rounded-lg border border-muted bg-background p-4 shadow-sm dark:bg-card">
-                                        <div className="text-blue-700 text-xl font-medium mb-1 truncate">{data.meta_title || data.title}</div>
-                                        <div className="text-green-700 text-sm mb-1">yourdomain.com › blog › {article.slug}</div>
-                                        <div className="text-gray-500 text-sm line-clamp-2">{data.meta_description || 'Write a meta description...'}</div>
-                                    </div>
-                                </div>
-                                <div className="grid gap-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="meta_title" className="text-sm font-medium">Meta Title</Label>
-                                        <Input
-                                            id="meta_title"
-                                            className="border-gray-100 bg-gray-50/30"
-                                            value={data.meta_title}
-                                            onChange={e => setData('meta_title', e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="meta_description" className="text-sm font-medium">Meta Description</Label>
-                                        <Textarea
-                                            id="meta_description"
-                                            className="border-gray-100 bg-gray-50/30"
-                                            value={data.meta_description}
-                                            onChange={e => setData('meta_description', e.target.value)}
-                                        />
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
                     </div>
 
                     {/* Sidebar Settings Area */}
@@ -288,8 +249,7 @@ export default function Edit({ article, categories, tags }: Props) {
                                         // Existing image from server
                                         <>
                                             <img
-                                                // Assuming backend returns relative path 'articles/xxx.jpg', we prepend /storage/
-                                                src={article.featured_image.startsWith('http') ? article.featured_image : `/storage/${article.featured_image}`}
+                                                src={article.featured_image}
                                                 className="w-full h-full object-cover"
                                                 alt="Current Featured"
                                             />
@@ -316,6 +276,7 @@ export default function Edit({ article, categories, tags }: Props) {
                                         }
                                     }}
                                 />
+                                {errors.featured_image && <p className="text-xs text-red-500 mt-2">{errors.featured_image}</p>}
                             </CardContent>
                         </Card>
 

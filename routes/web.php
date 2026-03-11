@@ -50,8 +50,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('notifications/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
     Route::delete('notifications/{id}', [\App\Http\Controllers\NotificationController::class, 'destroy'])->name('notifications.destroy');
 
+    // Content Image Uploads (for TipTap editor)
+    Route::post('content-images', [\App\Http\Controllers\ContentImageController::class, 'upload'])->name('content-images.upload');
+
     // Articles (WordPress-style blog)
     Route::get('articles/gallery', [\App\Http\Controllers\ArticleController::class, 'gallery'])->name('articles.gallery');
+    Route::post('articles/{article}', [\App\Http\Controllers\ArticleController::class, 'update'])->name('articles.update.post');
     Route::resource('articles', \App\Http\Controllers\ArticleController::class);
 
     // Videos (Travel Explorer Hub)
