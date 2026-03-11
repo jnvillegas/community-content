@@ -34,14 +34,14 @@ export default function Index({ courses }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Creator Academy" />
 
-            <div className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-                <div className="mb-12">
-                    <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl flex items-center gap-3">
-                        <GraduationCap className="h-12 w-12 text-primary" />
-                        Creator Academy
+            <div className="p-4 md:p-8 space-y-6">
+                <div>
+                    <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white flex items-center gap-3">
+                        {/* <GraduationCap className="h-8 w-8 text-primary" /> */}
+                        Academy Courses
                     </h1>
-                    <p className="mt-4 text-xl text-muted-foreground max-w-3xl">
-                        Empower your creative journey with our expert-led courses. From strategy to technical mastery, learn how to build your brand and community.
+                    <p className="text-gray-500 dark:text-gray-400 mt-1">
+                        Empower your creative journey with our expert-led courses.
                     </p>
                 </div>
 

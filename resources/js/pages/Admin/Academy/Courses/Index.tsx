@@ -77,11 +77,11 @@ export default function CoursesIndex({ courses }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Course Management" />
 
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-                <div className="flex items-center justify-between mb-4">
+            <div className="p-4 md:p-8 space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Manage Courses</h1>
-                        <p className="text-muted-foreground">Create and manage your educational content.</p>
+                        <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">Manage Courses</h1>
+                        <p className="text-gray-500 dark:text-gray-400 mt-1">Create and manage your educational content.</p>
                     </div>
                     <Button asChild>
                         <Link href="/admin/academy/courses/create">

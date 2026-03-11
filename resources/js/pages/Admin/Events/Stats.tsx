@@ -42,7 +42,7 @@ export default function Stats({ event, stats }: Props) {
         ]}>
             <Head title={`Stats - ${event.title}`} />
 
-            <div className="p-4 md:p-8 max-w-7xl mx-auto w-full space-y-8">
+            <div className="p-4 md:p-8 space-y-6">
                 <div>
                     <Button variant="ghost" className="pl-0 hover:bg-transparent hover:text-primary gap-2" asChild>
                         <Link href="/admin/events">
@@ -50,8 +50,8 @@ export default function Stats({ event, stats }: Props) {
                             Back to Events
                         </Link>
                     </Button>
-                    <h1 className="text-3xl font-black tracking-tight mt-2">Event Statistics</h1>
-                    <p className="text-muted-foreground">{event.title}</p>
+                    <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white mt-2">Event Statistics</h1>
+                    <p className="text-gray-500 dark:text-gray-400 mt-1">{event.title}</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">

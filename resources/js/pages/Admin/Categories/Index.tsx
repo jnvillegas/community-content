@@ -98,8 +98,8 @@ export default function CategoriesIndex({ categories, filters }: PageProps) {
             <div className="p-4 md:p-8 space-y-6">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight">Event Categories</h1>
-                        <p className="text-muted-foreground">Manage categories for your events.</p>
+                        <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">Event Categories</h1>
+                        <p className="text-gray-500 dark:text-gray-400 mt-1">Manage categories for your events.</p>
                     </div>
                     <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
                         <DialogTrigger asChild>

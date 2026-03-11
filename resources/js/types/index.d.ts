@@ -33,6 +33,7 @@ export interface NavItem {
     href: NonNullable<InertiaLinkProps['href']>;
     icon?: LucideIcon | null;
     isActive?: boolean;
+    items?: NavItem[];
     permission?: string; // Added permission requirement
     onClick?: () => void;
 }

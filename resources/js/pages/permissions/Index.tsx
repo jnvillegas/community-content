@@ -53,9 +53,12 @@ export default function Index({ permissions }: PermissionsPageProps) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Permissions" />
 
-            <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                    <h1 className="text-2xl font-semibold">Permission Management</h1>
+            <div className="p-4 md:p-8 space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">Permission Management</h1>
+                        <p className="text-gray-500 dark:text-gray-400 mt-1">Manage system-wide permissions and their access levels.</p>
+                    </div>
                     <Button onClick={handleCreate}>
                         <Plus className="w-4 h-4 mr-2" />
                         New Permission

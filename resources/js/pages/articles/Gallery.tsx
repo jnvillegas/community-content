@@ -36,14 +36,14 @@ export default function Gallery({ articles }: Props) {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                         <div className="flex items-center gap-2">
-                            <Button variant="ghost" size="icon" asChild className="-ml-2 h-8 w-8">
+                            {/* <Button variant="ghost" size="icon" asChild className="-ml-2 h-8 w-8">
                                 <Link href="/articles">
                                     <ArrowLeft className="h-4 w-4" />
                                 </Link>
-                            </Button>
+                            </Button> */}
                             <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">Article Gallery</h1>
                         </div>
-                        <p className="text-gray-500 dark:text-gray-400 mt-1 ml-10">A visual overview of your article featured images.</p>
+                        <p className="text-gray-500 dark:text-gray-400 mt-1">A visual overview of your article featured images.</p>
                     </div>
                 </div>
 

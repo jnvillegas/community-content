@@ -49,18 +49,13 @@ export default function Index({ events }: Props) {
         ]}>
             <Head title="Events Management" />
 
-            <div className="p-4 md:p-8 max-w-7xl mx-auto w-full">
-                <div className="flex justify-between items-center mb-6">
+            <div className="p-4 md:p-8 space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h1 className="text-3xl font-black tracking-tight">Events Management</h1>
-                        <p className="text-muted-foreground">Manage all community events.</p>
+                        <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">Events Management</h1>
+                        <p className="text-gray-500 dark:text-gray-400 mt-1">Manage all community events, schedules, and analytics.</p>
                     </div>
                     <div className="flex gap-2">
-                        {/* <Button variant="outline" asChild>
-                            <Link href="/admin/event-categories">
-                                Categories
-                            </Link>
-                        </Button> */}
                         <Button asChild>
                             <Link href="/admin/events/create">
                                 <Plus className="w-4 h-4 mr-2" />

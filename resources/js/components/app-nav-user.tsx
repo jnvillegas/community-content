@@ -4,13 +4,14 @@ import {
     Calendar,
     GraduationCap,
     User as UserIcon,
+    Bell,
 } from 'lucide-react';
 
 import { useIsMobile } from '@/hooks/use-mobile';
 import { type PageProps } from '@/types';
 import { dashboard } from '@/routes';
 import { edit as profileEdit } from '@/routes/profile';
-import { NotificationDropdown } from './notification-dropdown';
+import { index as notificationsIndex } from '@/routes/notifications';
 
 export function AppNavUser() {
     const isMobile = useIsMobile();
@@ -37,7 +38,17 @@ export function AppNavUser() {
                 <span className="text-[10px] font-medium">Cursos</span>
             </Link>
 
-            <NotificationDropdown variant='nav' />
+            <Link href={notificationsIndex().url} className="flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground relative">
+                <div className="relative">
+                    <Bell className="w-5 h-5" />
+                    {auth.unread_notifications_count > 0 && (
+                        <div className="absolute -top-1 -right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-red-500 text-[8px] font-bold text-white border border-white dark:border-gray-950">
+                            {auth.unread_notifications_count > 9 ? '9+' : auth.unread_notifications_count}
+                        </div>
+                    )}
+                </div>
+                <span className="text-[10px] font-medium">Alertas</span>
+            </Link>
 
             <Link href={profileEdit()} className="flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground">
                 <UserIcon className="w-5 h-5" />
