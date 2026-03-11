@@ -60,7 +60,7 @@ class DashboardController extends Controller
             });
 
         $activities = Activity::with(['subject', 'user'])
-            ->whereIn('type', ['created_event', 'created_story', 'created_article', 'created_video', 'created_wallpaper'])
+            ->whereIn('type', ['created_event', 'created_article', 'created_video', 'created_wallpaper'])
             ->latest()
             ->paginate(10);
 
