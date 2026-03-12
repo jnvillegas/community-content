@@ -162,7 +162,7 @@ export function NotificationDropdown({ variant = 'header' }: NotificationDropdow
                         <Button
                             variant="ghost"
                             size="sm"
-                            className="text-[11px] h-auto p-0 text-blue-600 font-bold hover:bg-transparent"
+                            className="text-[11px] h-auto p-0 text-[#09f] font-bold hover:bg-transparent"
                             onClick={markAllAsRead}
                         >
                             Mark all as read
@@ -184,15 +184,15 @@ export function NotificationDropdown({ variant = 'header' }: NotificationDropdow
                                 <div
                                     key={notification.id}
                                     className={cn(
-                                        "p-4 border-b border-gray-50 dark:border-gray-800 last:border-0 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative group",
-                                        !notification.read_at ? "bg-blue-50/50 dark:bg-blue-900/20" : "bg-white dark:bg-zinc-950"
+                                        "p-4 border-b border-gray-50 dark:border-gray-950 last:border-0 cursor-pointer hover:bg-gray-100 dark:hover:bg-card transition-colors relative group",
+                                        !notification.read_at ? "bg-card" : "opacity-50"
                                     )}
                                     onClick={() => markAsRead(notification.id, notification.data.action_url)}
                                 >
                                     <div className="flex gap-3">
                                         <Avatar className="h-9 w-9 shrink-0">
                                             <AvatarImage src={notification.data.sender_avatar} />
-                                            <AvatarFallback className="bg-blue-100 text-blue-600 text-xs">
+                                            <AvatarFallback className="bg-[#09f]/10 text-[#09f] text-xs font-bold">
                                                 {notification.data.sender_name?.charAt(0) || 'N'}
                                             </AvatarFallback>
                                         </Avatar>
@@ -205,7 +205,7 @@ export function NotificationDropdown({ variant = 'header' }: NotificationDropdow
                                                     {new Date(notification.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                 </span>
                                                 {notification.data.action_url && (
-                                                    <ExternalLink className="h-3 w-3 text-blue-500" />
+                                                    <ExternalLink className="h-3 w-3 text-[#09f]" />
                                                 )}
                                             </div>
                                         </div>
@@ -220,9 +220,7 @@ export function NotificationDropdown({ variant = 'header' }: NotificationDropdow
                                             </Button>
                                         </div>
                                     </div>
-                                    {!notification.read_at && (
-                                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
-                                    )}
+                                    {/* Removed blue border indicator */}
                                 </div>
                             ))}
                         </div>
@@ -230,7 +228,7 @@ export function NotificationDropdown({ variant = 'header' }: NotificationDropdow
                 </ScrollArea>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                    className="p-3 justify-center text-xs font-bold text-gray-500 uppercase tracking-widest cursor-pointer hover:text-blue-600"
+                    className="p-3 justify-center text-xs font-bold text-gray-500 uppercase tracking-widest cursor-pointer hover:text-[#09f]"
                     onClick={() => router.visit(window.route ? window.route('notifications.index') : '/notifications')}
                 >
                     View all notifications

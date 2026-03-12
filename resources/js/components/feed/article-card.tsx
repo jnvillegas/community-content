@@ -48,13 +48,13 @@ export default function ArticleCard({ activity }: { activity: any }) {
         if (navigator.share) {
             navigator.share({
                 title: subject.title,
-                url: `/articles/${subject.id}`,
+                url: route('articles.show', subject.slug),
             }).catch(() => {
                 // Fallback or silent fail
             });
         } else {
             // Fallback: Copy to clipboard
-            navigator.clipboard.writeText(`${window.location.origin}/articles/${subject.id}`);
+            navigator.clipboard.writeText(`${window.location.origin}/articles/${subject.slug}`);
             alert('Enlace copiado al portapapeles');
         }
     };
@@ -77,7 +77,7 @@ export default function ArticleCard({ activity }: { activity: any }) {
             <div className="flex flex-col flex-1 justify-between py-1">
                 <div className="space-y-4">
                     <div className="space-y-2">
-                        <Link href={`/articles/${subject.id}`}>
+                        <Link href={route('articles.show', subject.slug)}>
                             <h2 className="text-2xl md:text-3xl font-bold leading-tight text-zinc-900 dark:text-white hover:text-[#1d9bf0] transition-colors cursor-pointer">
                                 {subject.title}
                             </h2>
@@ -104,7 +104,7 @@ export default function ArticleCard({ activity }: { activity: any }) {
 
                     <div className="flex items-center justify-between">
                         <Link
-                            href={`/articles/${subject.id}`}
+                            href={route('articles.show', subject.slug)}
                             className="text-[#1d9bf0] hover:text-[#1d9bf0]/80 font-bold text-[15px] flex items-center gap-2 transition-all hover:translate-x-1"
                         >
                             Read Article

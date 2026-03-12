@@ -40,7 +40,7 @@ interface Props {
 export default function Show({ article }: Props) {
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Articles', href: '/articles' },
-        { title: 'View Article', href: `/articles/${article.id}` },
+        { title: 'View Article', href: route('articles.show', article.slug) },
     ];
 
     return (

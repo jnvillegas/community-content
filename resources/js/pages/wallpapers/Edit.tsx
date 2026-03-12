@@ -171,7 +171,7 @@ export default function Edit({ wallpaper }: Props) {
                                 />
                             </div>
 
-                            <div className="space-y-2">
+                            {/* <div className="space-y-2">
                                 <Label htmlFor="alt">Accessibility Title (Alt Text)</Label>
                                 <Input
                                     id="alt"
@@ -179,12 +179,12 @@ export default function Edit({ wallpaper }: Props) {
                                     value={data.alt}
                                     onChange={e => setData('alt', e.target.value)}
                                 />
-                            </div>
+                            </div> */}
                         </CardContent>
                     </Card>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <Card>
+                    <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
+                        {/* <Card>
                             <CardHeader>
                                 <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 text-primary">
                                     <Settings2 className="w-4 h-4" />
@@ -246,7 +246,7 @@ export default function Edit({ wallpaper }: Props) {
                                     </Select>
                                 </div>
                             </CardContent>
-                        </Card>
+                        </Card> */}
 
                         <Card>
                             <CardHeader>
@@ -276,7 +276,7 @@ export default function Edit({ wallpaper }: Props) {
                                 <Separator />
 
                                 <div className="space-y-4 pt-2">
-                                    <div className="flex items-center justify-between">
+                                    {/* <div className="flex items-center justify-between">
                                         <div className="space-y-0.5">
                                             <Label htmlFor="is_featured" className="text-sm font-bold">Featured</Label>
                                             <p className="text-[10px] text-muted-foreground uppercase font-black">Highlight on home screen</p>
@@ -286,7 +286,7 @@ export default function Edit({ wallpaper }: Props) {
                                             checked={data.is_featured}
                                             onCheckedChange={(checked) => setData('is_featured', checked)}
                                         />
-                                    </div>
+                                    </div> */}
 
                                     <div className="flex items-center justify-between">
                                         <div className="space-y-0.5">
@@ -335,7 +335,7 @@ export default function Edit({ wallpaper }: Props) {
                         </Card>
                     )}
 
-                    <Card className="border-none shadow-none bg-muted/20">
+                    {/* <Card className="border-none shadow-none bg-muted/20">
                         <CardHeader className="py-4">
                             <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
                                 <Hash className="w-3 h-3 text-primary" />
@@ -354,7 +354,7 @@ export default function Edit({ wallpaper }: Props) {
                                 </div>
                             </div>
                         </CardContent>
-                    </Card>
+                    </Card> */}
 
                     <div className="flex justify-end gap-4 py-8">
                         <Button variant="outline" asChild>

@@ -21,7 +21,7 @@ class ArticleController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('permission:manage articles', except: ['index', 'show', 'gallery']),
-            new Middleware('permission:view articles', only: ['index', 'show']),
+            new Middleware('auth', only: ['index', 'show']),
             new Middleware('permission:view gallery', only: ['gallery']),
         ];
     }

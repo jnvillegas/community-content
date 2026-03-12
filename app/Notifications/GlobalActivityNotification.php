@@ -58,9 +58,9 @@ class GlobalActivityNotification extends Notification
 
         // Dynamic URL based on type
         $url = match ($type) {
-            'Article' => route('blog.show', $subject->id),
+            'Article' => route('articles.show', $subject->slug),
             'Video' => route('videos.show', $subject->id),
-            'Wallpaper' => route('wallpaper'),
+            'Wallpaper' => route('wallpapers.index'), // Assuming internal gallery or index
             'Event' => route('events.show', $subject->slug),
             'Course' => route('academy.show', $subject->slug),
             'Story' => route('dashboard', ['story' => $subject->id]),

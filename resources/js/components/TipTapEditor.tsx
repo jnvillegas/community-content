@@ -123,7 +123,7 @@ const TipTapEditor = ({ content, onChange, placeholder = 'Start writing...' }: T
     return (
         <div className="flex flex-col min-h-[500px]">
             {/* Toolbar */}
-            <div className="flex flex-wrap items-center gap-2 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/50 p-2">
+            <div className="flex flex-wrap items-center gap-2 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-card p-2">
                 {/* Font Family Selector */}
                 <Select
                     value={fontFamily}
@@ -132,7 +132,7 @@ const TipTapEditor = ({ content, onChange, placeholder = 'Start writing...' }: T
                         editor.chain().focus().setFontFamily(value).run();
                     }}
                 >
-                    <SelectTrigger className="w-[140px] h-8 text-xs bg-white dark:bg-gray-950">
+                    <SelectTrigger className="w-[140px] h-8 text-xs bg-white dark:bg-sidebar">
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -152,7 +152,7 @@ const TipTapEditor = ({ content, onChange, placeholder = 'Start writing...' }: T
                         editor.chain().focus().setFontSize(value).run();
                     }}
                 >
-                    <SelectTrigger className="w-[80px] h-8 text-xs bg-white dark:bg-gray-950">
+                    <SelectTrigger className="w-[80px] h-8 text-xs bg-white dark:bg-sidebar">
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -197,7 +197,7 @@ const TipTapEditor = ({ content, onChange, placeholder = 'Start writing...' }: T
                     <Strikethrough className="h-4 w-4" />
                 </Button>
                 <div className="w-[1px] h-4 bg-gray-300 dark:bg-gray-700 mx-1" />
-                <Button
+                {/* <Button
                     type="button"
                     variant="ghost"
                     size="sm"
@@ -214,8 +214,8 @@ const TipTapEditor = ({ content, onChange, placeholder = 'Start writing...' }: T
                     className={editor.isActive('heading', { level: 2 }) ? 'bg-gray-200 dark:bg-gray-800' : ''}
                 >
                     <Heading2 className="h-4 w-4" />
-                </Button>
-                <div className="w-[1px] h-4 bg-gray-300 dark:bg-gray-700 mx-1" />
+                </Button> */}
+                {/* <div className="w-[1px] h-4 bg-gray-300 dark:bg-gray-700 mx-1" />
                 <Button
                     type="button"
                     variant="ghost"
@@ -224,8 +224,8 @@ const TipTapEditor = ({ content, onChange, placeholder = 'Start writing...' }: T
                     className={editor.isActive('bulletList') ? 'bg-gray-200 dark:bg-gray-800' : ''}
                 >
                     <List className="h-4 w-4" />
-                </Button>
-                <Button
+                </Button> */}
+                {/* <Button
                     type="button"
                     variant="ghost"
                     size="sm"
@@ -234,8 +234,8 @@ const TipTapEditor = ({ content, onChange, placeholder = 'Start writing...' }: T
                 >
                     <ListOrdered className="h-4 w-4" />
                 </Button>
-                <div className="w-[1px] h-4 bg-gray-300 dark:bg-gray-700 mx-1" />
-                <Button
+                <div className="w-[1px] h-4 bg-gray-300 dark:bg-gray-700 mx-1" /> */}
+                {/* <Button
                     type="button"
                     variant="ghost"
                     size="sm"
@@ -243,10 +243,10 @@ const TipTapEditor = ({ content, onChange, placeholder = 'Start writing...' }: T
                     className={editor.isActive('blockquote') ? 'bg-gray-200 dark:bg-gray-800' : ''}
                 >
                     <Quote className="h-4 w-4" />
-                </Button>
-                <Button type="button" variant="ghost" size="sm" onClick={setLink} className={editor.isActive('link') ? 'bg-gray-200 dark:bg-gray-800' : ''}>
+                </Button> */}
+                {/* <Button type="button" variant="ghost" size="sm" onClick={setLink} className={editor.isActive('link') ? 'bg-gray-200 dark:bg-gray-800' : ''}>
                     <LinkIcon className="h-4 w-4" />
-                </Button>
+                </Button> */}
                 <Button type="button" variant="ghost" size="sm" onClick={addImage}>
                     <ImageIcon className="h-4 w-4" />
                 </Button>

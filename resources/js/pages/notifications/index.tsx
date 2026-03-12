@@ -40,7 +40,7 @@ export default function NotificationsIndex({ notifications }: Props) {
     const markAsRead = async (id: string) => {
         try {
             await axios.patch(`/notifications/${id}/read`);
-            router.reload({ preserveScroll: true });
+            router.reload({ only: ['notifications'] });
         } catch (error) {
             console.error('Failed to mark as read', error);
         }
@@ -49,7 +49,7 @@ export default function NotificationsIndex({ notifications }: Props) {
     const markAllAsRead = async () => {
         try {
             await axios.post('/notifications/read-all');
-            router.reload({ preserveScroll: true });
+            router.reload({ only: ['notifications'] });
         } catch (error) {
             console.error('Failed to mark all as read', error);
         }
@@ -58,7 +58,7 @@ export default function NotificationsIndex({ notifications }: Props) {
     const deleteNotification = async (id: string) => {
         try {
             await axios.delete(`/notifications/${id}`);
-            router.reload({ preserveScroll: true });
+            router.reload({ only: ['notifications'] });
         } catch (error) {
             console.error('Failed to delete', error);
         }
@@ -101,15 +101,15 @@ export default function NotificationsIndex({ notifications }: Props) {
                                 className={cn(
                                     "overflow-hidden transition-all duration-300 border-none shadow-sm hover:shadow-md",
                                     !notification.read_at
-                                        ? "bg-white dark:bg-zinc-900 border-l-4 border-l-blue-600"
-                                        : "bg-gray-50/50 dark:bg-zinc-900/50 opacity-80"
+                                        ? "bg-card"
+                                        : "bg-transparent opacity-70"
                                 )}
                             >
                                 <CardContent className="p-0">
                                     <div className="flex items-start gap-4 p-5">
                                         <Avatar className="h-12 w-12 shrink-0 border-2 border-white dark:border-zinc-800 shadow-sm">
                                             <AvatarImage src={notification.data.sender_avatar} />
-                                            <AvatarFallback className="bg-blue-100 text-blue-600 font-bold">
+                                            <AvatarFallback className="bg-[#09f]/10 text-[#09f] font-bold">
                                                 {notification.data.sender_name?.charAt(0)}
                                             </AvatarFallback>
                                         </Avatar>
@@ -149,10 +149,10 @@ export default function NotificationsIndex({ notifications }: Props) {
                                                 {notification.data.action_url && notification.data.action_url !== '#' && (
                                                     <Button
                                                         variant="link"
-                                                        className="h-auto p-0 text-[11px] font-black uppercase tracking-widest text-[#1d9bf0] hover:text-[#1a8cd8] italic"
+                                                        className="h-auto p-0 text-[11px] font-black uppercase tracking-widest text-[#09f] hover:opacity-80 italic"
                                                         onClick={async () => {
                                                             await markAsRead(notification.id);
-                                                            router.visit(notification.data.action_url);
+                                                            router.visit(notification.data.action_url!);
                                                         }}
                                                     >
                                                         View Details
@@ -163,7 +163,7 @@ export default function NotificationsIndex({ notifications }: Props) {
                                                 {!notification.read_at && (
                                                     <Button
                                                         variant="link"
-                                                        className="h-auto p-0 text-[11px] font-black uppercase tracking-widest text-gray-400 hover:text-blue-600 leading-none"
+                                                        className="h-auto p-0 text-[11px] font-black uppercase tracking-widest text-gray-400 hover:text-[#09f] leading-none"
                                                         onClick={() => markAsRead(notification.id)}
                                                     >
                                                         Mark as read

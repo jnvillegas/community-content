@@ -40,7 +40,7 @@ class ArticlePublished extends Notification implements ShouldQueue
     {
         return [
             'message' => 'ha publicado un nuevo artículo: ' . $this->article->title,
-            'action_url' => route('blog.show', $this->article->id),
+            'action_url' => route('articles.show', $this->article->slug),
             'sender_name' => $this->article->author->name,
             'sender_avatar' => $this->article->author->avatar,
             'article_id' => $this->article->id,

@@ -29,9 +29,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 
-interface Props {}
+interface Props { }
 
-export default function Create({}: Props) {
+export default function Create({ }: Props) {
     const { data, setData, post, processing, errors } = useForm({
         title: '',
         alt: '',
@@ -73,12 +73,12 @@ export default function Create({}: Props) {
                         <p className="text-muted-foreground text-sm mt-1">Upload and configure a new high-quality wallpaper.</p>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    {/* <div className="flex items-center gap-2">
                         <Button variant="outline" size="sm" className="gap-2">
                             <Eye className="w-4 h-4" />
                             <span className="hidden sm:inline">Preview</span>
                         </Button>
-                    </div>
+                    </div> */}
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-8">
@@ -139,7 +139,7 @@ export default function Create({}: Props) {
                                 />
                             </div>
 
-                            <div className="space-y-2">
+                            {/* <div className="space-y-2">
                                 <Label htmlFor="alt">Accessibility Title (Alt Text)</Label>
                                 <Input
                                     id="alt"
@@ -147,12 +147,12 @@ export default function Create({}: Props) {
                                     value={data.alt}
                                     onChange={e => setData('alt', e.target.value)}
                                 />
-                            </div>
+                            </div> */}
                         </CardContent>
                     </Card>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <Card>
+                    <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
+                        {/* <Card>
                             <CardHeader>
                                 <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2">
                                     <Settings2 className="w-4 h-4 text-primary" />
@@ -214,18 +214,18 @@ export default function Create({}: Props) {
                                     </Select>
                                 </div>
                             </CardContent>
-                        </Card>
+                        </Card> */}
 
                         <Card>
                             <CardHeader>
-                                <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2">
+                                <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 mb-2">
                                     <Zap className="w-4 h-4 text-primary" />
                                     Settings & Status
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-bold text-muted-foreground uppercase opacity-70">Publication Status</Label>
+                                    <Label className="text-xs font-bold text-muted-foreground uppercase opacity-70 pb-2">Publication Status</Label>
                                     <Select
                                         value={data.status}
                                         onValueChange={(val: any) => setData('status', val)}
@@ -244,7 +244,7 @@ export default function Create({}: Props) {
                                 <Separator />
 
                                 <div className="space-y-4 pt-2">
-                                    <div className="flex items-center justify-between">
+                                    {/* <div className="flex items-center justify-between">
                                         <div className="space-y-0.5">
                                             <Label htmlFor="is_featured" className="text-sm font-medium">Featured</Label>
                                             <p className="text-[10px] text-muted-foreground">Highlight on home screen</p>
@@ -254,7 +254,7 @@ export default function Create({}: Props) {
                                             checked={data.is_featured}
                                             onCheckedChange={(checked) => setData('is_featured', checked)}
                                         />
-                                    </div>
+                                    </div> */}
 
                                     <div className="flex items-center justify-between">
                                         <div className="space-y-0.5">

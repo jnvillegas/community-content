@@ -116,7 +116,7 @@ export default function Index({ videos, filters = {} }: Props) {
                     <Button asChild>
                         <Link href="/videos/create">
                             <Plus className="mr-2 h-4 w-4" />
-                            Share Adventure
+                            Create Video
                         </Link>
                     </Button>
                 </div>
@@ -134,10 +134,10 @@ export default function Index({ videos, filters = {} }: Props) {
                                 />
                             </div>
                             <div className="flex items-center gap-3 overflow-x-auto pb-2 md:pb-0">
-                                <Button variant="outline" size="sm" className="hidden md:flex border-muted">
+                                {/* <Button variant="outline" size="sm" className="hidden md:flex border-muted">
                                     <Filter className="mr-2 h-3.5 w-3.5" />
                                     Filter
-                                </Button>
+                                </Button> */}
                                 <button
                                     onClick={() => handleFilterChange('all')}
                                     className={cn(

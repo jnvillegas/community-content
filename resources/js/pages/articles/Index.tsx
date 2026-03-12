@@ -96,12 +96,12 @@ export default function Index({ articles }: Props) {
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                                 <Input placeholder="Search articles..." className="pl-10 border-muted bg-background/50 dark:bg-card/30" />
                             </div>
-                            <div className="flex items-center gap-2">
+                            {/* <div className="flex items-center gap-2">
                                 <Button variant="outline" size="sm" className="hidden md:flex border-muted">
                                     <Filter className="mr-2 h-3.5 w-3.5" />
                                     Filter
                                 </Button>
-                            </div>
+                            </div> */}
                         </div>
                     </CardHeader>
                     <CardContent className="p-0">

@@ -128,9 +128,9 @@ export default function Show({ wallpaper }: Props) {
                         </div>
                     </Card>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-1 gap-8">
                         {/* Technical Information */}
-                        <Card>
+                        {/* <Card>
                             <CardHeader>
                                 <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 text-primary">
                                     <Monitor className="w-4 h-4" />
@@ -159,7 +159,7 @@ export default function Show({ wallpaper }: Props) {
                                     </Badge>
                                 </div>
                             </CardContent>
-                        </Card>
+                        </Card> */}
 
                         {/* Engagement Stats */}
                         <Card>
@@ -188,8 +188,7 @@ export default function Show({ wallpaper }: Props) {
                         </Card>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {/* Summary & Meta */}
+                    {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <Card>
                             <CardHeader>
                                 <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 text-primary">
@@ -221,7 +220,6 @@ export default function Show({ wallpaper }: Props) {
                             </CardContent>
                         </Card>
 
-                        {/* Description/Alt text */}
                         <Card>
                             <CardHeader>
                                 <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 text-primary">
@@ -243,7 +241,7 @@ export default function Show({ wallpaper }: Props) {
                                 </div>
                             </CardContent>
                         </Card>
-                    </div>
+                    </div> */}
 
                     <div className="flex justify-between items-center py-8 border-t border-muted/30 mt-8">
                         <Button variant="ghost" asChild>

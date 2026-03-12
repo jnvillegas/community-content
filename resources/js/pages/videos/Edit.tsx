@@ -210,7 +210,7 @@ export default function Edit({ video, categories }: Props) {
                             <CardTitle>Settings & Metadata</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="status">Status</Label>
                                     <Select
@@ -229,7 +229,7 @@ export default function Edit({ video, categories }: Props) {
                                     {errors.status && <p className="text-sm text-red-500">{errors.status}</p>}
                                 </div>
 
-                                <div className="flex items-center space-x-2 h-full pt-6">
+                                {/* <div className="flex items-center space-x-2 h-full pt-6">
                                     <Checkbox
                                         id="is_featured"
                                         checked={data.is_featured}
@@ -238,10 +238,10 @@ export default function Edit({ video, categories }: Props) {
                                     <Label htmlFor="is_featured" className="cursor-pointer">
                                         Featured Video?
                                     </Label>
-                                </div>
+                                </div> */}
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t">
+                            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t">
                                 <div className="space-y-2">
                                     <Label htmlFor="location">Location</Label>
                                     <div className="relative">
@@ -271,7 +271,7 @@ export default function Edit({ video, categories }: Props) {
                                     </div>
                                     {errors.duration && <p className="text-sm text-red-500">{errors.duration}</p>}
                                 </div>
-                            </div>
+                            </div> */}
                         </CardContent>
                     </Card>
 

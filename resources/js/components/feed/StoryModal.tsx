@@ -268,7 +268,19 @@ export default function StoryModal({ story, isOpen, onClose, onStoryEnd, onStory
                 </div>
 
                 {/* Bottom Actions & Input */}
-                <div className="p-4 bg-gradient-to-t from-black/90 via-black/40 to-transparent shrink-0 space-y-4 z-20">
+                <div className="p-4 bg-gradient-to-t from-black/95 via-black/60 to-transparent shrink-0 space-y-4 z-20">
+                    {/* Title and Description */}
+                    <div className="space-y-1 select-none pointer-events-none mb-2">
+                        <h4 className="text-white font-black text-lg leading-tight uppercase tracking-tight drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
+                            {localStory.title}
+                        </h4>
+                        {localStory.description && (
+                            <p className="text-white/90 text-sm font-medium leading-normal line-clamp-2 drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)]">
+                                {localStory.description}
+                            </p>
+                        )}
+                    </div>
+
                     <div className="flex items-center gap-3 text-white">
                         <form onSubmit={submitComment} className="flex-1 flex items-center gap-3 bg-white/10 backdrop-blur-md rounded-full px-4 py-2 border border-white/10 hover:bg-white/15 transition-colors">
                             <Input

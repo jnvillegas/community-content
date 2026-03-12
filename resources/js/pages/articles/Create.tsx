@@ -29,6 +29,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from "@/components/ui/checkbox";
+import { cn } from '@/lib/utils';
 
 interface Category {
     id: number;
@@ -50,7 +51,7 @@ export default function Create({ categories, tags }: Props) {
     const [isCreatingCategory, setIsCreatingCategory] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState('');
 
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, setError, clearErrors } = useForm({
         title: '',
         content: '',
         excerpt: '',
@@ -81,6 +82,12 @@ export default function Create({ categories, tags }: Props) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!data.featured_image) {
+            setError('featured_image', 'La imagen destacada es obligatoria para publicar un artículo.');
+            return;
+        }
+
         post('/articles', {
             forceFormData: true,
         });
@@ -154,7 +161,10 @@ export default function Create({ categories, tags }: Props) {
                         </CardHeader>
                         <CardContent>
                             <div
-                                className="aspect-video w-full max-w-xl mx-auto rounded-xl border-2 border-dashed border-muted bg-muted/30 flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-muted/50 transition-all overflow-hidden relative group"
+                                className={cn(
+                                    "aspect-video w-full max-w-xl mx-auto rounded-xl border-2 border-dashed border-muted bg-muted/30 flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-muted/50 transition-all overflow-hidden relative group",
+                                    errors.featured_image && "border-red-500 bg-red-50 dark:bg-red-950/20"
+                                )}
                                 onClick={() => document.getElementById('image-upload')?.click()}
                             >
                                 {data.featured_image ? (
@@ -183,9 +193,15 @@ export default function Create({ categories, tags }: Props) {
                                 onChange={e => {
                                     if (e.target.files && e.target.files[0]) {
                                         setData('featured_image', e.target.files[0]);
+                                        clearErrors('featured_image');
                                     }
                                 }}
                             />
+                            {errors.featured_image && (
+                                <p className="text-sm text-red-500 mt-3 text-center font-medium animate-in fade-in slide-in-from-top-1 duration-300">
+                                    {errors.featured_image}
+                                </p>
+                            )}
                         </CardContent>
                     </Card>
 

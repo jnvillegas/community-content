@@ -71,10 +71,10 @@ export default function Show({ video, relatedVideos }: Props) {
                     </div>
 
                     <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm" className="gap-2">
+                        {/* <Button variant="outline" size="sm" className="gap-2">
                             <Share2 className="w-4 h-4" />
                             <span className="hidden sm:inline">Share</span>
-                        </Button>
+                        </Button> */}
                         <Button size="sm" className="gap-2" asChild>
                             <Link href={`/videos/${video.id}/edit`}>
                                 <Edit className="w-4 h-4" />
@@ -105,7 +105,7 @@ export default function Show({ video, relatedVideos }: Props) {
 
                         {/* Details */}
                         <div className="space-y-6">
-                            <div className="flex flex-wrap gap-2">
+                            {/* <div className="flex flex-wrap gap-2">
                                 <Badge variant="secondary" className="px-3 py-1 font-bold text-[10px] uppercase tracking-wide">
                                     Video
                                 </Badge>
@@ -114,7 +114,7 @@ export default function Show({ video, relatedVideos }: Props) {
                                         {cat.name}
                                     </Badge>
                                 ))}
-                            </div>
+                            </div> */}
 
                             <Card className="border-none shadow-sm">
                                 <CardHeader className="pb-2">
@@ -159,7 +159,7 @@ export default function Show({ video, relatedVideos }: Props) {
                                     </div>
                                 )}
 
-                                <div className="flex items-center gap-3">
+                                {/* <div className="flex items-center gap-3">
                                     <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                                         <Clock className="w-4 h-4 text-primary" />
                                     </div>
@@ -167,12 +167,12 @@ export default function Show({ video, relatedVideos }: Props) {
                                         <p className="text-xs text-muted-foreground font-medium">Duration</p>
                                         <p className="text-sm font-bold">{video.duration || 'N/A'}</p>
                                     </div>
-                                </div>
+                                </div> */}
                             </CardContent>
                         </Card>
 
                         {/* Related Videos */}
-                        <Card className="border-none shadow-sm">
+                        {/* <Card className="border-none shadow-sm">
                             <CardHeader className="pb-4">
                                 <CardTitle className="text-sm uppercase tracking-widest text-muted-foreground">Related Journeys</CardTitle>
                             </CardHeader>
@@ -204,7 +204,7 @@ export default function Show({ video, relatedVideos }: Props) {
                                     )}
                                 </div>
                             </CardContent>
-                        </Card>
+                        </Card> */}
                     </div>
                 </div>
             </div>

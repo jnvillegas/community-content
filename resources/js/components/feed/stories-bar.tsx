@@ -152,13 +152,28 @@ export default function StoriesBar({ stories, openStoryId }: StoriesBarProps) {
         }
     };
 
+    const handleCloseStory = () => {
+        setSelectedStoryId(null);
+        
+        // Clean URL if 'story' parameter exists
+        const url = new URL(window.location.href);
+        if (url.searchParams.has('story')) {
+            url.searchParams.delete('story');
+            router.visit(url.pathname + url.search, {
+                replace: true,
+                preserveScroll: true,
+                preserveState: true,
+            });
+        }
+    };
+
     const handleStoryEnd = () => {
         // Find current story index and move to next
         const currentIndex = localStories.findIndex(s => s.id === selectedStoryId);
         if (currentIndex !== -1 && currentIndex < localStories.length - 1) {
             setSelectedStoryId(localStories[currentIndex + 1].id);
         } else {
-            setSelectedStoryId(null);
+            handleCloseStory();
         }
     };
 
@@ -375,7 +390,7 @@ export default function StoriesBar({ stories, openStoryId }: StoriesBarProps) {
             <StoryModal
                 story={selectedStory}
                 isOpen={!!selectedStoryId}
-                onClose={() => setSelectedStoryId(null)}
+                onClose={handleCloseStory}
                 onStoryEnd={handleStoryEnd}
                 onStoryPrev={handleStoryPrev}
             />

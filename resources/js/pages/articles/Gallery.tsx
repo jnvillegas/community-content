@@ -71,15 +71,15 @@ export default function Gallery({ articles }: Props) {
                                         )}
                                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                                             <Button variant="secondary" size="sm" asChild className="rounded-full h-9 w-9 p-0">
-                                                <Link href={`/articles/${article.id}`}>
-                                                    <Eye className="h-4 w-4" />
-                                                </Link>
-                                            </Button>
+                                                 <Link href={route('articles.show', article.slug)}>
+                                                     <Eye className="h-4 w-4" />
+                                                 </Link>
+                                             </Button>
                                             <Button variant="secondary" size="sm" asChild className="rounded-full h-9 w-9 p-0">
-                                                <Link href={`/articles/${article.id}/edit`}>
-                                                    <Edit className="h-4 w-4" />
-                                                </Link>
-                                            </Button>
+                                                 <Link href={route('articles.edit', article.slug)}>
+                                                     <Edit className="h-4 w-4" />
+                                                 </Link>
+                                             </Button>
                                         </div>
                                     </div>
                                     <div className="p-4">
