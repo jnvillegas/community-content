@@ -166,7 +166,7 @@ export default function Dashboard({ upcomingEvents, activities, stories, courses
                         )}
                     </div>
                 </aside>
-            </main >
+            </main>
         </AppLayout >
     );
 }
