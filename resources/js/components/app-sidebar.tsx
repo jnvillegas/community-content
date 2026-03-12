@@ -378,7 +378,7 @@ export function AppSidebar() {
             </SidebarContent>
 
             {/* User Profile Footer */}
-            <SidebarFooter className="border-t border-gray-200 dark:border-gray-800 p-3">
+            <SidebarFooter className="border-t border-gray-200 dark:border-gray-800 p-3 mt-auto">
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <DropdownMenu>
@@ -403,13 +403,15 @@ export function AppSidebar() {
                                     </div>
 
                                     {/* Name + PRO badge + Email */}
-                                    <div className="grid flex-1 text-left text-sm leading-tight">
-                                        <span className="flex items-center gap-1.5 truncate font-semibold text-gray-900 dark:text-gray-100">
-                                            {auth.user.name}
-                                            <span className="inline-flex items-center rounded-full bg-purple-100 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-purple-700 dark:bg-purple-900/40 dark:text-purple-300">
+                                    <div className="flex flex-col flex-1 text-left text-sm leading-tight min-w-0">
+                                        <div className="flex items-center gap-2">
+                                            <span className="truncate font-semibold text-gray-900 dark:text-gray-100 min-w-0">
+                                                {auth.user.name}
+                                            </span>
+                                            <span className="shrink-0 inline-flex items-center rounded-full bg-purple-100 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-purple-700 dark:bg-purple-900/40 dark:text-purple-300">
                                                 PRO
                                             </span>
-                                        </span>
+                                        </div>
                                         <span className="truncate text-xs text-gray-500 dark:text-gray-400">
                                             {auth.user.email}
                                         </span>
@@ -422,7 +424,7 @@ export function AppSidebar() {
                             <DropdownMenuContent
                                 className="w-48 rounded-lg"
                                 align="end"
-                                side={state === 'collapsed' ? 'right' : 'top'}
+                                side="right"
                                 sideOffset={8}
                             >
                                 <UserMenuContent user={auth.user} />
