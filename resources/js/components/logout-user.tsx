@@ -6,11 +6,7 @@ import { logout } from '@/routes';
 
 export default function LogoutUser() {
     const handleLogout = () => {
-        router.post(logout().url, {}, {
-            onFinish: () => {
-                router.visit('/login');
-            }
-        });
+        router.post(logout().url);
     };
 
     return (

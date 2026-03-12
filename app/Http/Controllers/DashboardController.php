@@ -73,6 +73,11 @@ class DashboardController extends Controller
         ]);
 
         // Map activities to include likes data and relations for subjects
+        // First, remove activities whose subject was deleted (soft-deleted)
+        $activities->setCollection(
+            $activities->getCollection()->filter(fn($activity) => $activity->subject !== null)
+        );
+
         $activities->getCollection()->transform(function ($activity) {
             $subject = $activity->subject;
             if ($subject) {
