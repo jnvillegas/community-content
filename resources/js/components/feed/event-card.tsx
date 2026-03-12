@@ -34,6 +34,27 @@ export default function EventCard({ activity }: { activity: any }) {
     const dateStr = startDate && isValid(startDate) ? format(startDate, "MMM d, yyyy", { locale: es }) : 'Por definir';
     const timeStr = startDate && isValid(startDate) ? format(startDate, "hh:mm a", { locale: es }) : 'Por definir';
 
+    const handleShare = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const shareUrl = `${window.location.origin}/events/${subject.id}`;
+        const shareTitle = subject.title;
+
+        if (navigator.share) {
+            navigator.share({
+                title: shareTitle,
+                url: shareUrl,
+            }).catch((err) => {
+                console.error('Error sharing:', err);
+            });
+        } else {
+            // Fallback: Copy to clipboard
+            navigator.clipboard.writeText(shareUrl);
+            alert('¡Enlace copiado al portapapeles!');
+        }
+    };
+
     return (
         <>
             <article className="group relative bg-white dark:bg-zinc-900/50 border border-gray-200 dark:border-white/5 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-black/5 mb-8">
@@ -106,6 +127,14 @@ export default function EventCard({ activity }: { activity: any }) {
                                 Ver detalles del evento
                                 <ArrowRight className="h-4 w-4" />
                             </Link>
+
+                            <button
+                                onClick={handleShare}
+                                className="p-3.5 bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-500 dark:text-zinc-400 rounded-xl transition-all active:scale-95 border border-zinc-100 dark:border-zinc-800"
+                                title="Compartir"
+                            >
+                                <Share2 className="h-5 w-5" />
+                            </button>
 
                             <button
                                 className="p-3.5 bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-500 dark:text-zinc-400 rounded-xl transition-all active:scale-95 border border-zinc-100 dark:border-zinc-800"

@@ -9,6 +9,27 @@ export default function WallpaperCard({ activity }: { activity: any }) {
     // Determine if it's "NEW" (created in the last 7 days)
     const isNew = subject.created_at ? (new Date().getTime() - new Date(subject.created_at).getTime()) < 7 * 24 * 60 * 60 * 1000 : false;
 
+    const handleShare = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const shareUrl = `${window.location.origin}/wallpapers/${subject.id}`;
+        const shareTitle = subject.title;
+
+        if (navigator.share) {
+            navigator.share({
+                title: shareTitle,
+                url: shareUrl,
+            }).catch((err) => {
+                console.error('Error sharing:', err);
+            });
+        } else {
+            // Fallback: Copy to clipboard
+            navigator.clipboard.writeText(shareUrl);
+            alert('¡Enlace copiado al portapapeles!');
+        }
+    };
+
     return (
         <article className="group relative bg-white dark:bg-zinc-900/50 border border-gray-200 dark:border-white/5 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-black/5 mb-8">
             <div className="flex flex-col md:flex-row p-4 gap-6">
@@ -71,6 +92,7 @@ export default function WallpaperCard({ activity }: { activity: any }) {
                         </Link>
 
                         <button
+                            onClick={handleShare}
                             className="p-2.5 bg-gray-50 dark:bg-zinc-800/50 hover:bg-gray-100 dark:hover:bg-zinc-800 text-zinc-500 dark:text-zinc-400 rounded-xl transition-all active:scale-95 shadow-sm"
                             title="Compartir"
                         >
