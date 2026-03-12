@@ -1,19 +1,22 @@
+import React from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import {
-    ChevronLeft,
+    ArrowLeft,
     Save,
     Image as ImageIcon,
     Settings2,
     Lock,
     Monitor,
     Smartphone,
-    Maximize2
+    Maximize2,
+    Loader2,
+    Eye,
+    Zap,
+    Scale
 } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import {
     Select,
@@ -22,21 +25,18 @@ import {
     SelectTrigger,
     SelectValue
 } from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Wallpapers', href: '/wallpapers' },
-    { title: 'Create New', href: '/wallpapers/create' },
-];
+interface Props {}
 
-export default function Create() {
+export default function Create({}: Props) {
     const { data, setData, post, processing, errors } = useForm({
         title: '',
         alt: '',
         src: '',
-        image_file: null as File | null, // Added for file upload
+        image_file: null as File | null,
         is_locked: false,
         lock_text: 'Junte-se à Nossa Comunidade',
         lock_subtitle: 'EXCLUSIVO PARA MEMBROS',
@@ -54,307 +54,272 @@ export default function Create() {
     };
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <AppLayout breadcrumbs={[
+            { title: 'Wallpapers', href: '/wallpapers' },
+            { title: 'Create', href: '#' },
+        ]}>
             <Head title="Create Wallpaper" />
 
-            <form onSubmit={handleSubmit} className="min-h-screen bg-[#F8F9FA] dark:bg-gray-950/20">
-                {/* Fixed Top bar for actions */}
-                <div className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-muted bg-background/80 px-4 backdrop-blur-md dark:bg-card/80 md:px-8">
-                    <div className="flex items-center gap-4">
-                        <Button variant="ghost" size="sm" asChild className="text-gray-500">
+            <div className="p-4 md:p-8 max-w-4xl mx-auto w-full">
+                <div className="mb-6 flex justify-between items-start">
+                    <div>
+                        <Button variant="ghost" className="pl-0 hover:bg-transparent hover:text-primary gap-2" asChild>
                             <Link href="/wallpapers">
-                                <ChevronLeft className="mr-2 h-4 w-4" />
-                                Back
+                                <ArrowLeft className="w-4 h-4" />
+                                Back to Wallpapers
                             </Link>
                         </Button>
-                        <div className="h-4 w-[1px] bg-gray-200 dark:bg-gray-800" />
-                        <span className="text-sm font-bold text-gray-900 dark:text-gray-100 uppercase tracking-widest">
-                            New Wallpaper
-                        </span>
+                        <h1 className="text-3xl font-black tracking-tight mt-2">Create Wallpaper</h1>
+                        <p className="text-muted-foreground text-sm mt-1">Upload and configure a new high-quality wallpaper.</p>
                     </div>
 
-                    <div className="flex items-center gap-3">
-                        <Button
-                            disabled={processing}
-                            type="submit"
-                            className="font-bold h-9 px-6"
-                        >
-                            <Save className="mr-2 h-4 w-4" />
-                            {data.status === 'published' ? 'Publish Now' : 'Save Draft'}
+                    <div className="flex items-center gap-2">
+                        <Button variant="outline" size="sm" className="gap-2">
+                            <Eye className="w-4 h-4" />
+                            <span className="hidden sm:inline">Preview</span>
                         </Button>
                     </div>
                 </div>
 
-                <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-8 p-4 md:p-8 lg:grid-cols-[1fr_350px]">
-                    {/* Main Content Area */}
-                    <div className="space-y-8">
-                        {/* Title Input */}
-                        <div className="space-y-4">
-                            <Input
-                                placeholder="Wallpaper title..."
-                                className="border-none bg-transparent px-0 text-3xl font-black tracking-tight placeholder:text-gray-300 focus-visible:ring-0 md:text-4xl dark:text-white"
-                                value={data.title}
-                                onChange={e => setData('title', e.target.value)}
-                            />
-                            {errors.title && <p className="text-sm text-red-500">{errors.title}</p>}
-                        </div>
+                <form onSubmit={handleSubmit} className="space-y-8">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Wallpaper Content</CardTitle>
+                            <CardDescription>Upload the image file and provide a descriptive title.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            <div className="space-y-2">
+                                <Label htmlFor="title">Title</Label>
+                                <Input
+                                    id="title"
+                                    placeholder="e.g. Neon Horizon"
+                                    className="text-xl font-bold"
+                                    value={data.title}
+                                    onChange={e => setData('title', e.target.value)}
+                                    required
+                                />
+                                {errors.title && <p className="text-sm text-red-500">{errors.title}</p>}
+                            </div>
 
-                        {/* Image Preview & URL */}
-                        <Card className="border-none shadow-sm">
-                            <CardHeader className="p-6">
-                                <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-gray-100">
-                                    <ImageIcon className="h-4 w-4 text-blue-600" />
-                                    Wallpaper Image
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-6 pt-0 space-y-4">
+                            <div className="space-y-2">
+                                <Label>Upload Image</Label>
                                 <div
-                                    className="aspect-video w-full rounded-xl overflow-hidden border-2 border-dashed border-muted bg-background/50 flex flex-col items-center justify-center dark:bg-card/50 relative group cursor-pointer hover:border-muted/80 hover:bg-background transition-all"
+                                    className="aspect-video w-full rounded-xl border-2 border-dashed border-muted bg-muted/30 flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-muted/50 transition-all overflow-hidden relative group"
                                     onClick={() => document.getElementById('wallpaper-upload')?.click()}
                                 >
                                     {data.image_file ? (
-                                        <img
-                                            src={URL.createObjectURL(data.image_file)}
-                                            alt="Preview"
-                                            className="w-full h-full object-cover"
-                                        />
-                                    ) : data.src ? (
-                                        <img
-                                            src={data.src}
-                                            alt={data.alt || data.title}
-                                            className="w-full h-full object-cover"
-                                        />
+                                        <>
+                                            <img
+                                                src={URL.createObjectURL(data.image_file)}
+                                                className="w-full h-full object-cover"
+                                                alt="Preview"
+                                            />
+                                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <span className="text-white font-bold text-xs uppercase bg-black/50 px-3 py-1 rounded-full">Change Image</span>
+                                            </div>
+                                        </>
                                     ) : (
-                                        <div className="flex flex-col items-center">
-                                            <ImageIcon className="h-12 w-12 text-gray-300 mb-2" />
-                                            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Click to Upload Image</span>
+                                        <div className="flex flex-col items-center text-muted-foreground text-center p-6">
+                                            <ImageIcon className="h-12 w-12 mb-3 opacity-20" />
+                                            <p className="text-sm font-medium">Click to select or drag and drop</p>
+                                            <p className="text-xs opacity-60 mt-1">PNG, JPG or WEBP up to 10MB</p>
                                         </div>
                                     )}
-
-                                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <span className="text-white font-bold text-xs uppercase">Select Image</span>
-                                    </div>
                                 </div>
                                 <input
                                     id="wallpaper-upload"
                                     type="file"
-                                    accept="image/*"
                                     className="hidden"
+                                    accept="image/*"
                                     onChange={e => {
                                         if (e.target.files && e.target.files[0]) {
                                             setData('image_file', e.target.files[0]);
                                         }
                                     }}
                                 />
+                            </div>
 
-                                {/* URL Input Removed - Only File Upload Allowed */}
-                                <div className="space-y-2">
-                                    <Label htmlFor="alt" className="text-sm font-medium">Alt Text (Description)</Label>
-                                    <Input
-                                        id="alt"
-                                        placeholder="Beautiful mountain sunset wallpaper"
-                                        className="border-gray-100 bg-gray-50/30"
-                                        value={data.alt}
-                                        onChange={e => setData('alt', e.target.value)}
-                                    />
-                                </div>
-                            </CardContent>
-                        </Card>
+                            <div className="space-y-2">
+                                <Label htmlFor="alt">Accessibility Title (Alt Text)</Label>
+                                <Input
+                                    id="alt"
+                                    placeholder="Detailed description for screen readers..."
+                                    value={data.alt}
+                                    onChange={e => setData('alt', e.target.value)}
+                                />
+                            </div>
+                        </CardContent>
+                    </Card>
 
-                        {/* Image Details */}
-                        <Card className="border-none shadow-sm">
-                            <CardHeader className="p-6">
-                                <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-gray-100">
-                                    <Maximize2 className="h-4 w-4 text-blue-600" />
-                                    Image Details
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2">
+                                    <Settings2 className="w-4 h-4 text-primary" />
+                                    Technical Specs
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent className="p-6 pt-0 grid gap-4 md:grid-cols-2">
+                            <CardContent className="space-y-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="resolution" className="text-sm font-medium">Resolution</Label>
+                                    <Label htmlFor="resolution" className="flex items-center gap-2">
+                                        <Maximize2 className="w-3 h-3" /> Resolution
+                                    </Label>
                                     <Input
                                         id="resolution"
-                                        placeholder="1920x1080"
-                                        className="border-gray-100 bg-gray-50/30"
+                                        placeholder="3840x2160"
                                         value={data.resolution}
                                         onChange={e => setData('resolution', e.target.value)}
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="file_size" className="text-sm font-medium">File Size</Label>
+                                    <Label htmlFor="file_size" className="flex items-center gap-2">
+                                        <Scale className="w-3 h-3" /> File Size
+                                    </Label>
                                     <Input
                                         id="file_size"
-                                        placeholder="2.5 MB"
-                                        className="border-gray-100 bg-gray-50/30"
+                                        placeholder="4.2 MB"
                                         value={data.file_size}
                                         onChange={e => setData('file_size', e.target.value)}
                                     />
                                 </div>
+                                <Separator />
+                                <div className="space-y-2">
+                                    <Label className="flex items-center gap-2">
+                                        <Monitor className="w-3 h-3" /> Target Device
+                                    </Label>
+                                    <Select
+                                        value={data.category}
+                                        onValueChange={(val: any) => setData('category', val)}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="desktop">
+                                                <span className="flex items-center gap-2">
+                                                    <Monitor className="w-3 h-3" /> Desktop
+                                                </span>
+                                            </SelectItem>
+                                            <SelectItem value="mobile">
+                                                <span className="flex items-center gap-2">
+                                                    <Smartphone className="w-3 h-3" /> Mobile
+                                                </span>
+                                            </SelectItem>
+                                            <SelectItem value="both">
+                                                <span className="flex items-center gap-2">
+                                                    <Maximize2 className="w-3 h-3" /> Both
+                                                </span>
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
                             </CardContent>
                         </Card>
 
-                        {/* Lock Settings */}
-                        {data.is_locked && (
-                            <Card className="border-none shadow-sm border-l-4 border-l-orange-500">
-                                <CardHeader className="p-6 bg-orange-50/20 dark:bg-orange-950/20">
-                                    <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-orange-600">
-                                        <Lock className="h-4 w-4" />
-                                        Locked Wallpaper Settings
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent className="p-6 space-y-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="lock_text" className="text-sm font-medium">Lock Message</Label>
-                                        <Input
-                                            id="lock_text"
-                                            placeholder="Join Our Community"
-                                            className="border-gray-100 bg-gray-50/30"
-                                            value={data.lock_text}
-                                            onChange={e => setData('lock_text', e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="lock_subtitle" className="text-sm font-medium">Lock Subtitle</Label>
-                                        <Input
-                                            id="lock_subtitle"
-                                            placeholder="EXCLUSIVE FOR MEMBERS"
-                                            className="border-gray-100 bg-gray-50/30"
-                                            value={data.lock_subtitle}
-                                            onChange={e => setData('lock_subtitle', e.target.value)}
-                                        />
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        )}
-                    </div>
-
-                    {/* Sidebar Settings Area */}
-                    <div className="space-y-6">
-                        {/* Status & Visibility Card */}
-                        <Card className="border-none shadow-sm">
-                            <CardHeader className="p-6">
-                                <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-gray-100">
-                                    <Settings2 className="h-4 w-4 text-blue-600" />
-                                    Publish Settings
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2">
+                                    <Zap className="w-4 h-4 text-primary" />
+                                    Settings & Status
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent className="p-6 pt-0 space-y-4">
-                                <div className="flex items-center justify-between">
-                                    <Label className="text-sm text-gray-500">Status</Label>
+                            <CardContent className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label className="text-xs font-bold text-muted-foreground uppercase opacity-70">Publication Status</Label>
                                     <Select
                                         value={data.status}
                                         onValueChange={(val: any) => setData('status', val)}
                                     >
-                                        <SelectTrigger className="w-[140px] border-none bg-gray-50 font-bold dark:bg-gray-800">
+                                        <SelectTrigger>
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="draft">Draft</SelectItem>
-                                            <SelectItem value="published">Published</SelectItem>
-                                            <SelectItem value="archived">Archived</SelectItem>
+                                            <SelectItem value="draft">Borrador</SelectItem>
+                                            <SelectItem value="published">Publicado</SelectItem>
+                                            <SelectItem value="archived">Archivado</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
-                                <Separator className="bg-gray-50 dark:bg-gray-800" />
-                                <div className="flex items-center justify-between">
-                                    <Label htmlFor="is_featured" className="text-sm text-gray-500">Featured</Label>
-                                    <Switch
-                                        id="is_featured"
-                                        checked={data.is_featured}
-                                        onCheckedChange={(checked) => setData('is_featured', checked)}
-                                    />
-                                </div>
-                                <Separator className="bg-gray-50 dark:bg-gray-800" />
-                                <div className="flex items-center justify-between">
-                                    <Label htmlFor="is_locked" className="text-sm text-gray-500">Locked (Members Only)</Label>
-                                    <Switch
-                                        id="is_locked"
-                                        checked={data.is_locked}
-                                        onCheckedChange={(checked) => setData('is_locked', checked)}
-                                    />
+
+                                <Separator />
+
+                                <div className="space-y-4 pt-2">
+                                    <div className="flex items-center justify-between">
+                                        <div className="space-y-0.5">
+                                            <Label htmlFor="is_featured" className="text-sm font-medium">Featured</Label>
+                                            <p className="text-[10px] text-muted-foreground">Highlight on home screen</p>
+                                        </div>
+                                        <Switch
+                                            id="is_featured"
+                                            checked={data.is_featured}
+                                            onCheckedChange={(checked) => setData('is_featured', checked)}
+                                        />
+                                    </div>
+
+                                    <div className="flex items-center justify-between">
+                                        <div className="space-y-0.5">
+                                            <Label htmlFor="is_locked" className="text-sm font-medium">Locked</Label>
+                                            <p className="text-[10px] text-muted-foreground">Exclusive to members</p>
+                                        </div>
+                                        <Switch
+                                            id="is_locked"
+                                            checked={data.is_locked}
+                                            onCheckedChange={(checked) => setData('is_locked', checked)}
+                                        />
+                                    </div>
                                 </div>
                             </CardContent>
                         </Card>
+                    </div>
 
-                        {/* Category Card */}
-                        <Card className="border-none shadow-sm">
-                            <CardHeader className="p-6">
-                                <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-gray-100">
-                                    <Monitor className="h-4 w-4 text-blue-600" />
-                                    Device Category
+                    {data.is_locked && (
+                        <Card className="border-primary/20 bg-primary/5 animate-in fade-in slide-in-from-top-2 duration-300">
+                            <CardHeader>
+                                <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2">
+                                    <Lock className="w-4 h-4 text-primary" />
+                                    Locked Content Settings
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent className="p-6 pt-0 space-y-3">
-                                <div className="flex items-center gap-2">
-                                    <input
-                                        type="radio"
-                                        id="cat-mobile"
-                                        name="category"
-                                        value="mobile"
-                                        checked={data.category === 'mobile'}
-                                        onChange={e => setData('category', e.target.value as any)}
-                                        className="text-blue-600 focus:ring-blue-500"
+                            <CardContent className="grid gap-6 md:grid-cols-2">
+                                <div className="space-y-2">
+                                    <Label htmlFor="lock_text">Primary Message</Label>
+                                    <Input
+                                        id="lock_text"
+                                        placeholder="Join Our Community"
+                                        value={data.lock_text}
+                                        onChange={e => setData('lock_text', e.target.value)}
                                     />
-                                    <label htmlFor="cat-mobile" className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
-                                        <Smartphone className="h-4 w-4" />
-                                        Mobile
-                                    </label>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <input
-                                        type="radio"
-                                        id="cat-desktop"
-                                        name="category"
-                                        value="desktop"
-                                        checked={data.category === 'desktop'}
-                                        onChange={e => setData('category', e.target.value as any)}
-                                        className="text-blue-600 focus:ring-blue-500"
+                                <div className="space-y-2">
+                                    <Label htmlFor="lock_subtitle">Secondary Subtitle</Label>
+                                    <Input
+                                        id="lock_subtitle"
+                                        placeholder="EXCLUSIVE FOR MEMBERS"
+                                        value={data.lock_subtitle}
+                                        onChange={e => setData('lock_subtitle', e.target.value)}
                                     />
-                                    <label htmlFor="cat-desktop" className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
-                                        <Monitor className="h-4 w-4" />
-                                        Desktop
-                                    </label>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <input
-                                        type="radio"
-                                        id="cat-both"
-                                        name="category"
-                                        value="both"
-                                        checked={data.category === 'both'}
-                                        onChange={e => setData('category', e.target.value as any)}
-                                        className="text-blue-600 focus:ring-blue-500"
-                                    />
-                                    <label htmlFor="cat-both" className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
-                                        <Maximize2 className="h-4 w-4" />
-                                        Both
-                                    </label>
-                                </div>
-                                {errors.category && <p className="text-sm text-red-500">{errors.category}</p>}
                             </CardContent>
                         </Card>
+                    )}
 
-                        {/* Publish Date */}
-                        {data.status === 'published' && (
-                            <Card className="border-none shadow-sm">
-                                <CardHeader className="p-6">
-                                    <CardTitle className="text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-gray-100">
-                                        Publish Date
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent className="p-6 pt-0">
-                                    <Input
-                                        type="datetime-local"
-                                        className="border-gray-100 bg-gray-50/30"
-                                        value={data.published_at}
-                                        onChange={e => setData('published_at', e.target.value)}
-                                    />
-                                </CardContent>
-                            </Card>
-                        )}
+                    <div className="flex justify-end gap-4 py-8">
+                        <Button variant="outline" asChild>
+                            <Link href="/wallpapers">Cancel</Link>
+                        </Button>
+                        <Button type="submit" disabled={processing} className="min-w-[140px]">
+                            {processing ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Creating...
+                                </>
+                            ) : (
+                                'Create Wallpaper'
+                            )}
+                        </Button>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </AppLayout>
     );
 }

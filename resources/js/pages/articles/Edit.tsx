@@ -3,20 +3,22 @@ import axios from 'axios';
 import TipTapEditor from '@/components/TipTapEditor';
 import { Head, Link, useForm } from '@inertiajs/react';
 import {
-    ChevronLeft,
+    ArrowLeft,
     Save,
     Eye,
     Image as ImageIcon,
     Settings2,
-    Globe,
-    Tag,
-    Layout,
     BarChart3,
     Clock,
-    User
+    User,
+    CalendarDays,
+    Loader2,
+    X,
+    Plus
 } from 'lucide-react';
+import { format, isValid } from 'date-fns';
+import { es } from 'date-fns/locale';
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -28,10 +30,11 @@ import {
     SelectTrigger,
     SelectValue
 } from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface Article {
     id: number;
@@ -70,11 +73,6 @@ export default function Edit({ article, categories, tags }: Props) {
     const [isCreatingCategory, setIsCreatingCategory] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState('');
 
-    const breadcrumbs: BreadcrumbItem[] = [
-        { title: 'Articles', href: '/articles' },
-        { title: 'Edit Article', href: `/articles/${article.id}/edit` },
-    ];
-
     const { data, setData, post, processing, errors } = useForm({
         _method: 'put',
         title: article.title || '',
@@ -107,135 +105,148 @@ export default function Edit({ article, categories, tags }: Props) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // We use POST with _method: 'put' to allow file uploads
         post(`/articles/${article.id}`);
     };
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <AppLayout breadcrumbs={[
+            { title: 'Articles', href: '/articles' },
+            { title: 'Edit', href: '#' },
+        ]}>
             <Head title={`Edit: ${article.title}`} />
 
-            <form onSubmit={handleSubmit} className="min-h-screen bg-[#F8F9FA] dark:bg-gray-950/20">
-                {/* Fixed Top bar for actions */}
-                <div className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-muted bg-background/80 px-4 backdrop-blur-md dark:bg-card/80 md:px-8">
-                    <div className="flex items-center gap-4">
-                        <Button variant="ghost" size="sm" asChild className="text-gray-500">
+            <div className="p-4 md:p-8 max-w-4xl mx-auto w-full">
+                <div className="mb-6 flex justify-between items-start">
+                    <div>
+                        <Button variant="ghost" className="pl-0 hover:bg-transparent hover:text-primary gap-2" asChild>
                             <Link href="/articles">
-                                <ChevronLeft className="mr-2 h-4 w-4" />
-                                Back
+                                <ArrowLeft className="w-4 h-4" />
+                                Back to Articles
                             </Link>
                         </Button>
-                        <div className="h-4 w-[1px] bg-gray-200 dark:bg-gray-800" />
-                        <span className="text-sm font-bold text-gray-900 dark:text-gray-100 uppercase tracking-widest hidden md:inline">
-                            Editing Article
-                        </span>
-                        <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest opacity-60">ID #{article.id}</Badge>
+                        <h1 className="text-3xl font-black tracking-tight mt-2">Edit Article</h1>
+                        <div className="flex items-center gap-2 text-muted-foreground mt-1 text-sm">
+                            <CalendarDays className="w-4 h-4" />
+                            <span>
+                                {article.created_at && isValid(new Date(article.created_at))
+                                    ? format(new Date(article.created_at), "d 'de' MMMM, yyyy", { locale: es })
+                                    : 'N/A'}
+                            </span>
+                            <span className="opacity-30">•</span>
+                            <span>ID #{article.id}</span>
+                        </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
-                        <Button variant="ghost" size="sm" className="font-bold text-gray-500">
-                            <Eye className="mr-2 h-4 w-4" />
-                            Preview
-                        </Button>
-                        <Button
-                            disabled={processing}
-                            type="submit"
-                            className="font-bold h-9 px-6"
-                        >
-                            <Save className="mr-2 h-4 w-4" />
-                            Update Article
+                    <div className="flex items-center gap-2">
+                        <Button variant="outline" size="sm" className="gap-2">
+                            <Eye className="w-4 h-4" />
+                            <span className="hidden sm:inline">Preview</span>
                         </Button>
                     </div>
                 </div>
 
-                <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-8 p-4 md:p-8 lg:grid-cols-[1fr_350px]">
-                    {/* Main Content Area */}
-                    <div className="space-y-8">
-                        {/* Title Input */}
-                        <div className="space-y-4">
-                            <Input
-                                placeholder="Add a title..."
-                                className="border-none bg-transparent px-0 text-3xl font-black tracking-tight placeholder:text-gray-300 focus-visible:ring-0 md:text-4xl dark:text-white"
-                                value={data.title}
-                                onChange={e => setData('title', e.target.value)}
-                            />
-                            {errors.title && <p className="text-sm text-red-500">{errors.title}</p>}
-                        </div>
+                <form onSubmit={handleSubmit} className="space-y-8">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Content</CardTitle>
+                            <CardDescription>Write and manage your article content.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            <div className="space-y-2">
+                                <Label htmlFor="title">Title</Label>
+                                <Input
+                                    id="title"
+                                    placeholder="Add a title..."
+                                    className="text-xl font-bold"
+                                    value={data.title}
+                                    onChange={e => setData('title', e.target.value)}
+                                />
+                                {errors.title && <p className="text-sm text-red-500">{errors.title}</p>}
+                            </div>
 
-                        {/* Editor Canvas */}
-                        <Card className="border-none shadow-sm overflow-hidden min-h-[500px]">
-                            <CardHeader className="bg-background/50 dark:bg-card/50 border-b border-muted p-3">
-                                <div className="flex items-center gap-1">
-                                    <span className="text-xs font-bold uppercase tracking-wider text-gray-500">Rich Text Editor</span>
+                            <div className="space-y-2">
+                                <Label>Body</Label>
+                                <div className="rounded-md border bg-card">
+                                    <TipTapEditor
+                                        content={data.content}
+                                        onChange={(html) => setData('content', html)}
+                                        placeholder="Start editing..."
+                                    />
                                 </div>
-                            </CardHeader>
-                            <TipTapEditor
-                                content={data.content}
-                                onChange={(html) => setData('content', html)}
-                                placeholder="Start editing..."
-                            />
-                            {errors.content && <p className="text-sm text-red-500 p-6">{errors.content}</p>}
-                        </Card>
+                                {errors.content && <p className="text-sm text-red-500">{errors.content}</p>}
+                            </div>
+                        </CardContent>
+                    </Card>
 
-                        {/* SEO Section */}
-                        <Card className="border-none shadow-sm overflow-hidden border-t-4 border-t-blue-500">
-                            <CardHeader className="p-6 bg-background/50">
-                                <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-blue-600">
-                                    <BarChart3 className="h-4 w-4" />
-                                    SEO Configuration
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Featured Image</CardTitle>
+                            <CardDescription>Visual representation for your article.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div
+                                className="aspect-video w-full max-w-xl mx-auto rounded-xl border-2 border-dashed border-muted bg-muted/30 flex flex-col items-center justify-center cursor-pointer hover:border-primary/50 hover:bg-muted/50 transition-all overflow-hidden relative group"
+                                onClick={() => document.getElementById('image-upload')?.click()}
+                            >
+                                {data.featured_image ? (
+                                    <>
+                                        <img
+                                            src={URL.createObjectURL(data.featured_image as File)}
+                                            className="w-full h-full object-cover"
+                                            alt="New Preview"
+                                        />
+                                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <span className="text-white font-bold text-xs uppercase bg-black/50 px-3 py-1 rounded-full">Change Image</span>
+                                        </div>
+                                    </>
+                                ) : article.featured_image ? (
+                                    <>
+                                        <img
+                                            src={article.featured_image.startsWith('http') ? article.featured_image : `/storage/${article.featured_image}`}
+                                            className="w-full h-full object-cover"
+                                            alt="Current Featured"
+                                        />
+                                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <span className="text-white font-bold text-xs uppercase bg-black/50 px-3 py-1 rounded-full">Replace Image</span>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="flex flex-col items-center text-muted-foreground">
+                                        <ImageIcon className="h-10 w-10 mb-2 opacity-20" />
+                                        <span className="text-xs font-bold uppercase tracking-widest">Click to Upload</span>
+                                    </div>
+                                )}
+                            </div>
+                            <input
+                                id="image-upload"
+                                type="file"
+                                className="hidden"
+                                accept="image/*"
+                                onChange={e => {
+                                    if (e.target.files && e.target.files[0]) {
+                                        setData('featured_image', e.target.files[0]);
+                                    }
+                                }}
+                            />
+                        </CardContent>
+                    </Card>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2">
+                                    <Settings2 className="w-4 h-4 text-primary" />
+                                    Publishing
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent className="p-6 space-y-6">
+                            <CardContent className="space-y-4">
                                 <div className="space-y-2">
-                                    <Label className="text-xs font-bold uppercase text-gray-500">Google Result View</Label>
-                                    <div className="rounded-lg border border-muted bg-background p-4 shadow-sm dark:bg-card">
-                                        <div className="text-blue-700 text-xl font-medium mb-1 truncate">{data.meta_title || data.title}</div>
-                                        <div className="text-green-700 text-sm mb-1">yourdomain.com › blog › {article.slug}</div>
-                                        <div className="text-gray-500 text-sm line-clamp-2">{data.meta_description || 'Write a meta description...'}</div>
-                                    </div>
-                                </div>
-                                <div className="grid gap-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="meta_title" className="text-sm font-medium">Meta Title</Label>
-                                        <Input
-                                            id="meta_title"
-                                            className="border-gray-100 bg-gray-50/30"
-                                            value={data.meta_title}
-                                            onChange={e => setData('meta_title', e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="meta_description" className="text-sm font-medium">Meta Description</Label>
-                                        <Textarea
-                                            id="meta_description"
-                                            className="border-gray-100 bg-gray-50/30"
-                                            value={data.meta_description}
-                                            onChange={e => setData('meta_description', e.target.value)}
-                                        />
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-
-                    {/* Sidebar Settings Area */}
-                    <div className="space-y-6">
-                        {/* Publish Settings */}
-                        <Card className="border-none shadow-sm">
-                            <CardHeader className="p-6">
-                                <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-gray-100">
-                                    <Settings2 className="h-4 w-4 text-blue-600" />
-                                    Publish Settings
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-6 pt-0 space-y-4">
-                                <div className="flex items-center justify-between">
-                                    <Label className="text-sm text-gray-500">Status</Label>
+                                    <Label htmlFor="status" className="text-xs font-bold text-muted-foreground">Status</Label>
                                     <Select
                                         value={data.status}
                                         onValueChange={(val: any) => setData('status', val)}
                                     >
-                                        <SelectTrigger className="w-[140px] border-none bg-gray-50 font-bold dark:bg-gray-800">
+                                        <SelectTrigger>
                                             <SelectValue />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -245,159 +256,134 @@ export default function Edit({ article, categories, tags }: Props) {
                                         </SelectContent>
                                     </Select>
                                 </div>
-                                <Separator className="bg-gray-50 dark:bg-gray-800" />
-                                <div className="flex flex-col gap-2">
-                                    <div className="flex items-center gap-2 text-xs text-gray-500 font-medium uppercase tracking-widest">
-                                        <User className="h-3 w-3" /> Author: <span className="text-gray-900 dark:text-white">{article.author?.name || 'Unknown'}</span>
+                                <Separator />
+                                <div className="space-y-3">
+                                    <div className="flex items-center gap-3 text-sm">
+                                        <User className="w-4 h-4 text-muted-foreground" />
+                                        <span className="text-muted-foreground">Author:</span>
+                                        <span className="font-bold">{article.author?.name || 'Unknown'}</span>
                                     </div>
-                                    <div className="flex items-center gap-2 text-xs text-gray-500 font-medium uppercase tracking-widest">
-                                        <Clock className="h-3 w-3" /> Created: <span className="text-gray-900 dark:text-white">
-                                            {article.created_at ? new Date(article.created_at).toLocaleDateString() : 'N/A'}
+                                    <div className="flex items-center gap-3 text-sm">
+                                        <Clock className="w-4 h-4 text-muted-foreground" />
+                                        <span className="text-muted-foreground">Created:</span>
+                                        <span className="font-bold">
+                                            {article.created_at ? format(new Date(article.created_at), "dd/MM/yyyy") : 'N/A'}
                                         </span>
                                     </div>
                                 </div>
                             </CardContent>
                         </Card>
 
-                        {/* Featured Image Card */}
-                        <Card className="border-none shadow-sm">
-                            <CardHeader className="p-6">
-                                <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-gray-100">
-                                    <ImageIcon className="h-4 w-4 text-blue-600" />
-                                    Featured Image
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-6 pt-0">
-                                <div
-                                    className="aspect-video w-full rounded-xl border-2 border-dashed border-muted bg-background/50 flex flex-col items-center justify-center cursor-pointer hover:border-muted/80 hover:bg-background transition-all dark:bg-card/50 overflow-hidden relative group"
-                                    onClick={() => document.getElementById('image-upload')?.click()}
-                                >
-                                    {data.featured_image ? (
-                                        // New image selected for upload
-                                        <>
-                                            <img
-                                                src={URL.createObjectURL(data.featured_image as File)}
-                                                className="w-full h-full object-cover"
-                                                alt="New Preview"
-                                            />
-                                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <span className="text-white font-bold text-xs uppercase">Change Selection</span>
-                                            </div>
-                                        </>
-                                    ) : article.featured_image ? (
-                                        // Existing image from server
-                                        <>
-                                            <img
-                                                // Assuming backend returns relative path 'articles/xxx.jpg', we prepend /storage/
-                                                src={article.featured_image.startsWith('http') ? article.featured_image : `/storage/${article.featured_image}`}
-                                                className="w-full h-full object-cover"
-                                                alt="Current Featured"
-                                            />
-                                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <span className="text-white font-bold text-xs uppercase">Replace Image</span>
-                                            </div>
-                                        </>
-                                    ) : (
-                                        // No image at all
-                                        <div className="flex flex-col items-center">
-                                            <ImageIcon className="h-8 w-8 text-gray-300 mb-2" />
-                                            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest leading-none">Upload Image</span>
-                                        </div>
-                                    )}
-                                </div>
-                                <input
-                                    id="image-upload"
-                                    type="file"
-                                    className="hidden"
-                                    accept="image/*"
-                                    onChange={e => {
-                                        if (e.target.files && e.target.files[0]) {
-                                            setData('featured_image', e.target.files[0]);
-                                        }
-                                    }}
-                                />
-                            </CardContent>
-                        </Card>
-
-                        {/* Excerpt Section Removed */}
-                        {/* Categories & Tags (Similar to Create...) */}
-                        <Card className="border-none shadow-sm">
-                            <CardHeader className="p-6">
+                        <Card>
+                            <CardHeader>
                                 <CardTitle className="text-sm font-bold uppercase tracking-wider">Categories</CardTitle>
                             </CardHeader>
-                            <CardContent className="p-6 pt-0">
-                                <ScrollArea className="h-40">
-                                    <div className="space-y-3">
+                            <CardContent>
+                                <ScrollArea className="h-44 pr-4">
+                                    <div className="grid grid-cols-1 gap-3">
                                         {localCategories.map(cat => (
-                                            <div key={cat.id} className="flex items-center gap-2">
-                                                <input
-                                                    type="checkbox"
+                                            <div key={cat.id} className="flex items-center space-x-2">
+                                                <Checkbox
                                                     id={`cat-${cat.id}`}
-                                                    className="rounded border-gray-200 text-blue-600"
                                                     checked={data.categories.includes(cat.id)}
-                                                    onChange={(e) => {
-                                                        if (e.target.checked) setData('categories', [...data.categories, cat.id]);
+                                                    onCheckedChange={(checked) => {
+                                                        if (checked) setData('categories', [...data.categories, cat.id]);
                                                         else setData('categories', data.categories.filter(id => id !== cat.id));
                                                     }}
                                                 />
-                                                <label htmlFor={`cat-${cat.id}`} className="text-sm dark:text-gray-300">{cat.name}</label>
+                                                <Label htmlFor={`cat-${cat.id}`} className="text-sm cursor-pointer font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                                    {cat.name}
+                                                </Label>
                                             </div>
                                         ))}
                                     </div>
                                 </ScrollArea>
-                                {isCreatingCategory ? (
-                                    <div className="mt-4 flex items-center gap-2">
-                                        <Input
-                                            autoFocus
-                                            className="h-8 text-xs"
-                                            placeholder="Category name..."
-                                            value={newCategoryName}
-                                            onChange={(e) => setNewCategoryName(e.target.value)}
-                                            onKeyDown={(e) => {
-                                                if (e.key === 'Enter') {
-                                                    e.preventDefault();
-                                                    handleCreateCategory();
-                                                }
-                                            }}
-                                        />
+
+                                <div className="mt-4 pt-4 border-t">
+                                    {isCreatingCategory ? (
+                                        <div className="flex items-center gap-2">
+                                            <Input
+                                                autoFocus
+                                                className="h-9"
+                                                placeholder="New category..."
+                                                value={newCategoryName}
+                                                onChange={(e) => setNewCategoryName(e.target.value)}
+                                            />
+                                            <Button size="icon" className="h-9 w-9 shrink-0" onClick={handleCreateCategory}>
+                                                <Save className="w-4 h-4" />
+                                            </Button>
+                                            <Button variant="ghost" size="icon" className="h-9 w-9 shrink-0" onClick={() => setIsCreatingCategory(false)}>
+                                                <X className="w-4 h-4" />
+                                            </Button>
+                                        </div>
+                                    ) : (
                                         <Button
-                                            type="button"
+                                            variant="outline"
                                             size="sm"
-                                            className="h-8 w-8 p-0 bg-blue-600 hover:bg-blue-700"
-                                            onClick={handleCreateCategory}
-                                            disabled={!newCategoryName.trim()}
+                                            className="w-full border-dashed"
+                                            onClick={() => setIsCreatingCategory(true)}
                                         >
-                                            <Save className="h-4 w-4" />
+                                            <Plus className="w-4 h-4 mr-2" />
+                                            New Category
                                         </Button>
-                                        <Button
-                                            type="button"
-                                            variant="ghost"
-                                            size="sm"
-                                            className="h-8 w-8 p-0 text-red-500 hover:text-red-700"
-                                            onClick={() => {
-                                                setIsCreatingCategory(false);
-                                                setNewCategoryName('');
-                                            }}
-                                        >
-                                            <span className="text-xs font-bold">✕</span>
-                                        </Button>
-                                    </div>
-                                ) : (
-                                    <Button
-                                        type="button"
-                                        variant="link"
-                                        size="sm"
-                                        className="mt-4 h-auto p-0 text-blue-600 font-bold text-xs uppercase tracking-widest"
-                                        onClick={() => setIsCreatingCategory(true)}
-                                    >
-                                        + Add New Category
-                                    </Button>
-                                )}
+                                    )}
+                                </div>
                             </CardContent>
                         </Card>
                     </div>
-                </div>
-            </form>
+
+                    <Card className="">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-primary">
+                                <BarChart3 className="h-4 w-4" />
+                                SEO Configuration
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            <div className="p-4 rounded-lg bg-muted/50 border">
+                                <div className="text-lg font-medium truncate mb-0.5">{data.meta_title || data.title}</div>
+                                <div className="text-xs mb-1.5 opacity-80">yourdomain.com › blog › {article.slug}</div>
+                                <div className="text-muted-foreground text-sm line-clamp-2">{data.meta_description || 'Write a meta description...'}</div>
+                            </div>
+
+                            <div className="grid gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="meta_title">Meta Title</Label>
+                                    <Input
+                                        id="meta_title"
+                                        value={data.meta_title}
+                                        onChange={e => setData('meta_title', e.target.value)}
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="meta_description">Meta Description</Label>
+                                    <Textarea
+                                        id="meta_description"
+                                        value={data.meta_description}
+                                        onChange={e => setData('meta_description', e.target.value)}
+                                    />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    <div className="flex justify-end gap-4 py-8">
+                        <Button variant="outline" asChild>
+                            <Link href="/articles">Cancel</Link>
+                        </Button>
+                        <Button type="submit" disabled={processing} className="min-w-[140px]">
+                            {processing ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Saving...
+                                </>
+                            ) : (
+                                'Update Article'
+                            )}
+                        </Button>
+                    </div>
+                </form>
+            </div>
         </AppLayout>
     );
 }

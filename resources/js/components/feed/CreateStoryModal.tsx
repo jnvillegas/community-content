@@ -102,7 +102,7 @@ export default function CreateStoryModal({ isOpen, onClose }: CreateStoryModalPr
                         {previews.length === 0 && (
                             <div
                                 onClick={() => fileInputRef.current?.click()}
-                                className="aspect-[9/16] w-full max-w-[150px] mx-auto rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-800 flex flex-col items-center justify-center cursor-pointer hover:border-[#1a87cb] hover:bg-gray-50 dark:hover:bg-gray-900 transition-all"
+                                className="aspect-[9/16] w-full max-w-[150px] mx-auto rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-100/20 flex flex-col items-center justify-center cursor-pointer transition-all"
                             >
                                 <ImagePlus className="w-8 h-8 text-gray-400 mb-2" />
                                 <span className="text-[10px] text-gray-500 text-center px-4 font-medium">Subir imágenes</span>

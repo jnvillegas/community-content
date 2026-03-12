@@ -61,7 +61,7 @@ const TipTapEditor = ({ content, onChange, placeholder = 'Start writing...' }: T
     return (
         <div className="flex flex-col min-h-[500px]">
             {/* Toolbar */}
-            <div className="flex flex-wrap items-center gap-1 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/50 p-2">
+            <div className="flex flex-wrap items-center gap-1 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 p-2">
                 <Button
                     type="button"
                     variant="ghost"

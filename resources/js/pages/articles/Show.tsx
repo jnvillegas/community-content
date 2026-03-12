@@ -50,28 +50,15 @@ export default function Show({ article }: Props) {
             </Head>
 
             <article className="min-h-screen bg-white dark:bg-background">
-                {/* Fixed Sub-header for viewing mode */}
-                <div className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-muted bg-background/80 px-4 backdrop-blur-md dark:bg-card/80 md:px-8">
-                    <div className="flex items-center gap-4">
-                        <Button variant="ghost" size="sm" asChild className="text-gray-500">
+                <div className="mx-auto max-w-[800px] px-6 py-12 md:py-20">
+                    <div className="mb-6">
+                        <Button variant="ghost" className="pl-0 hover:bg-transparent hover:text-primary gap-2" asChild>
                             <Link href="/articles">
-                                <ChevronLeft className="mr-2 h-4 w-4" />
-                                Back
+                                <ChevronLeft className="w-4 h-4" />
+                                Back to Articles
                             </Link>
                         </Button>
                     </div>
-
-                    {/* <div className="flex items-center gap-3">
-                        <Button variant="ghost" size="icon" className="text-gray-500">
-                            <Share2 className="h-4 w-4" />
-                        </Button>
-                        <Button asChild variant="outline" size="sm" className="font-bold border-muted">
-                            <Link href={`/articles/${article.id}/edit`}>Edit Post</Link>
-                        </Button>
-                    </div> */}
-                </div>
-
-                <div className="mx-auto max-w-[800px] px-6 py-12 md:py-20">
                     {/* Categories */}
                     <div className="flex flex-wrap gap-2 mb-6">
                         {article.categories.map(cat => (
