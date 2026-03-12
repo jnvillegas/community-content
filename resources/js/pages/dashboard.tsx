@@ -65,13 +65,14 @@ interface DashboardProps {
         modules_count: number;
     }[];
     auth: any;
+    openStoryId?: number | null;
 }
 
 import StoriesBar from '@/components/feed/stories-bar';
 import ActivityFeed from '@/components/feed/activity-feed';
 import AppLogo from '@/components/app-logo';
 
-export default function Dashboard({ upcomingEvents, activities, stories, courses, auth }: DashboardProps) {
+export default function Dashboard({ upcomingEvents, activities, stories, courses, auth, openStoryId }: DashboardProps) {
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [sidebarTab, setSidebarTab] = useState<'upcoming' | 'calendar'>('calendar');
 
@@ -91,7 +92,7 @@ export default function Dashboard({ upcomingEvents, activities, stories, courses
                     <div className='mb-6 px-1 md:px-0'>
                         <AppLogo></AppLogo>
                     </div>
-                    <StoriesBar stories={stories} />
+                    <StoriesBar stories={stories} openStoryId={openStoryId} />
                     <ActivityFeed activities={activities} courses={courses} />
                 </div>
 

@@ -36,7 +36,7 @@ export default function FeedItem({ activity, course, filter = 'all' }: FeedItemP
     const isVideo = type === 'created_video';
     const isArticle = type === 'created_article';
     const isWallpaper = type === 'created_wallpaper';
-    const isEvent = subject_type?.includes('Event') || subject_type?.includes('Story');
+    const isEvent = subject_type?.includes('Event');
 
     // Apply filtering logic at the item level
     if (filter === 'courses') return null;

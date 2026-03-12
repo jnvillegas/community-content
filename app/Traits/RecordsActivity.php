@@ -25,6 +25,33 @@ trait RecordsActivity
                 }
             }
         });
+
+        static::deleted(function (Model $model) {
+            $model->deleteActivityAndNotifications();
+        });
+    }
+
+    protected function deleteActivityAndNotifications()
+    {
+        // 1. Delete Activities
+        $this->activity()->delete();
+
+        // 2. Delete Notifications
+        $driver = \Illuminate\Support\Facades\DB::getDriverName();
+
+        if ($driver === 'pgsql') {
+            // In PostgreSQL, the 'data' column is often 'text', so we need to cast it
+            \Illuminate\Support\Facades\DB::table('notifications')
+                ->whereRaw('data::jsonb->>\'subject_id\' = ?', [(string) $this->id])
+                ->whereRaw('data::jsonb->>\'subject_type\' = ?', [get_class($this)])
+                ->delete();
+        } else {
+            // Default for MySQL/SQLite
+            \Illuminate\Support\Facades\DB::table('notifications')
+                ->where('data->subject_id', $this->id)
+                ->where('data->subject_type', get_class($this))
+                ->delete();
+        }
     }
 
     protected function recordActivity(string $event)

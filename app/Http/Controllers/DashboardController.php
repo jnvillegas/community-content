@@ -19,8 +19,9 @@ class DashboardController extends Controller
     /**
      * Display the dashboard.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $openStoryId = $request->query('story');
         $upcomingEvents = Event::with(['likes', 'comments.user', 'createdBy'])
             ->where('start_date', '>', now())
             ->where('status', Event::STATUS_PUBLISHED)
@@ -60,7 +61,7 @@ class DashboardController extends Controller
             });
 
         $activities = Activity::with(['subject', 'user'])
-            ->whereIn('type', ['created_event', 'created_story', 'created_article', 'created_video', 'created_wallpaper'])
+            ->whereIn('type', ['created_event', 'created_article', 'created_video', 'created_wallpaper'])
             ->latest()
             ->paginate(10);
 
@@ -73,6 +74,11 @@ class DashboardController extends Controller
         ]);
 
         // Map activities to include likes data and relations for subjects
+        // First, remove activities whose subject was deleted (soft-deleted)
+        $activities->setCollection(
+            $activities->getCollection()->filter(fn($activity) => $activity->subject !== null)
+        );
+
         $activities->getCollection()->transform(function ($activity) {
             $subject = $activity->subject;
             if ($subject) {
@@ -216,6 +222,7 @@ class DashboardController extends Controller
             'activities' => $activities,
             'stories' => $stories,
             'courses' => $courses,
+            'openStoryId' => $openStoryId ? (int) $openStoryId : null,
         ]);
     }
 

@@ -10,9 +10,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+use App\Traits\RecordsActivity;
+
 class Story extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, RecordsActivity;
+
+    public function shouldRecordActivity(string $eventName): bool
+    {
+        return $eventName === 'created';
+    }
 
     protected $fillable = [
         'title',

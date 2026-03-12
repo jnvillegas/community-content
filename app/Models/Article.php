@@ -45,7 +45,7 @@ class Article extends Model
                 $originalSlug = $slug;
                 $count = 1;
 
-                while (static::where('slug', $slug)->exists()) {
+                while (static::withTrashed()->where('slug', $slug)->exists()) {
                     $slug = "{$originalSlug}-{$count}";
                     $count++;
                 }

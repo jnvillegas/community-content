@@ -13,6 +13,7 @@ use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class ArticleController extends Controller implements HasMiddleware
 {
@@ -121,8 +122,12 @@ class ArticleController extends Controller implements HasMiddleware
      */
     public function edit(Article $article): Response
     {
+        $article->load(['categories', 'tags', 'author']);
+        Log::debug('Edit article content length: ' . strlen($article->content ?? ''));
+        Log::debug('Edit article content has base64: ' . (str_contains($article->content ?? '', 'base64') ? 'YES' : 'NO'));
+        Log::debug('Edit article content has img: ' . (str_contains($article->content ?? '', '<img') ? 'YES' : 'NO'));
         return Inertia::render('articles/Edit', [
-            'article' => $article->load(['categories', 'tags', 'author']),
+            'article' => $article,
             'categories' => ArticleCategory::all(),
             'tags' => ArticleTag::all()
         ]);
@@ -133,6 +138,9 @@ class ArticleController extends Controller implements HasMiddleware
      */
     public function update(Request $request, Article $article): RedirectResponse
     {
+        Log::debug('Article update request:', $request->except('featured_image'));
+        Log::debug('Request files:', array_keys($request->allFiles()));
+        Log::debug('Has featured_image file:', ['has' => $request->hasFile('featured_image')]);
         // Note: 'featured_image' can be nullable string (existing URL) or file (new upload)
         // Inertia might send 'null' string if cleared, or the file object.
         // If it's a file, we validate it as image. If it's a string, we assume it's keeping the old one (or updating text url, but we prioritize file).

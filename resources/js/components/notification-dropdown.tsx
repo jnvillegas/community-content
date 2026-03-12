@@ -93,9 +93,6 @@ export function NotificationDropdown({ variant = 'header' }: NotificationDropdow
     useEffect(() => {
         if (isOpen) {
             fetchNotifications();
-            if (auth.unread_notifications_count > 0) {
-                markAllAsRead();
-            }
         }
     }, [isOpen]);
 
@@ -187,8 +184,8 @@ export function NotificationDropdown({ variant = 'header' }: NotificationDropdow
                                 <div
                                     key={notification.id}
                                     className={cn(
-                                        "p-4 border-b border-gray-50 dark:border-gray-800 last:border-0 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors relative group",
-                                        !notification.read_at && "bg-blue-50/30 dark:bg-blue-900/10"
+                                        "p-4 border-b border-gray-50 dark:border-gray-800 last:border-0 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative group",
+                                        !notification.read_at ? "bg-blue-50/50 dark:bg-blue-900/20" : "bg-white dark:bg-zinc-950"
                                     )}
                                     onClick={() => markAsRead(notification.id, notification.data.action_url)}
                                 >
@@ -224,7 +221,7 @@ export function NotificationDropdown({ variant = 'header' }: NotificationDropdow
                                         </div>
                                     </div>
                                     {!notification.read_at && (
-                                        <div className="absolute left-1 top-1/2 -translate-y-1/2 w-1 h-8 bg-blue-600 rounded-full" />
+                                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
                                     )}
                                 </div>
                             ))}

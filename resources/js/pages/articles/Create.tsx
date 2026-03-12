@@ -81,7 +81,9 @@ export default function Create({ categories, tags }: Props) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post('/articles');
+        post('/articles', {
+            forceFormData: true,
+        });
     };
 
     return (
@@ -224,7 +226,7 @@ export default function Create({ categories, tags }: Props) {
                                     <div className="grid grid-cols-1 gap-3">
                                         {localCategories.map(cat => (
                                             <div key={cat.id} className="flex items-center space-x-2">
-                                                <Checkbox 
+                                                <Checkbox
                                                     id={`cat-${cat.id}`}
                                                     checked={data.categories.includes(cat.id)}
                                                     onCheckedChange={(checked) => {
@@ -239,7 +241,7 @@ export default function Create({ categories, tags }: Props) {
                                         ))}
                                     </div>
                                 </ScrollArea>
-                                
+
                                 <div className="mt-4 pt-4 border-t">
                                     {isCreatingCategory ? (
                                         <div className="flex items-center gap-2">
@@ -258,9 +260,9 @@ export default function Create({ categories, tags }: Props) {
                                             </Button>
                                         </div>
                                     ) : (
-                                        <Button 
-                                            variant="outline" 
-                                            size="sm" 
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
                                             className="w-full border-dashed"
                                             onClick={() => setIsCreatingCategory(true)}
                                         >

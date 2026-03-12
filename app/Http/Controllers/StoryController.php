@@ -20,6 +20,10 @@ class StoryController extends Controller
             ->latest()
             ->get();
 
+        if (request()->header('X-Inertia')) {
+            return redirect()->route('dashboard');
+        }
+
         // Increment views for the stories being served
         Story::whereIn('id', $stories->pluck('id'))->increment('views_count');
 

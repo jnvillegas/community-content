@@ -18,19 +18,30 @@ import {
     Home,
     User as UserIcon,
     Sparkles,
+    MoreHorizontal,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/nav-main';
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarGroupLabel,
     SidebarTrigger,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuItem,
+    SidebarMenuButton,
+    useSidebar,
 } from '@/components/ui/sidebar';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { UserMenuContent } from '@/components/user-menu-content';
 import AppLogo from '@/components/app-logo';
 import { dashboard } from '@/routes';
 import { edit as profileEdit } from '@/routes/profile';
@@ -40,6 +51,7 @@ import { type SharedData } from '@/types';
 import CreateStoryModal from './feed/CreateStoryModal';
 import { useState } from 'react';
 import { NotificationDropdown } from './notification-dropdown';
+import { useInitials } from '@/hooks/use-initials';
 
 // Platform Section
 const platformItems: NavItem[] = [
@@ -50,13 +62,8 @@ const platformItems: NavItem[] = [
     }
 ];
 
-const userItems: NavItem[] = [
-    {
-        title: 'Profile',
-        href: profileEdit(),
-        icon: UserIcon,
-    }
-];
+
+
 
 
 
@@ -219,6 +226,8 @@ export function AppSidebar() {
     const isAdmin = userRoles.includes('admin');
     const [isCreateStoryOpen, setIsCreateStoryOpen] = useState(false);
     const [openItem, setOpenItem] = useState<string | null>(null);
+    const { state } = useSidebar();
+    const getInitials = useInitials();
 
     // Stories Section
     const storiesItems: NavItem[] = [
@@ -305,11 +314,6 @@ export function AppSidebar() {
                     <NavMain items={filterItems(platformItems)} openItem={openItem} setOpenItem={setOpenItem} />
                 </SidebarGroup>
 
-                {filterItems(userItems).length > 0 && (
-                    <SidebarGroup>
-                        <NavMain items={filterItems(userItems)} openItem={openItem} setOpenItem={setOpenItem} />
-                    </SidebarGroup>
-                )}
 
                 <SidebarGroup>
                     <SidebarMenu>
@@ -372,6 +376,63 @@ export function AppSidebar() {
                     </SidebarGroup>
                 )} */}
             </SidebarContent>
+
+            {/* User Profile Footer */}
+            <SidebarFooter className="border-t border-gray-200 dark:border-gray-800 p-3 mt-auto">
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <SidebarMenuButton
+                                    size="lg"
+                                    className="w-full hover:bg-gray-100 dark:hover:bg-gray-800/50 rounded-lg transition-colors"
+                                    tooltip={auth.user.name}
+                                >
+                                    {/* Avatar with PRO border + online dot */}
+                                    <div className="relative shrink-0">
+                                        <div className="rounded-full p-[2px] bg-gradient-to-br from-purple-500 to-violet-600">
+                                            <Avatar className="h-8 w-8 border-2 border-white dark:border-gray-900">
+                                                <AvatarImage src={auth.user.avatar} alt={auth.user.name} />
+                                                <AvatarFallback className="bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200 text-xs font-bold">
+                                                    {getInitials(auth.user.name)}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                        </div>
+                                        {/* Green online dot */}
+                                        <span className="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-gray-900" />
+                                    </div>
+
+                                    {/* Name + PRO badge + Email */}
+                                    <div className="flex flex-col flex-1 text-left text-sm leading-tight min-w-0">
+                                        <div className="flex items-center gap-2">
+                                            <span className="truncate font-semibold text-gray-900 dark:text-gray-100 min-w-0">
+                                                {auth.user.name}
+                                            </span>
+                                            <span className="shrink-0 inline-flex items-center rounded-full bg-purple-100 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-purple-700 dark:bg-purple-900/40 dark:text-purple-300">
+                                                PRO
+                                            </span>
+                                        </div>
+                                        <span className="truncate text-xs text-gray-500 dark:text-gray-400">
+                                            {auth.user.email}
+                                        </span>
+                                    </div>
+
+                                    {/* Three dots */}
+                                    <MoreHorizontal className="ml-auto h-4 w-4 shrink-0 text-gray-400" />
+                                </SidebarMenuButton>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                                className="w-48 rounded-lg"
+                                align="end"
+                                side="right"
+                                sideOffset={8}
+                            >
+                                <UserMenuContent user={auth.user} />
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+            </SidebarFooter>
 
             <CreateStoryModal
                 isOpen={isCreateStoryOpen}
