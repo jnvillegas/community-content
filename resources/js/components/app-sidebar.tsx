@@ -237,14 +237,8 @@ export function AppSidebar() {
             icon: Sparkles,
             items: [
                 {
-                    title: 'Dashboard',
+                    title: 'List',
                     href: '/admin/stories',
-                    permission: 'manage stories',
-                },
-                {
-                    title: 'Create Story',
-                    href: '#',
-                    onClick: () => setIsCreateStoryOpen(true),
                     permission: 'manage stories',
                 },
             ],
@@ -278,8 +272,8 @@ export function AppSidebar() {
                         return rest;
                     }
 
-                    // For admins, only show dropdown if there are 2+ items
-                    if (filteredSubItems.length > 1) {
+                    // For admins, allow dropdown if there are 1+ items
+                    if (filteredSubItems.length >= 1) {
                         return { ...item, items: filteredSubItems };
                     }
 

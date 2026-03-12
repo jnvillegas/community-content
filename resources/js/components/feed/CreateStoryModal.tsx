@@ -3,24 +3,49 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useForm } from "@inertiajs/react";
 import { ImagePlus, X, Loader2 } from "lucide-react";
 
 interface CreateStoryModalProps {
     isOpen: boolean;
     onClose: () => void;
+    story?: {
+        id: number;
+        title: string;
+        description: string;
+        images: { id: number; url: string }[];
+    } | null;
 }
 
-export default function CreateStoryModal({ isOpen, onClose }: CreateStoryModalProps) {
-    const [previews, setPreviews] = useState<string[]>([]);
+export default function CreateStoryModal({ isOpen, onClose, story }: CreateStoryModalProps) {
+    const [previews, setPreviews] = useState<{ id?: number; url: string }[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const { data, setData, post, processing, errors, reset, clearErrors } = useForm({
+    const { data, setData, post, patch, processing, errors, reset, clearErrors } = useForm({
         title: '',
         description: '',
         images: [] as File[],
+        deleted_image_ids: [] as number[],
+        _method: 'PATCH', // Helper for multipart PATCH if needed, but and patch helper handles it
     });
+
+    // Update form and previews when story prop changes
+    useEffect(() => {
+        if (story) {
+            setData({
+                title: story.title,
+                description: story.description || '',
+                images: [],
+                deleted_image_ids: [],
+                _method: 'PATCH',
+            });
+            setPreviews(story.images || []);
+        } else {
+            reset();
+            setPreviews([]);
+        }
+    }, [story, isOpen]);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
@@ -30,7 +55,7 @@ export default function CreateStoryModal({ isOpen, onClose }: CreateStoryModalPr
             files.forEach(file => {
                 const reader = new FileReader();
                 reader.onloadend = () => {
-                    setPreviews(prev => [...prev, reader.result as string]);
+                    setPreviews(prev => [...prev, { url: reader.result as string }]);
                 };
                 reader.readAsDataURL(file);
             });
@@ -38,9 +63,21 @@ export default function CreateStoryModal({ isOpen, onClose }: CreateStoryModalPr
     };
 
     const removeImage = (index: number) => {
-        const newImages = [...data.images];
-        newImages.splice(index, 1);
-        setData('images', newImages);
+        const item = previews[index];
+
+        if (item.id) {
+            // Existing image from story
+            setData('deleted_image_ids', [...data.deleted_image_ids, item.id]);
+        } else {
+            // Newly added file
+            // We need to find the correct index in context of data.images
+            // newly added items follow existing ones in previews
+            const existingCount = story?.images.filter(img => !data.deleted_image_ids.includes(img.id)).length || 0;
+            const newImageIndex = previews.filter((p, i) => i < index && !p.id).length;
+            const newImages = [...data.images];
+            newImages.splice(newImageIndex, 1);
+            setData('images', newImages);
+        }
 
         const newPreviews = [...previews];
         newPreviews.splice(index, 1);
@@ -56,18 +93,29 @@ export default function CreateStoryModal({ isOpen, onClose }: CreateStoryModalPr
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post('/stories', {
-            onSuccess: () => handleClose(),
-        });
+        if (story) {
+            // Inertia patch helper doesn't support files well in some Laravel versions 
+            // but we use post with _method: PATCH for multipart
+            post(`/stories/${story.id}`, {
+                onSuccess: () => handleClose(),
+                forceFormData: true,
+            });
+        } else {
+            post('/stories', {
+                onSuccess: () => handleClose(),
+            });
+        }
     };
 
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
             <DialogContent className="sm:max-w-[425px] bg-white dark:bg-sidebar p-0 overflow-hidden">
                 <DialogHeader className="p-6 pb-0">
-                    <DialogTitle className="text-xl font-bold">Crea una nueva historia</DialogTitle>
+                    <DialogTitle className="text-xl font-bold">
+                        {story ? 'Editar historia' : 'Crea una nueva historia'}
+                    </DialogTitle>
                     <DialogDescription>
-                        Comparte momentos exclusivos con tu comunidad.
+                        {story ? 'Modifica los detalles e imágenes de tu historia.' : 'Comparte momentos exclusivos con tu comunidad.'}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -97,7 +145,7 @@ export default function CreateStoryModal({ isOpen, onClose }: CreateStoryModalPr
                     </div>
 
                     <div className="space-y-4 flex flex-col flex-wrap gap-4">
-                        <Label>Imágenes de la historia</Label>
+                        <Label>{story ? 'Gestionar imágenes' : 'Imágenes de la historia'}</Label>
 
                         {previews.length === 0 && (
                             <div
@@ -114,18 +162,18 @@ export default function CreateStoryModal({ isOpen, onClose }: CreateStoryModalPr
                                 <button
                                     type="button"
                                     onClick={() => fileInputRef.current?.click()}
-                                    className="aspect-[9/16] rounded-lg border-2 border-dashed border-gray-200 flex flex-col items-center justify-center transition-all"
+                                    className="aspect-[9/16] rounded-lg border-2 border-dashed border-gray-200 flex flex-col items-center justify-center transition-all hover:bg-gray-50 dark:hover:bg-white/5"
                                 >
                                     <ImagePlus className="w-6 h-6 text-gray-400" />
                                 </button>
 
                                 {previews.map((preview, index) => (
-                                    <div key={index} className="relative aspect-[9/16] rounded-lg border overflow-hidden bg-gray-100">
-                                        <img src={preview} className="w-full h-full object-cover" alt={`Preview ${index}`} />
+                                    <div key={index} className="relative aspect-[9/16] rounded-lg border overflow-hidden bg-gray-100 group">
+                                        <img src={preview.url} className="w-full h-full object-cover" alt={`Preview ${index}`} />
                                         <button
                                             type="button"
                                             onClick={() => removeImage(index)}
-                                            className="absolute top-1 right-1 bg-red-500 text-white p-0.5 rounded-full shadow-md hover:bg-red-600 transition-colors"
+                                            className="absolute top-1 right-1 bg-red-500 text-white p-0.5 rounded-full shadow-md hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100"
                                         >
                                             <X className="w-3 h-3" />
                                         </button>
@@ -153,9 +201,9 @@ export default function CreateStoryModal({ isOpen, onClose }: CreateStoryModalPr
                         <Button type="button" variant="outline" className="flex-1" onClick={handleClose}>
                             Cancelar
                         </Button>
-                        <Button type="submit" className="flex-1 bg-[#1a87cb] hover:bg-[#1a87cb]/90 font-bold" disabled={processing || data.images.length === 0}>
+                        <Button type="submit" className="flex-1 bg-[#1a87cb] hover:bg-[#1a87cb]/90 font-bold" disabled={processing || (previews.length === 0)}>
                             {processing ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                            Publicar ({data.images.length})
+                            {story ? 'Guardar cambios' : `Publicar (${data.images.length})`}
                         </Button>
                     </div>
                 </form>

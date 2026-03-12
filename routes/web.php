@@ -84,6 +84,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/stories/{story}/like', [\App\Http\Controllers\StoryController::class, 'like'])->name('stories.like');
     Route::post('/stories/{story}/comments', [\App\Http\Controllers\StoryController::class, 'comment'])->name('stories.comment');
     Route::post('/stories/{story}/view', [\App\Http\Controllers\StoryController::class, 'markAsViewed'])->name('stories.view');
+    Route::patch('/stories/{story}', [\App\Http\Controllers\StoryController::class, 'update'])->name('stories.update');
     Route::delete('/stories/{story}', [\App\Http\Controllers\StoryController::class, 'destroy'])->name('stories.destroy');
 
     // Academy (Courses)

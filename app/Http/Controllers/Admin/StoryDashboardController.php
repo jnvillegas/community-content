@@ -15,17 +15,13 @@ class StoryDashboardController extends Controller
     {
         $stats = [
             'total_stories' => Story::count(),
-            'total_likes' => StoryLike::count(),
-            'total_comments' => StoryComment::count(),
+            'total_likes' => StoryLike::whereHas('story')->count(),
+            'total_comments' => StoryComment::whereHas('story')->count(),
             'total_views' => Story::sum('views_count'),
         ];
 
-        $recentComments = StoryComment::with([
-            'user',
-            'story' => function ($query) {
-                $query->withTrashed();
-            }
-        ])
+        $recentComments = StoryComment::whereHas('story')
+            ->with(['user', 'story'])
             ->latest()
             ->take(10)
             ->get()
@@ -42,7 +38,8 @@ class StoryDashboardController extends Controller
                 ];
             });
 
-        $storiesPerformance = Story::withCount(['likes', 'comments'])
+        $storiesPerformance = Story::with(['images'])
+            ->withCount(['likes', 'comments'])
             ->orderBy('views_count', 'desc')
             ->take(10)
             ->get()
@@ -50,6 +47,8 @@ class StoryDashboardController extends Controller
                 return [
                     'id' => $story->id,
                     'title' => $story->title,
+                    'description' => $story->description,
+                    'images' => $story->images->map(fn($img) => ['id' => $img->id, 'url' => $img->image_url]),
                     'views' => $story->views_count,
                     'likes' => $story->likes_count,
                     'comments' => $story->comments_count,

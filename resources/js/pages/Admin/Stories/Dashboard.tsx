@@ -1,7 +1,9 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { Eye, Heart, MessageCircle, MoreHorizontal, Trash2, TrendingUp, Users } from 'lucide-react';
+import { useState } from 'react';
+import { Eye, Heart, MessageCircle, MoreHorizontal, Trash2, TrendingUp, Users, Plus, Pencil } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
+import CreateStoryModal from '@/components/feed/CreateStoryModal';
 import {
     Card,
     CardContent,
@@ -46,6 +48,8 @@ interface Comment {
 interface StoryPerformance {
     id: number;
     title: string;
+    description: string;
+    images: { id: number; url: string }[];
     views: number;
     likes: number;
     comments: number;
@@ -70,6 +74,19 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function StoriesDashboard({ stats, recentComments, storiesPerformance }: Props) {
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [selectedStory, setSelectedStory] = useState<any>(null);
+
+    const handleEditClick = (story: any) => {
+        setSelectedStory(story);
+        setIsCreateModalOpen(true);
+    };
+
+    const handleCreateClick = () => {
+        setSelectedStory(null);
+        setIsCreateModalOpen(true);
+    };
+
     const handleDeleteComment = (id: number) => {
         if (confirm('Are you sure you want to delete this comment?')) {
             router.delete(`/admin/stories/comments/${id}`);
@@ -86,8 +103,25 @@ export default function StoriesDashboard({ stats, recentComments, storiesPerform
                         <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">Stories Dashboard</h1>
                         <p className="text-gray-500 dark:text-gray-400 mt-1">Overview of your community stories and engagement metrics.</p>
                     </div>
+                    <Button
+                        onClick={handleCreateClick}
+                        className="bg-[#1a87cb] hover:bg-[#1a87cb]/90 font-bold"
+                    >
+                        <Plus className="mr-2 h-4 w-4" />
+                        Create Story
+                    </Button>
                 </div>
+
+                <CreateStoryModal
+                    isOpen={isCreateModalOpen}
+                    onClose={() => {
+                        setIsCreateModalOpen(false);
+                        setSelectedStory(null);
+                    }}
+                    story={selectedStory}
+                />
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                    {/* ... stats ... */}
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium">Total Stories</CardTitle>
@@ -159,24 +193,34 @@ export default function StoriesDashboard({ stats, recentComments, storiesPerform
                                                 {story.engagement_rate}%
                                             </TableCell>
                                             <TableCell className="text-right">
-                                                <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                                                    onClick={() => {
-                                                        if (confirm('¿Estás seguro de que deseas eliminar esta historia?')) {
-                                                            router.delete(`/stories/${story.id}`);
-                                                        }
-                                                    }}
-                                                >
-                                                    <Trash2 className="h-4 w-4" />
-                                                </Button>
+                                                <div className="flex justify-end gap-2">
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                                                        onClick={() => handleEditClick(story)}
+                                                    >
+                                                        <Pencil className="h-4 w-4" />
+                                                    </Button>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                        onClick={() => {
+                                                            if (confirm('¿Estás seguro de que deseas eliminar esta historia?')) {
+                                                                router.delete(`/stories/${story.id}`);
+                                                            }
+                                                        }}
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </Button>
+                                                </div>
                                             </TableCell>
                                         </TableRow>
                                     ))}
                                     {storiesPerformance.length === 0 && (
                                         <TableRow>
-                                            <TableCell colSpan={4} className="h-24 text-center">
+                                            <TableCell colSpan={5} className="h-24 text-center">
                                                 No data available.
                                             </TableCell>
                                         </TableRow>

@@ -59,6 +59,61 @@ class StoryController extends Controller
         return response()->json($stories);
     }
 
+    public function update(Request $request, Story $story)
+    {
+        if ($story->user_id !== auth()->id() && !auth()->user()->hasRole('admin')) {
+            abort(403);
+        }
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'deleted_image_ids' => 'nullable|array',
+            'deleted_image_ids.*' => 'integer',
+            'images' => 'nullable|array',
+            'images.*' => 'image|max:5120',
+        ]);
+
+        $story->update([
+            'title' => $request->title,
+            'description' => $request->description,
+        ]);
+
+        // Process deletions
+        if ($request->has('deleted_image_ids')) {
+            foreach ($request->deleted_image_ids as $id) {
+                $image = StoryImage::where('story_id', $story->id)->find($id);
+                if ($image) {
+                    // Use getRawOriginal to get the path without the accessor's URL prefix
+                    $path = $image->getRawOriginal('image_url');
+                    Storage::disk('public')->delete($path);
+                    $image->delete();
+                }
+            }
+        }
+
+        // Process new uploads
+        if ($request->hasFile('images')) {
+            $lastOrder = $story->images()->max('order') ?? -1;
+            foreach ($request->file('images') as $index => $image) {
+                $path = $image->store('stories', 'public');
+                StoryImage::create([
+                    'story_id' => $story->id,
+                    'image_url' => $path,
+                    'order' => $lastOrder + $index + 1,
+                ]);
+            }
+        }
+
+        // Update content_url if it was pointing to a deleted image or needs refresh
+        $firstImage = $story->fresh()->images()->orderBy('order')->first();
+        if ($firstImage) {
+            $story->update(['content_url' => $firstImage->getRawOriginal('image_url')]);
+        }
+
+        return back()->with('success', 'Story updated successfully!');
+    }
+
     public function store(Request $request)
     {
         $request->validate([
