@@ -24,9 +24,10 @@ interface Story {
 
 interface StoriesBarProps {
     stories: Story[];
+    openStoryId?: number | null;
 }
 
-export default function StoriesBar({ stories }: StoriesBarProps) {
+export default function StoriesBar({ stories, openStoryId }: StoriesBarProps) {
     const { auth } = usePage<any>().props;
     const canManageStories =
         auth.permissions?.includes('manage stories') ||
@@ -41,6 +42,12 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
     const [scrollLeft, setScrollLeft] = useState(0);
     const [draggedDistance, setDraggedDistance] = useState(0);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+    useEffect(() => {
+        if (openStoryId) {
+            setSelectedStoryId(Number(openStoryId));
+        }
+    }, [openStoryId]);
 
     useEffect(() => {
         // Update local stories when prop changes
@@ -350,11 +357,11 @@ export default function StoriesBar({ stories }: StoriesBarProps) {
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover/story:opacity-100 transition-opacity duration-300" />
                             </div>
 
-                            {!story.is_viewed && (story.likes_count > 0 || (story.comments && story.comments.length > 0)) && (
+                            {!story.is_viewed && (
                                 <div className="absolute -top-1 -right-1 z-20 animate-in fade-in zoom-in duration-300">
                                     <div className="flex items-center justify-center w-5 h-5 bg-red-500 backdrop-blur-sm rounded-full">
                                         <span className="text-[10px] font-bold text-white leading-none">
-                                            {(story.likes_count || 0) + (story.comments?.length || 0)}
+                                            {((story.likes_count || 0) + (story.comments?.length || 0)) || ''}
                                         </span>
                                     </div>
                                 </div>

@@ -19,8 +19,9 @@ class DashboardController extends Controller
     /**
      * Display the dashboard.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $openStoryId = $request->query('story');
         $upcomingEvents = Event::with(['likes', 'comments.user', 'createdBy'])
             ->where('start_date', '>', now())
             ->where('status', Event::STATUS_PUBLISHED)
@@ -221,6 +222,7 @@ class DashboardController extends Controller
             'activities' => $activities,
             'stories' => $stories,
             'courses' => $courses,
+            'openStoryId' => $openStoryId ? (int) $openStoryId : null,
         ]);
     }
 

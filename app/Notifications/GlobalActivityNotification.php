@@ -63,9 +63,9 @@ class GlobalActivityNotification extends Notification
             'Wallpaper' => route('wallpaper'),
             'Event' => route('events.show', $subject->slug),
             'Course' => route('academy.show', $subject->slug),
-            'Story' => route('stories.index'),
+            'Story' => route('dashboard', ['story' => $subject->id]),
             'EventLike', 'EventComment' => route('events.show', $subject->event->slug),
-            'StoryLike', 'StoryComment' => route('stories.index'),
+            'StoryLike', 'StoryComment' => route('dashboard', ['story' => $subject->story->id]),
             default => '#',
         };
 
