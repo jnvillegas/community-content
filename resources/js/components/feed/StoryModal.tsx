@@ -66,7 +66,7 @@ export default function StoryModal({ story, isOpen, onClose, onStoryEnd, onStory
         setCurrentImageIndex(0);
 
         if (isOpen && localStory?.id) {
-            router.post(`/stories/${localStory.id}/view`, {}, {
+            router.post(route('stories.view', localStory.id), {}, {
                 preserveScroll: true,
                 preserveState: true,
                 only: ['stories'], // Refresh only stories data
@@ -161,7 +161,7 @@ export default function StoryModal({ story, isOpen, onClose, onStoryEnd, onStory
     if (!localStory) return null;
 
     const toggleLike = () => {
-        router.post(`/stories/${localStory.id}/like`, {}, {
+        router.post(route('stories.like', localStory.id), {}, {
             preserveScroll: true,
             preserveState: true,
         });
@@ -172,7 +172,7 @@ export default function StoryModal({ story, isOpen, onClose, onStoryEnd, onStory
         if (!comment.trim()) return;
 
         setIsSubmitting(true);
-        router.post(`/stories/${localStory.id}/comments`, {
+        router.post(route('stories.comment', localStory.id), {
             content: comment
         }, {
             preserveScroll: true,

@@ -96,12 +96,12 @@ export default function CreateStoryModal({ isOpen, onClose, story }: CreateStory
         if (story) {
             // Inertia patch helper doesn't support files well in some Laravel versions 
             // but we use post with _method: PATCH for multipart
-            post(`/stories/${story.id}`, {
+            post(route('stories.update', story.id), {
                 onSuccess: () => handleClose(),
                 forceFormData: true,
             });
         } else {
-            post('/stories', {
+            post(route('stories.store'), {
                 onSuccess: () => handleClose(),
             });
         }
