@@ -11,6 +11,16 @@ use App\Http\Controllers\EventRegistrationController;
 use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Web\EventsController;
 
+Route::get('/reset-my-password', function () {
+    $u = \App\Models\User::where('email', 'jnvillegas86@gmail.com')->first();
+    if ($u) {
+        $u->password = \Illuminate\Support\Facades\Hash::make('Admin123456!');
+        $u->save();
+        return "Contraseña actualizada exitosamente a: Admin123456!";
+    }
+    return "Usuario no encontrado";
+});
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/about', function () {
