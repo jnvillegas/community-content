@@ -56,8 +56,12 @@ class EventService
 
             // 3. Generate Slug
             $slug = Str::slug($data['title']);
-            if (Event::where('slug', $slug)->exists()) {
-                $slug = $slug . '-' . uniqid();
+            $originalSlug = $slug;
+            $count = 1;
+
+            while (Event::withTrashed()->where('slug', $slug)->exists()) {
+                $slug = $originalSlug . '-' . $count;
+                $count++;
             }
             $data['slug'] = $slug;
 

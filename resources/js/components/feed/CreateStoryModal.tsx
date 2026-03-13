@@ -22,12 +22,21 @@ export default function CreateStoryModal({ isOpen, onClose, story }: CreateStory
     const [previews, setPreviews] = useState<{ id?: number; url: string }[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const { data, setData, post, patch, processing, errors, reset, clearErrors } = useForm({
+    const { data, setData, post, patch, processing, errors, reset, clearErrors, transform } = useForm({
         title: '',
         description: '',
         images: [] as File[],
         deleted_image_ids: [] as number[],
-        _method: 'PATCH', // Helper for multipart PATCH if needed, but and patch helper handles it
+        _method: '', // Helper for multipart PATCH
+    });
+
+    // Inertia transform to remove _method if it's empty (for POST requests)
+    transform((data) => {
+        if (!data._method) {
+            const { _method, ...rest } = data;
+            return rest;
+        }
+        return data;
     });
 
     // Update form and previews when story prop changes
@@ -42,7 +51,14 @@ export default function CreateStoryModal({ isOpen, onClose, story }: CreateStory
             });
             setPreviews(story.images || []);
         } else {
-            reset();
+            setData({
+                title: '',
+                description: '',
+                images: [],
+                deleted_image_ids: [],
+                _method: '',
+            });
+            clearErrors();
             setPreviews([]);
         }
     }, [story, isOpen]);
