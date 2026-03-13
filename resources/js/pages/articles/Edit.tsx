@@ -160,7 +160,7 @@ export default function Edit({ article, categories, tags }: Props) {
                                     placeholder="Add a title..."
                                     className="text-xl font-bold"
                                     value={data.title}
-                                    onChange={e => setData('title', e.target.value)}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData('title', e.target.value)}
                                 />
                                 {errors.title && <p className="text-sm text-red-500">{errors.title}</p>}
                             </div>

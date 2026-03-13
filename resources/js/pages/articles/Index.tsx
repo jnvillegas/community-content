@@ -65,9 +65,9 @@ export default function Index({ articles }: Props) {
         }
     };
 
-    const handleDelete = (id: number) => {
+    const handleDelete = (slug: string) => {
         if (confirm('¿Estás seguro de que deseas eliminar este artículo?')) {
-            router.delete(`/articles/${id}`);
+            router.delete(`/articles/${slug}`);
         }
     };
 
@@ -174,13 +174,13 @@ export default function Index({ articles }: Props) {
                                                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                                         <DropdownMenuSeparator />
                                                         <DropdownMenuItem asChild>
-                                                            <Link href={`/articles/${article.id}/edit`} className="flex items-center">
+                                                            <Link href={`/articles/${article.slug}/edit`} className="flex items-center">
                                                                 <Edit className="mr-2 h-3.5 w-3.5" />
                                                                 Edit Article
                                                             </Link>
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem asChild>
-                                                            <Link href={`/articles/${article.id}`} className="flex items-center">
+                                                            <Link href={`/articles/${article.slug}`} className="flex items-center">
                                                                 <Eye className="mr-2 h-3.5 w-3.5" />
                                                                 View Page
                                                             </Link>
@@ -188,7 +188,7 @@ export default function Index({ articles }: Props) {
                                                         <DropdownMenuSeparator />
                                                         <DropdownMenuItem
                                                             className="text-red-600 focus:text-red-600 flex items-center cursor-pointer"
-                                                            onClick={() => handleDelete(article.id)}
+                                                            onClick={() => handleDelete(article.slug)}
                                                         >
                                                             <Trash2 className="mr-2 h-3.5 w-3.5" />
                                                             Delete
