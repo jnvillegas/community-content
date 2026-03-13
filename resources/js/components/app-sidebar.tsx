@@ -254,35 +254,37 @@ export function AppSidebar() {
 
     const filterItems = (items: NavItem[]): NavItem[] => {
         return items
-            .filter((item) => {
-                // If not admin, only show specific core sections
-                if (!isAdmin) {
-                    const allowedTitles = ['Home', 'Profile', 'Events', 'Academy'];
-                    if (!allowedTitles.includes(item.title)) return false;
+            .reduce((acc: NavItem[], item) => {
+                // If the item itself has a specific permission requirement and the user doesn't meet it, skip it.
+                if (item.permission && !hasPermission(item)) {
+                    return acc;
                 }
-                return hasPermission(item);
-            })
-            .map((item) => {
+
                 if (item.items) {
+                    // Filter sub-items based on permissions
                     const filteredSubItems = item.items.filter(hasPermission);
 
-                    // For common users, never show dropdowns
-                    if (!isAdmin) {
+                    // If it has sub-items but none are permitted, don't show the parent menu.
+                    if (filteredSubItems.length === 0) {
+                        return acc;
+                    }
+
+                    // For admins (or roles that should see dropdowns), keep the structure.
+                    if (isAdmin && filteredSubItems.length >= 1) {
+                        acc.push({ ...item, items: filteredSubItems });
+                    } else {
+                        // For common users, flatten the menu to avoid dropdowns and use the first permitted sub-item's URL.
                         const { items: _, ...rest } = item;
-                        return rest;
+                        rest.href = filteredSubItems[0].href;
+                        acc.push(rest);
                     }
-
-                    // For admins, allow dropdown if there are 1+ items
-                    if (filteredSubItems.length >= 1) {
-                        return { ...item, items: filteredSubItems };
-                    }
-
-                    // Otherwise flatten (0 or 1 item)
-                    const { items: _, ...rest } = item;
-                    return rest;
+                } else {
+                    // If no sub-items and passed permission check, include it.
+                    acc.push(item);
                 }
-                return item;
-            });
+
+                return acc;
+            }, []);
     };
 
     return (

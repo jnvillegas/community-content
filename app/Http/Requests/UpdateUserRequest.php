@@ -30,7 +30,7 @@ class UpdateUserRequest extends FormRequest
                 'lowercase',
                 'email',
                 'max:255',
-                Rule::unique('users')->ignore($this->user->id),
+                Rule::unique('users')->ignore($this->route('user')->id),
             ],
             'password' => ['nullable', 'string', 'min:8', 'regex:/[A-Z]/', 'regex:/[0-9]/'],
             'role' => ['required', 'string', 'exists:roles,name'],

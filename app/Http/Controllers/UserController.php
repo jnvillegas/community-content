@@ -83,6 +83,10 @@ class UserController extends Controller implements HasMiddleware
 
         $user->syncRoles([$request->role]);
 
+        if (auth()->id() === $user->id && !$user->can('view users')) {
+            return redirect()->route('dashboard')->with('success', 'Tu rol ha sido actualizado. Ya no tienes acceso a la gestión de usuarios.');
+        }
+
         return redirect()->back()->with('success', 'User updated successfully.');
     }
 
