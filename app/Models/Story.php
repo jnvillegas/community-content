@@ -80,6 +80,19 @@ class Story extends Model
         return $view->updated_at >= $this->updated_at;
     }
 
+    public function getNewInteractionsCountFor(User $user): int
+    {
+        $view = $this->views()->where('user_id', $user->id)->first();
+        if (!$view) {
+            return $this->likes()->count() + $this->comments()->count();
+        }
+
+        $newLikes = $this->likes()->where('created_at', '>', $view->updated_at)->count();
+        $newComments = $this->comments()->where('created_at', '>', $view->updated_at)->count();
+
+        return $newLikes + $newComments;
+    }
+
     /**
      * Get the story's content URL.
      *

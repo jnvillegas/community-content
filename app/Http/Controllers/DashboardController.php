@@ -178,6 +178,7 @@ class DashboardController extends Controller
                     'likes_count' => $story->likes->count(),
                     'is_liked' => auth()->check() ? $story->isLikedBy(auth()->user()) : false,
                     'is_viewed' => auth()->check() ? $story->isViewedBy(auth()->user()) : false,
+                    'new_interactions_count' => auth()->check() ? $story->getNewInteractionsCountFor(auth()->user()) : 0,
                     'comments' => $story->comments->map(function ($comment) {
                         return [
                             'id' => $comment->id,

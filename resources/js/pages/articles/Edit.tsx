@@ -104,7 +104,7 @@ export default function Edit({ article, categories, tags }: Props) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(`/articles/${article.id}`, {
+        post(`/articles/${article.slug}`, {
             forceFormData: true,
         });
     };
@@ -184,45 +184,6 @@ export default function Edit({ article, categories, tags }: Props) {
 
                     {/* Sidebar Settings Area */}
                     <div className="space-y-6">
-                        {/* Publish Settings */}
-                        <Card className="border-none shadow-sm">
-                            <CardHeader className="p-6">
-                                <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-gray-100">
-                                    <Settings2 className="h-4 w-4 text-blue-600" />
-                                    Publish Settings
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-6 pt-0 space-y-4">
-                                <div className="flex items-center justify-between">
-                                    <Label className="text-sm text-gray-500">Status</Label>
-                                    <Select
-                                        value={data.status}
-                                        onValueChange={(val: any) => setData('status', val)}
-                                    >
-                                        <SelectTrigger className="w-[140px] border-none bg-gray-50 font-bold dark:bg-gray-800">
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="draft">Borrador</SelectItem>
-                                            <SelectItem value="published">Publicado</SelectItem>
-                                            <SelectItem value="private">Privado</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <Separator className="bg-gray-50 dark:bg-gray-800" />
-                                <div className="flex flex-col gap-2">
-                                    <div className="flex items-center gap-2 text-xs text-gray-500 font-medium uppercase tracking-widest">
-                                        <User className="h-3 w-3" /> Author: <span className="text-gray-900 dark:text-white">{article.author?.name || 'Unknown'}</span>
-                                    </div>
-                                    <div className="flex items-center gap-2 text-xs text-gray-500 font-medium uppercase tracking-widest">
-                                        <Clock className="h-3 w-3" /> Created: <span className="text-gray-900 dark:text-white">
-                                            {article.created_at ? new Date(article.created_at).toLocaleDateString() : 'N/A'}
-                                        </span>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-
                         <Card>
                             <CardHeader>
                                 <CardTitle>Featured Image</CardTitle>
@@ -376,41 +337,6 @@ export default function Edit({ article, categories, tags }: Props) {
                                 </CardContent>
                             </Card>
                         </div>
-
-                        <Card className="">
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-primary">
-                                    <BarChart3 className="h-4 w-4" />
-                                    SEO Configuration
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-6">
-                                <div className="p-4 rounded-lg bg-muted/50 border">
-                                    <div className="text-lg font-medium truncate mb-0.5">{data.meta_title || data.title}</div>
-                                    <div className="text-xs mb-1.5 opacity-80">yourdomain.com › blog › {article.slug}</div>
-                                    <div className="text-muted-foreground text-sm line-clamp-2">{data.meta_description || 'Write a meta description...'}</div>
-                                </div>
-
-                                <div className="grid gap-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="meta_title">Meta Title</Label>
-                                        <Input
-                                            id="meta_title"
-                                            value={data.meta_title}
-                                            onChange={e => setData('meta_title', e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="meta_description">Meta Description</Label>
-                                        <Textarea
-                                            id="meta_description"
-                                            value={data.meta_description}
-                                            onChange={e => setData('meta_description', e.target.value)}
-                                        />
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
                     </div>
 
                     <div className="flex justify-end gap-4 py-8">

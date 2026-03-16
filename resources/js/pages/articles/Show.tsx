@@ -120,9 +120,20 @@ export default function Show({ article }: Props) {
                     )}
 
                     {/* Content */}
-                    <div className="prose prose-lg dark:prose-invert max-w-none prose-p:text-gray-600 dark:prose-p:text-gray-400 prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-black prose-a:text-blue-600 hover:prose-a:underline">
+                    <div className="prose prose-lg dark:prose-invert max-w-none prose-p:text-gray-600 dark:prose-p:text-gray-400 prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-black">
+                        <style dangerouslySetInnerHTML={{
+                            __html: `
+                            .article-content a {
+                                text-decoration: underline !important;
+                                text-underline-offset: 2px;
+                                color: #3b82f6 !important;
+                            }
+                            .article-content a:hover {
+                                color: #2563eb !important;
+                            }
+                        `}} />
                         <div
-                            className="leading-relaxed text-lg text-gray-700 dark:text-gray-300"
+                            className="article-content leading-relaxed text-lg text-gray-700 dark:text-gray-300"
                             dangerouslySetInnerHTML={{ __html: article.content }}
                         />
                     </div>

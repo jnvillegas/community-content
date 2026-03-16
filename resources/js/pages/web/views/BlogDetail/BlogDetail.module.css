@@ -138,6 +138,16 @@
     line-height: 1.6;
 }
 
+.post_text a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    color: #3b82f6;
+}
+
+.post_text a:hover {
+    color: #2563eb;
+}
+
 .share_container {
     display: flex;
     justify-content: space-between;

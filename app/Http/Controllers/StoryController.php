@@ -37,6 +37,7 @@ class StoryController extends Controller
                 'likes_count' => $story->likes->count(),
                 'is_liked' => auth()->check() ? $story->isLikedBy(auth()->user()) : false,
                 'is_viewed' => auth()->check() ? $story->isViewedBy(auth()->user()) : false,
+                'new_interactions_count' => auth()->check() ? $story->getNewInteractionsCountFor(auth()->user()) : 0,
                 'comments' => $story->comments->map(function ($comment) {
                     return [
                         'id' => $comment->id,
@@ -111,6 +112,12 @@ class StoryController extends Controller
             $story->update(['content_url' => $firstImage->getRawOriginal('image_url')]);
         }
 
+        if (auth()->check()) {
+            StoryView::updateOrCreate(
+                ['user_id' => auth()->id(), 'story_id' => $story->id]
+            )->touch();
+        }
+
         return back()->with('success', 'Story updated successfully!');
     }
 
@@ -145,6 +152,12 @@ class StoryController extends Controller
                 'image_url' => $img['url'],
                 'order' => $img['order'],
             ]);
+        }
+
+        if (auth()->check()) {
+            StoryView::updateOrCreate(
+                ['user_id' => auth()->id(), 'story_id' => $story->id]
+            )->touch();
         }
 
         return back()->with('success', 'Story created successfully!');

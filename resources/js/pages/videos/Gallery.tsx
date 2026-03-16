@@ -44,12 +44,6 @@ export default function Gallery({ videos }: Props) {
                         <h1 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white">Video Gallery</h1>
                         <p className="text-gray-500 dark:text-gray-400 mt-1">Browse our collection of travel expeditions and adventures.</p>
                     </div>
-                    <Button asChild>
-                        <Link href="/videos/create">
-                            <Plus className="mr-2 h-4 w-4" />
-                            Upload Video
-                        </Link>
-                    </Button>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

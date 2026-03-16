@@ -111,13 +111,6 @@ export default function Create({ categories, tags }: Props) {
                         </Button>
                         <h1 className="text-3xl font-black tracking-tight mt-2">Create Article</h1>
                     </div>
-
-                    <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm" className="gap-2">
-                            <Eye className="w-4 h-4" />
-                            <span className="hidden sm:inline">Preview</span>
-                        </Button>
-                    </div>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-8">
@@ -290,43 +283,6 @@ export default function Create({ categories, tags }: Props) {
                             </CardContent>
                         </Card>
                     </div>
-
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-primary">
-                                <BarChart3 className="h-4 w-4" />
-                                SEO Configuration
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-6">
-                            <div className="p-4 rounded-lg bg-muted/50 border">
-                                <div className="text-lg font-medium truncate mb-0.5">{data.meta_title || (data.title || 'Page Title')}</div>
-                                <div className="text-xs mb-1.5 opacity-80">yourdomain.com › blog › {data.title ? data.title.toLowerCase().replace(/ /g, '-') : 'slug'}</div>
-                                <div className="text-muted-foreground text-sm line-clamp-2">{data.meta_description || 'Write a meta description...'}</div>
-                            </div>
-
-                            <div className="grid gap-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="meta_title">Meta Title</Label>
-                                    <Input
-                                        id="meta_title"
-                                        placeholder="SEO Specific Title"
-                                        value={data.meta_title}
-                                        onChange={e => setData('meta_title', e.target.value)}
-                                    />
-                                </div>
-                                <div className="space-y-2">
-                                    <Label htmlFor="meta_description">Meta Description</Label>
-                                    <Textarea
-                                        id="meta_description"
-                                        placeholder="Write a meta description for search engines..."
-                                        value={data.meta_description}
-                                        onChange={e => setData('meta_description', e.target.value)}
-                                    />
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
 
                     <div className="flex justify-end gap-4 py-8">
                         <Button variant="outline" asChild>

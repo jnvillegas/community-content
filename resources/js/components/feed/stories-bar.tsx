@@ -14,6 +14,7 @@ interface Story {
     likes_count: number;
     is_liked: boolean;
     is_viewed: boolean;
+    new_interactions_count?: number;
     comments: any[];
     author: {
         name: string;
@@ -372,11 +373,11 @@ export default function StoriesBar({ stories, openStoryId }: StoriesBarProps) {
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover/story:opacity-100 transition-opacity duration-300" />
                             </div>
 
-                            {!story.is_viewed && (
+                            {(story.new_interactions_count || 0) > 0 && (
                                 <div className="absolute -top-1 -right-1 z-20 animate-in fade-in zoom-in duration-300">
-                                    <div className="flex items-center justify-center w-5 h-5 bg-red-500 backdrop-blur-sm rounded-full">
+                                    <div className="flex items-center justify-center w-5 h-5 bg-red-500 backdrop-blur-sm rounded-full shadow-sm">
                                         <span className="text-[10px] font-bold text-white leading-none">
-                                            {((story.likes_count || 0) + (story.comments?.length || 0)) || ''}
+                                            {story.new_interactions_count}
                                         </span>
                                     </div>
                                 </div>

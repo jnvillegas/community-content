@@ -97,7 +97,7 @@ export default function Dashboard({ upcomingEvents, activities, stories, courses
                 </div>
 
                 {/* Right Column - Widgets */}
-                <aside className="bg-transparent hidden lg:block w-[312px] min-w-[312px]">
+                {/* <aside className="bg-transparent hidden lg:block w-[312px] min-w-[312px]">
                     <div className="space-y-6 h-full sticky top-5">
 
                         <div className="flex items-center p-1 bg-sidebar rounded-xl">
@@ -166,7 +166,7 @@ export default function Dashboard({ upcomingEvents, activities, stories, courses
                             </div>
                         )}
                     </div>
-                </aside>
+                </aside> */}
             </main>
         </AppLayout >
     );

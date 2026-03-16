@@ -10,6 +10,8 @@ import FontFamily from '@tiptap/extension-font-family';
 import Color from '@tiptap/extension-color';
 import { FontSize } from '@/extensions/font-size';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
     Select,
     SelectContent,
@@ -18,8 +20,16 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import {
-    Bold, Italic, Strikethrough, Heading1, Heading2, List, ListOrdered, Quote, ImageIcon, Link as LinkIcon
+    Bold, Italic, Strikethrough, Heading1, Heading2, List, ListOrdered, Quote, ImageIcon, Link as LinkIcon, Trash2
 } from 'lucide-react';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+    DialogTrigger,
+} from '@/components/ui/dialog';
 
 interface TipTapEditorProps {
     content: string;
@@ -30,6 +40,9 @@ interface TipTapEditorProps {
 const TipTapEditor = ({ content, onChange, placeholder = 'Start writing...' }: TipTapEditorProps) => {
     const [fontFamily, setFontFamily] = React.useState('Inter');
     const [fontSize, setFontSize] = React.useState('16px');
+    const [linkUrl, setLinkUrl] = React.useState('');
+    const [linkText, setLinkText] = React.useState('');
+    const [isLinkPopoverOpen, setIsLinkPopoverOpen] = React.useState(false);
     const imageInputRef = useRef<HTMLInputElement>(null);
     const editorReady = useRef(false);
 
@@ -82,16 +95,24 @@ const TipTapEditor = ({ content, onChange, placeholder = 'Start writing...' }: T
     }
 
     const setLink = () => {
-        const previousUrl = editor.getAttributes('link').href;
-        const url = window.prompt('URL', previousUrl);
+        if (linkUrl === '') return;
 
-        if (url === null) return;
-        if (url === '') {
-            editor.chain().focus().extendMarkRange('link').unsetLink().run();
-            return;
-        }
+        const text = linkText || linkUrl;
+        
+        editor.chain()
+            .focus()
+            .insertContent(`<a href="${linkUrl}" rel="noopener noreferrer" target="_blank">${text}</a> `)
+            .run();
 
-        editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+        setIsLinkPopoverOpen(false);
+        setLinkUrl('');
+        setLinkText('');
+    };
+
+    const handleLinkButtonClick = () => {
+        setLinkUrl('');
+        setLinkText('');
+        setIsLinkPopoverOpen(true);
     };
 
     const addImage = () => {
@@ -122,10 +143,9 @@ const TipTapEditor = ({ content, onChange, placeholder = 'Start writing...' }: T
 
     return (
         <div className="flex flex-col min-h-[500px]">
-            {/* Toolbar */}
             <div className="flex flex-wrap items-center gap-2 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-card p-2">
                 {/* Font Family Selector */}
-                <Select
+                {/* <Select
                     value={fontFamily}
                     onValueChange={(value) => {
                         setFontFamily(value);
@@ -142,10 +162,10 @@ const TipTapEditor = ({ content, onChange, placeholder = 'Start writing...' }: T
                         <SelectItem value="monospace">Monospace</SelectItem>
                         <SelectItem value="cursive">Cursive</SelectItem>
                     </SelectContent>
-                </Select>
+                </Select> */}
 
                 {/* Font Size Selector */}
-                <Select
+                {/* <Select
                     value={fontSize}
                     onValueChange={(value) => {
                         setFontSize(value);
@@ -165,10 +185,10 @@ const TipTapEditor = ({ content, onChange, placeholder = 'Start writing...' }: T
                         <SelectItem value="30px">30px</SelectItem>
                         <SelectItem value="36px">36px</SelectItem>
                     </SelectContent>
-                </Select>
+                </Select> */}
 
-                <div className="w-[1px] h-4 bg-gray-300 dark:bg-gray-700 mx-1" />
-
+                {/* <div className="w-[1px] h-4 bg-gray-300 dark:bg-gray-700 mx-1" /> */}
+                {/* 
                 <Button
                     type="button"
                     variant="ghost"
@@ -196,7 +216,7 @@ const TipTapEditor = ({ content, onChange, placeholder = 'Start writing...' }: T
                 >
                     <Strikethrough className="h-4 w-4" />
                 </Button>
-                <div className="w-[1px] h-4 bg-gray-300 dark:bg-gray-700 mx-1" />
+                <div className="w-[1px] h-4 bg-gray-300 dark:bg-gray-700 mx-1" /> */}
                 {/* <Button
                     type="button"
                     variant="ghost"
@@ -244,9 +264,63 @@ const TipTapEditor = ({ content, onChange, placeholder = 'Start writing...' }: T
                 >
                     <Quote className="h-4 w-4" />
                 </Button> */}
-                {/* <Button type="button" variant="ghost" size="sm" onClick={setLink} className={editor.isActive('link') ? 'bg-gray-200 dark:bg-gray-800' : ''}>
-                    <LinkIcon className="h-4 w-4" />
-                </Button> */}
+
+                <Dialog open={isLinkPopoverOpen} onOpenChange={setIsLinkPopoverOpen}>
+                    <DialogTrigger asChild>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleLinkButtonClick}
+                            className={editor.isActive('link') ? 'bg-gray-200 dark:bg-gray-800' : ''}
+                        >
+                            <LinkIcon className="h-4 w-4" />
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                            <DialogTitle>Insertar Enlace</DialogTitle>
+                        </DialogHeader>
+                        <div className="flex flex-col gap-4 py-4">
+                            <div className="grid gap-2">
+                                <Label htmlFor="link-text">Texto del enlace</Label>
+                                <Input
+                                    id="link-text"
+                                    placeholder="Ej: Haz clic aquí"
+                                    value={linkText}
+                                    onChange={(e) => setLinkText(e.target.value)}
+                                    autoFocus
+                                />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label htmlFor="link-url">URL del enlace</Label>
+                                <Input
+                                    id="link-url"
+                                    placeholder="https://ejemplo.com"
+                                    value={linkUrl}
+                                    onChange={(e) => setLinkUrl(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            e.preventDefault();
+                                            setLink();
+                                        }
+                                    }}
+                                />
+                            </div>
+                        </div>
+                        <DialogFooter>
+                            <Button
+                                type="button"
+                                size="sm"
+                                onClick={setLink}
+                                disabled={!linkUrl}
+                            >
+                                Insertar Enlace
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+
                 <Button type="button" variant="ghost" size="sm" onClick={addImage}>
                     <ImageIcon className="h-4 w-4" />
                 </Button>
@@ -272,6 +346,15 @@ const TipTapEditor = ({ content, onChange, placeholder = 'Start writing...' }: T
                     .ProseMirror img {
                         cursor: pointer;
                         transition: outline 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
+                    }
+                    .ProseMirror a {
+                        text-decoration: underline;
+                        text-underline-offset: 2px;
+                        color: #3b82f6;
+                        cursor: pointer;
+                    }
+                    .ProseMirror a:hover {
+                        color: #2563eb;
                     }
                 `}} />
                 <EditorContent editor={editor} />

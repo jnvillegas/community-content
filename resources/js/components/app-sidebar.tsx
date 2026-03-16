@@ -19,6 +19,7 @@ import {
     User as UserIcon,
     Sparkles,
     MoreHorizontal,
+    Globe,
 } from 'lucide-react';
 
 import { NavMain } from '@/components/nav-main';
@@ -376,6 +377,18 @@ export function AppSidebar() {
             {/* User Profile Footer */}
             <SidebarFooter className="border-t border-gray-200 dark:border-gray-800 p-3 mt-auto">
                 <SidebarMenu>
+                    <SidebarMenuItem className="mb-1">
+                        <SidebarMenuButton
+                            asChild
+                            tooltip="Ir a la web"
+                            className="w-full hover:bg-gray-100 dark:hover:bg-gray-800/50 rounded-lg transition-colors"
+                        >
+                            <Link href="/">
+                                <Globe className="h-4 w-4" />
+                                <span>Ir a la web</span>
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
                     <SidebarMenuItem>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
