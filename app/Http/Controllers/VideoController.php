@@ -26,7 +26,7 @@ class VideoController extends Controller implements HasMiddleware
 
     public function gallery(): Response
     {
-        $videos = Video::orderBy('created_at', 'desc')->get();
+        $videos = Video::with(['author', 'categories'])->latest()->get();
 
         return Inertia::render('videos/Gallery', [
             'videos' => $videos

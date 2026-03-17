@@ -9,6 +9,15 @@ class Module extends Model
 {
     use HasFactory;
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($module) {
+            $module->lessons->each->delete();
+        });
+    }
+
     protected $fillable = [
         'course_id',
         'title',

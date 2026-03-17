@@ -12,6 +12,15 @@ class Course extends Model
 {
     use HasFactory, SoftDeletes, RecordsActivity;
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($course) {
+            $course->modules->each->delete();
+        });
+    }
+
     public function shouldRecordActivity(string $eventName): bool
     {
         if ($eventName === 'created') {

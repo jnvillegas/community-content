@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use App\Models\User;
 use App\Notifications\GlobalActivityNotification;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Log;
 
 class Activity extends Model
 {
@@ -52,7 +53,10 @@ class Activity extends Model
 
                 // Only notify if there's a recipient and it's not the actor
                 if ($recipient && $recipient->id !== $actor->id) {
+                    Log::info("Sending notification for {$type} to recipient {$recipient->id}");
                     Notification::send($recipient, new GlobalActivityNotification($activity));
+                } else {
+                    Log::info("Not sending notification for {$type}. Recipient: " . ($recipient->id ?? 'null') . ", Actor: {$actor->id}");
                 }
                 return;
             }

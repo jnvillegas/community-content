@@ -70,6 +70,11 @@ class Wallpaper extends Model
                 $wallpaper->slug = Str::slug($wallpaper->title);
             }
         });
+
+        static::deleting(function ($wallpaper) {
+            $wallpaper->likes->each->delete();
+            $wallpaper->comments->each->delete();
+        });
     }
 
     /**

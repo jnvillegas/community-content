@@ -55,6 +55,18 @@ class Event extends Model
 {
     use HasFactory, SoftDeletes, RecordsActivity;
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($event) {
+            $event->likes->each->delete();
+            $event->comments->each->delete();
+            $event->registrations->each->delete();
+            $event->reminders->each->delete();
+        });
+    }
+
     // Type Enums
     // Type Enums
     const TYPE_WORKSHOP = 'WORKSHOP';

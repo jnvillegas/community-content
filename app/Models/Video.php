@@ -40,6 +40,11 @@ class Video extends Model
                 $video->slug = Str::slug($video->title);
             }
         });
+
+        static::deleting(function ($video) {
+            $video->likes->each->delete();
+            $video->comments->each->delete();
+        });
     }
 
     public function author(): BelongsTo

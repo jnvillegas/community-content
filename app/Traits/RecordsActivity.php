@@ -5,12 +5,14 @@ namespace App\Traits;
 use App\Models\Activity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 trait RecordsActivity
 {
-    protected static function bootRecordsActivity()
+    public static function bootRecordsActivity()
     {
         static::created(function (Model $model) {
+            Log::info("Recording created activity for " . get_class($model) . " ID: " . $model->id);
             if (method_exists($model, 'shouldRecordActivity')) {
                 if (!$model->shouldRecordActivity('created'))
                     return;
@@ -40,10 +42,10 @@ trait RecordsActivity
         $driver = \Illuminate\Support\Facades\DB::getDriverName();
 
         if ($driver === 'pgsql') {
-            // In PostgreSQL, the 'data' column is often 'text', so we need to cast it
+            // Use a more robust check for JSON fields in PostgreSQL
             \Illuminate\Support\Facades\DB::table('notifications')
-                ->whereRaw('data::jsonb->>\'subject_id\' = ?', [(string) $this->id])
-                ->whereRaw('data::jsonb->>\'subject_type\' = ?', [get_class($this)])
+                ->whereRaw("data::json->>'subject_id' = ?", [(string) $this->id])
+                ->whereRaw("data::json->>'subject_type' = ?", [get_class($this)])
                 ->delete();
         } else {
             // Default for MySQL/SQLite

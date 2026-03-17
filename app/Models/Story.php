@@ -16,6 +16,18 @@ class Story extends Model
 {
     use HasFactory, SoftDeletes, RecordsActivity;
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($story) {
+            $story->likes->each->delete();
+            $story->comments->each->delete();
+            $story->images->each->delete();
+            $story->views->each->delete();
+        });
+    }
+
     public function shouldRecordActivity(string $eventName): bool
     {
         return $eventName === 'created';

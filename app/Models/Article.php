@@ -55,6 +55,12 @@ class Article extends Model
                 $article->slug = $slug;
             }
         });
+
+        static::deleting(function ($article) {
+            // Delete interactions to trigger their RecordsActivity deletion hooks
+            $article->likes->each->delete();
+            $article->comments->each->delete();
+        });
     }
 
     /**

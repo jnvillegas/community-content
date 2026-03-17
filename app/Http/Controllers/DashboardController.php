@@ -9,6 +9,16 @@ use App\Models\Event;
 use App\Models\Story;
 use App\Models\Video;
 use App\Models\Wallpaper;
+use App\Models\EventLike;
+use App\Models\EventComment;
+use App\Models\StoryLike;
+use App\Models\StoryComment;
+use App\Models\ArticleLike;
+use App\Models\ArticleComment;
+use App\Models\VideoLike;
+use App\Models\VideoComment;
+use App\Models\WallpaperLike;
+use App\Models\WallpaperComment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -61,7 +71,13 @@ class DashboardController extends Controller
             });
 
         $activities = Activity::with(['subject', 'user'])
-            ->whereIn('type', ['created_event', 'created_article', 'created_video', 'created_wallpaper'])
+            ->whereIn('type', [
+                'created_event', 'created_article', 'created_video', 'created_wallpaper',
+                'updated_article', 'updated_video', 'updated_wallpaper',
+                'created_eventlike', 'created_eventcomment', 'created_storylike', 'created_storycomment',
+                'created_articlelike', 'created_articlecomment', 'created_videolike', 'created_videocomment',
+                'created_wallpaperlike', 'created_wallpapercomment'
+            ])
             ->latest()
             ->paginate(10);
 
@@ -71,6 +87,16 @@ class DashboardController extends Controller
             Article::class => ['author', 'categories', 'likes', 'comments.user'],
             Video::class => ['author', 'categories', 'likes', 'comments.user'],
             Wallpaper::class => ['author', 'likes', 'comments.user'],
+            EventLike::class => ['event', 'user'],
+            EventComment::class => ['event', 'user'],
+            StoryLike::class => ['story', 'user'],
+            StoryComment::class => ['story', 'user'],
+            ArticleLike::class => ['article', 'user'],
+            ArticleComment::class => ['article', 'user'],
+            VideoLike::class => ['video', 'user'],
+            VideoComment::class => ['video', 'user'],
+            WallpaperLike::class => ['wallpaper', 'user'],
+            WallpaperComment::class => ['wallpaper', 'user'],
         ]);
 
         // Map activities to include likes data and relations for subjects
@@ -81,6 +107,26 @@ class DashboardController extends Controller
 
         $activities->getCollection()->transform(function ($activity) {
             $subject = $activity->subject;
+            
+            // Normalize subject for interaction activities
+            // If the parent content is missing, we set subject to null so it gets filtered out
+            if ($activity->type === 'created_articlelike' || $activity->type === 'created_articlecomment') {
+                $subject = $subject->article ?? null;
+                $activity->setRelation('subject', $subject);
+            } elseif ($activity->type === 'created_videolike' || $activity->type === 'created_videocomment') {
+                $subject = $subject->video ?? null;
+                $activity->setRelation('subject', $subject);
+            } elseif ($activity->type === 'created_wallpaperlike' || $activity->type === 'created_wallpapercomment') {
+                $subject = $subject->wallpaper ?? null;
+                $activity->setRelation('subject', $subject);
+            } elseif ($activity->type === 'created_eventlike' || $activity->type === 'created_eventcomment') {
+                $subject = $subject->event ?? null;
+                $activity->setRelation('subject', $subject);
+            } elseif ($activity->type === 'created_storylike' || $activity->type === 'created_storycomment') {
+                $subject = $subject->story ?? null;
+                $activity->setRelation('subject', $subject);
+            }
+
             if ($subject) {
                 if ($subject instanceof \App\Models\Event) {
                     $subject->likes_count = $subject->likes->count();
