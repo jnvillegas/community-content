@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
-import { Plus, Download, Eye, MapPin, MoreHorizontal, Edit, Trash2, Smartphone, Monitor } from 'lucide-react';
+import { Plus, Download, Eye, MapPin, MoreHorizontal, Edit, Trash2, Smartphone, Monitor, Heart, MessageCircle } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
@@ -22,6 +22,9 @@ interface Wallpaper {
         name: string;
     };
     created_at: string;
+    likes_count?: number;
+    comments_count?: number;
+    is_liked?: boolean;
 }
 
 interface Props {
@@ -128,7 +131,16 @@ export default function Gallery({ wallpapers }: Props) {
                                         </DropdownMenu>
                                     </div>
                                     <div className="mt-2 flex items-center justify-between text-[10px] text-gray-500 font-bold uppercase tracking-wider">
-                                        <span>{wallpaper.author?.name || 'Explorer'}</span>
+                                        <div className="flex items-center gap-3">
+                                            <div className={cn("flex items-center gap-1", wallpaper.is_liked && "text-red-500")}>
+                                                <Heart className={cn("w-3 h-3", wallpaper.is_liked && "fill-current")} />
+                                                <span>{wallpaper.likes_count || 0}</span>
+                                            </div>
+                                            <div className="flex items-center gap-1">
+                                                <MessageCircle className="w-3 h-3" />
+                                                <span>{wallpaper.comments_count || 0}</span>
+                                            </div>
+                                        </div>
                                         <span>{wallpaper.file_size || ''}</span>
                                     </div>
                                 </div>

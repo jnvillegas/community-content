@@ -15,16 +15,25 @@ class WallpaperController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:manage wallpapers', except: ['index', 'show', 'download', 'gallery']),
+            new Middleware('permission:manage wallpapers', except: ['index', 'show', 'download', 'gallery', 'toggleLike', 'storeComment']),
             new Middleware('permission:view wallpaper gallery', only: ['gallery']),
+            new Middleware('auth', only: ['toggleLike', 'storeComment']),
         ];
     }
 
     public function gallery(): Response
     {
         $wallpapers = Wallpaper::where('status', 'published')
+            ->withCount(['likes', 'comments'])
             ->orderBy('created_at', 'desc')
             ->get();
+
+        if (auth()->check()) {
+            $user = auth()->user();
+            $wallpapers->each(function ($wallpaper) use ($user) {
+                $wallpaper->is_liked = $wallpaper->isLikedBy($user);
+            });
+        }
 
         return Inertia::render('wallpapers/Gallery', [
             'wallpapers' => $wallpapers
@@ -37,8 +46,16 @@ class WallpaperController extends Controller implements HasMiddleware
     public function index(): Response
     {
         $wallpapers = Wallpaper::with('author')
+            ->withCount(['likes', 'comments'])
             ->orderBy('created_at', 'desc')
             ->paginate(20);
+
+        if (auth()->check()) {
+            $user = auth()->user();
+            $wallpapers->getCollection()->each(function ($wallpaper) use ($user) {
+                $wallpaper->is_liked = $wallpaper->isLikedBy($user);
+            });
+        }
 
         return Inertia::render('wallpapers/Index', [
             'wallpapers' => $wallpapers,
@@ -97,11 +114,42 @@ class WallpaperController extends Controller implements HasMiddleware
      */
     public function show(Wallpaper $wallpaper): Response
     {
-        $wallpaper->load('author');
+        $wallpaper->load(['author', 'comments.user']);
+        $wallpaper->loadCount(['likes', 'comments']);
+        
+        $wallpaper->is_liked = auth()->check() ? $wallpaper->isLikedBy(auth()->user()) : false;
 
         return Inertia::render('wallpapers/Show', [
             'wallpaper' => $wallpaper,
         ]);
+    }
+
+    public function toggleLike(Wallpaper $wallpaper): RedirectResponse
+    {
+        $user = auth()->user();
+        $like = $wallpaper->likes()->where('user_id', $user->id)->first();
+
+        if ($like) {
+            $like->delete();
+        } else {
+            $wallpaper->likes()->create(['user_id' => $user->id]);
+        }
+
+        return back();
+    }
+
+    public function storeComment(Request $request, Wallpaper $wallpaper): RedirectResponse
+    {
+        $validated = $request->validate([
+            'content' => 'required|string|max:1000',
+        ]);
+
+        $wallpaper->comments()->create([
+            'user_id' => auth()->id(),
+            'content' => $validated['content'],
+        ]);
+
+        return back();
     }
 
     /**

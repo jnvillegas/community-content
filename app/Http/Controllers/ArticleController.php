@@ -8,33 +8,42 @@ use App\Models\ArticleTag;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
+
 
 class ArticleController extends Controller implements HasMiddleware
 {
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:manage articles', except: ['index', 'show', 'gallery']),
-            new Middleware('auth', only: ['index', 'show']),
+            new Middleware('permission:manage articles', except: ['index', 'show', 'gallery', 'toggleLike', 'storeComment']),
+            new Middleware('auth', only: ['index', 'show', 'toggleLike', 'storeComment']),
             new Middleware('permission:view gallery', only: ['gallery']),
         ];
     }
 
     public function index(): Response
     {
-        $articles = Article::with(['categories', 'author'])
+        $articles = Article::with(['categories', 'author', 'likes', 'comments.user'])
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate(10)
+            ->through(function ($article) {
+                $article->likes_count = $article->likes->count();
+                $article->is_liked = Auth::check() ? $article->isLikedBy(Auth::user()) : false;
+                $article->comments_count = $article->comments->count();
+                return $article;
+            });
 
         return Inertia::render('articles/Index', [
             'articles' => $articles
         ]);
+
     }
 
     /**
@@ -67,10 +76,17 @@ class ArticleController extends Controller implements HasMiddleware
      */
     public function show(Article $article): Response
     {
+        $article->load(['categories', 'tags', 'author', 'likes', 'comments.user']);
+        
+        $article->likes_count = $article->likes->count();
+        $article->is_liked = Auth::check() ? $article->isLikedBy(Auth::user()) : false;
+        $article->comments_count = $article->comments->count();
+
         return Inertia::render('articles/Show', [
-            'article' => $article->load(['categories', 'tags', 'author']),
+            'article' => $article,
         ]);
     }
+
 
     /**
      * Store a newly created article in storage.
@@ -196,4 +212,36 @@ class ArticleController extends Controller implements HasMiddleware
         $article->delete();
         return redirect()->back()->with('success', 'Articulo eliminado.');
     }
+
+    public function toggleLike(Article $article): RedirectResponse
+    {
+        Log::debug('Toggling like for article: ' . $article->slug . ' by user: ' . Auth::id());
+        $user = Auth::user();
+        $like = $article->likes()->where('user_id', $user->id)->first();
+
+        if ($like) {
+            Log::debug('Removing like');
+            $like->delete();
+        } else {
+            Log::debug('Adding like');
+            $article->likes()->create(['user_id' => $user->id]);
+        }
+
+        return back();
+    }
+
+    public function storeComment(Article $article, Request $request): RedirectResponse
+    {
+        $request->validate([
+            'content' => 'required|string|max:1000',
+        ]);
+
+        $article->comments()->create([
+            'user_id' => Auth::id(),
+            'content' => $request->input('content'),
+        ]);
+
+        return back();
+    }
 }
+

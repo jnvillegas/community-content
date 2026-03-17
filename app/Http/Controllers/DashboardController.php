@@ -68,9 +68,9 @@ class DashboardController extends Controller
         $activities->loadMorph('subject', [
             Event::class => ['likes', 'comments.user', 'createdBy'],
             Story::class => ['likes', 'comments.user', 'user', 'images'],
-            Article::class => ['author', 'categories'], // Fixed: removed non-existent relations
-            Video::class => ['author', 'categories'],
-            Wallpaper::class => ['author'],
+            Article::class => ['author', 'categories', 'likes', 'comments.user'],
+            Video::class => ['author', 'categories', 'likes', 'comments.user'],
+            Wallpaper::class => ['author', 'likes', 'comments.user'],
         ]);
 
         // Map activities to include likes data and relations for subjects
@@ -134,9 +134,9 @@ class DashboardController extends Controller
                         $subject->created_at = $subject->created_at->diffForHumans();
                     }
                 } elseif ($subject instanceof \App\Models\Article) {
-                    $subject->likes_count = 0; // Fixed: relationships do not exist yet
-                    $subject->comments_count = 0;
-                    $subject->is_liked = false;
+                    $subject->likes_count = $subject->likes->count();
+                    $subject->comments_count = $subject->comments->count();
+                    $subject->is_liked = Auth::check() ? $subject->isLikedBy(Auth::user()) : false;
                     $subject->formatted_date = $subject->created_at->format('M j · g:i A');
 
                     if (!isset($subject->author) && isset($subject->author_id)) {
@@ -146,9 +146,22 @@ class DashboardController extends Controller
                             'avatar' => $author->profile_photo_url ?? 'https://api.dicebear.com/7.x/avataaars/svg?seed=' . ($author->name ?? 'Admin'),
                         ];
                     }
-                } elseif ($subject instanceof \App\Models\Video || $subject instanceof \App\Models\Wallpaper) {
-                    $subject->likes_count = 0; // Keeping simple for non-articles as per request
-                    $subject->is_liked = false;
+                } elseif ($subject instanceof \App\Models\Video) {
+                    $subject->likes_count = $subject->likes->count();
+                    $subject->comments_count = $subject->comments->count();
+                    $subject->is_liked = Auth::check() ? $subject->isLikedBy(Auth::user()) : false;
+
+                    if (!isset($subject->author) && isset($subject->author_id)) {
+                        $author = $subject->author;
+                        $subject->author = [
+                            'name' => $author->name ?? 'Admin',
+                            'avatar' => $author->profile_photo_url ?? 'https://api.dicebear.com/7.x/avataaars/svg?seed=' . ($author->name ?? 'Admin'),
+                        ];
+                    }
+                } elseif ($subject instanceof \App\Models\Wallpaper) {
+                    $subject->likes_count = $subject->likes->count();
+                    $subject->comments_count = $subject->comments->count();
+                    $subject->is_liked = Auth::check() ? $subject->isLikedBy(Auth::user()) : false;
 
                     if (!isset($subject->author) && isset($subject->author_id)) {
                         $author = $subject->author;

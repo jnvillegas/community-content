@@ -8,8 +8,14 @@ import {
     Facebook,
     Twitter,
     Link as LinkIcon,
-    Tag
+    Tag,
+    Heart,
+    MessageCircle,
+    Send
 } from 'lucide-react';
+import { router, usePage } from '@inertiajs/react';
+import { useState, useEffect } from 'react';
+import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
@@ -31,13 +37,65 @@ interface Article {
     tags: Array<{ id: number; name: string }>;
     author: { name: string; avatar?: string };
     created_at: string;
+    likes_count?: number;
+    is_liked?: boolean;
+    comments?: any[];
+    comments_count?: number;
 }
 
 interface Props {
     article: Article;
+    auth: {
+        user: any;
+    };
 }
 
-export default function Show({ article }: Props) {
+export default function Show({ article: initialArticle, auth }: Props) {
+    const page = usePage<Props>();
+    const [isLiked, setIsLiked] = useState(initialArticle.is_liked || false);
+    const [likesCount, setLikesCount] = useState(initialArticle.likes_count || 0);
+    const [comments, setComments] = useState(initialArticle.comments || []);
+    const [commentText, setCommentText] = useState('');
+    const [submittingComment, setSubmittingComment] = useState(false);
+
+    useEffect(() => {
+        const updatedArticle = page.props.article;
+        setIsLiked(updatedArticle.is_liked || false);
+        setLikesCount(updatedArticle.likes_count || 0);
+        setComments(updatedArticle.comments || []);
+    }, [page.props.article]);
+
+    const handleLike = () => {
+        router.post(route('articles.like', initialArticle.slug), {}, {
+            preserveScroll: true,
+            onSuccess: () => {
+                // Update local state if needed (optional)
+            }
+        });
+    };
+
+    const handleCommentSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!commentText.trim()) return;
+
+        setSubmittingComment(true);
+        router.post(route('articles.comment', initialArticle.slug),
+            { content: commentText },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setCommentText('');
+                    setSubmittingComment(false);
+                },
+                onError: () => {
+                    setSubmittingComment(false);
+                }
+            }
+        );
+    };
+
+    const article = page.props.article;
+
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Articles', href: '/articles' },
         { title: 'View Article', href: route('articles.show', article.slug) },
@@ -155,16 +213,112 @@ export default function Show({ article }: Props) {
                         </div>
                     )}
 
+                    {/* Engagement Section */}
+                    <div className="mt-12 pt-12 border-t border-muted">
+                        <div className="flex items-center gap-8 mb-12">
+                            <button
+                                onClick={handleLike}
+                                className={`flex items-center gap-2 transition-all ${isLiked
+                                    ? 'text-red-500 scale-105'
+                                    : 'text-gray-500 hover:text-red-500'
+                                    }`}
+                            >
+                                <Heart className={`w-8 h-8 ${isLiked ? 'fill-current' : ''}`} />
+                                <span className="font-black text-xl">{likesCount}</span>
+                            </button>
+                            <div className="flex items-center gap-2 text-gray-500">
+                                <MessageCircle className="w-8 h-8" />
+                                <span className="font-black text-xl">{comments.length}</span>
+                            </div>
+                        </div>
+
+                        {/* Comment Form */}
+                        <h3 className="text-2xl font-black mb-8 text-gray-900 dark:text-white">Comentarios</h3>
+                        {auth.user ? (
+                            <form onSubmit={handleCommentSubmit} className="mb-12">
+                                <div className="flex gap-4">
+                                    <Avatar className="h-10 w-10 border border-muted">
+                                        <AvatarImage src={auth.user.avatar} />
+                                        <AvatarFallback className="bg-gray-100 text-white font-bold">
+                                            {auth.user.name?.charAt(0)}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    <div className="flex-grow space-y-4">
+                                        <Textarea
+                                            placeholder="Escribe lo que piensas..."
+                                            value={commentText}
+                                            onChange={(e) => setCommentText(e.target.value)}
+                                            className="min-h-[100px] resize-none rounded-2xl border-muted bg-gray-50 dark:bg-zinc-900 focus:ring-blue-500"
+                                        />
+                                        <div className="flex justify-end">
+                                            <Button
+                                                type="submit"
+                                                disabled={!commentText.trim() || submittingComment}
+                                                className="rounded-full px-8 bg-blue-600 hover:bg-blue-700 text-white font-bold"
+                                            >
+                                                {submittingComment ? 'Publicando...' : 'Publicar comentario'}
+                                                <Send className="ml-2 h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        ) : (
+                            <div className="mb-12 p-6 rounded-3xl bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/30">
+                                <p className="text-blue-600 dark:text-blue-400 font-medium">
+                                    <Link href="/login" className="font-black hover:underline">Inicia sesión</Link> para unirte a la conversación.
+                                </p>
+                            </div>
+                        )}
+
+                        {/* Comments List */}
+                        <div className="space-y-8">
+                            {comments.length > 0 ? (
+                                comments.map((comment) => (
+                                    <div key={comment.id} className="flex gap-4 group">
+                                        <Avatar className="h-10 w-10 border border-muted shrink-0">
+                                            <AvatarImage src={comment.user?.avatar} />
+                                            <AvatarFallback className="bg-gray-100 text-white font-bold">
+                                                {comment.user?.name?.charAt(0)}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <div className="flex-grow">
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <span className="font-black text-gray-900 dark:text-white text-sm">{comment.user?.name}</span>
+                                                <span className="text-gray-400 text-[10px] uppercase font-bold tracking-widest">•</span>
+                                                <span className="text-gray-400 text-xs">
+                                                    {new Date(comment.created_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}
+                                                </span>
+                                            </div>
+                                            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                                                {comment.content}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="text-center py-20 bg-gray-50 dark:bg-zinc-900/50 rounded-3xl border border-dashed border-muted">
+                                    <MessageCircle className="h-12 w-12 mx-auto text-gray-300 mb-4" />
+                                    <p className="text-gray-500 font-bold">No hay comentarios aún.</p>
+                                    <p className="text-sm text-gray-400">¡Sé el primero en compartir tu opinión!</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
                     {/* Share Section */}
-                    <div className="mt-12 p-8 rounded-3xl bg-background dark:bg-card flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div className="mt-20 p-8 rounded-3xl bg-gray-50 dark:bg-card flex flex-col md:flex-row items-center justify-between gap-6 border border-muted">
                         <div className="text-center md:text-left">
                             <h4 className="font-black text-gray-900 dark:text-white">Did you like this article?</h4>
                             <p className="text-sm text-gray-500">Share it with your community.</p>
                         </div>
                         <div className="flex gap-3">
-                            <Button variant="outline" className="rounded-full w-12 h-12 p-0 border-muted"><Facebook className="h-5 w-5 fill-current" /></Button>
-                            <Button variant="outline" className="rounded-full w-12 h-12 p-0 border-muted"><Twitter className="h-5 w-5 fill-current" /></Button>
-                            <Button variant="outline" className="rounded-full w-12 h-12 p-0 border-muted"><LinkIcon className="h-5 w-5" /></Button>
+                            <Button variant="outline" className="rounded-full w-12 h-12 p-0 border-muted hover:bg-[#1877F2] hover:text-white transition-colors"><Facebook className="h-5 w-5 fill-current" /></Button>
+                            <Button variant="outline" className="rounded-full w-12 h-12 p-0 border-muted hover:bg-[#1DA1F2] hover:text-white transition-colors"><Twitter className="h-5 w-5 fill-current" /></Button>
+                            <Button variant="outline" className="rounded-full w-12 h-12 p-0 border-muted hover:bg-gray-200 dark:hover:bg-zinc-800 transition-colors" onClick={() => {
+                                navigator.clipboard.writeText(window.location.href);
+                                alert('Enlace copiado al portapapeles');
+                            }}><LinkIcon className="h-5 w-5" /></Button>
                         </div>
                     </div>
                 </div>

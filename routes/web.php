@@ -66,14 +66,39 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Articles (WordPress-style blog)
     Route::get('articles/gallery', [\App\Http\Controllers\ArticleController::class, 'gallery'])->name('articles.gallery');
     Route::post('articles/{article}', [\App\Http\Controllers\ArticleController::class, 'update'])->name('articles.update.post');
+    Route::post('articles/{article}/like', [\App\Http\Controllers\ArticleController::class, 'toggleLike'])->name('articles.like');
+    Route::get('articles/{article}/like', function (\App\Models\Article $article) {
+        return redirect()->route('articles.show', $article->slug);
+    });
+    Route::post('articles/{article}/comments', [\App\Http\Controllers\ArticleController::class, 'storeComment'])->name('articles.comment');
+    Route::get('articles/{article}/comments', function (\App\Models\Article $article) {
+        return redirect()->route('articles.show', $article->slug);
+    });
     Route::resource('articles', \App\Http\Controllers\ArticleController::class);
+
 
     // Videos (Travel Explorer Hub)
     Route::get('videos/gallery', [\App\Http\Controllers\VideoController::class, 'gallery'])->name('videos.gallery');
+    Route::post('videos/{video}/like', [\App\Http\Controllers\VideoController::class, 'toggleLike'])->name('videos.like');
+    Route::get('videos/{video}/like', function (\App\Models\Video $video) {
+        return redirect()->route('videos.show', $video->id);
+    });
+    Route::post('videos/{video}/comments', [\App\Http\Controllers\VideoController::class, 'storeComment'])->name('videos.comment');
+    Route::get('videos/{video}/comments', function (\App\Models\Video $video) {
+        return redirect()->route('videos.show', $video->id);
+    });
     Route::resource('videos', \App\Http\Controllers\VideoController::class);
 
     // Wallpapers
     Route::get('wallpapers/gallery', [\App\Http\Controllers\WallpaperController::class, 'gallery'])->name('wallpapers.gallery');
+    Route::post('wallpapers/{wallpaper}/like', [\App\Http\Controllers\WallpaperController::class, 'toggleLike'])->name('wallpapers.like');
+    Route::get('wallpapers/{wallpaper}/like', function (\App\Models\Wallpaper $wallpaper) {
+        return redirect()->route('wallpapers.show', $wallpaper->id);
+    });
+    Route::post('wallpapers/{wallpaper}/comments', [\App\Http\Controllers\WallpaperController::class, 'storeComment'])->name('wallpapers.comment');
+    Route::get('wallpapers/{wallpaper}/comments', function (\App\Models\Wallpaper $wallpaper) {
+        return redirect()->route('wallpapers.show', $wallpaper->id);
+    });
     Route::resource('wallpapers', \App\Http\Controllers\WallpaperController::class);
     //
     // // Dynamic Categories (AJAX)

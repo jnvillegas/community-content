@@ -16,8 +16,9 @@ class VideoController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:manage videos', except: ['index', 'show', 'gallery']),
+            new Middleware('permission:manage videos', except: ['index', 'show', 'gallery', 'toggleLike', 'storeComment']),
             new Middleware('permission:view video gallery', only: ['gallery']),
+            new Middleware('auth', only: ['toggleLike', 'storeComment']),
         ];
     }
 
@@ -98,10 +99,43 @@ class VideoController extends Controller implements HasMiddleware
 
     public function show(Video $video): Response
     {
+        $video->load(['categories', 'author', 'comments.user']);
+        $video->loadCount(['likes', 'comments']);
+        
+        $video->is_liked = auth()->check() ? $video->isLikedBy(auth()->user()) : false;
+
         return Inertia::render('videos/Show', [
-            'video' => $video->load(['categories', 'author']),
+            'video' => $video,
             'relatedVideos' => Video::where('id', '!=', $video->id)->limit(4)->get()
         ]);
+    }
+
+    public function toggleLike(Video $video): RedirectResponse
+    {
+        $user = auth()->user();
+        $like = $video->likes()->where('user_id', $user->id)->first();
+
+        if ($like) {
+            $like->delete();
+        } else {
+            $video->likes()->create(['user_id' => $user->id]);
+        }
+
+        return back();
+    }
+
+    public function storeComment(Request $request, Video $video): RedirectResponse
+    {
+        $validated = $request->validate([
+            'content' => 'required|string|max:1000',
+        ]);
+
+        $video->comments()->create([
+            'user_id' => auth()->id(),
+            'content' => $validated['content'],
+        ]);
+
+        return back();
     }
 
     public function edit(Video $video): Response

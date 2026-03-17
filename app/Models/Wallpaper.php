@@ -138,4 +138,23 @@ class Wallpaper extends Model
 
         return $url;
     }
+ 
+    public function likes()
+    {
+        return $this->hasMany(WallpaperLike::class);
+    }
+ 
+    public function comments()
+    {
+        return $this->hasMany(WallpaperComment::class);
+    }
+ 
+    public function isLikedBy(?User $user): bool
+    {
+        if (!$user) {
+            return false;
+        }
+ 
+        return $this->likes()->where('user_id', $user->id)->exists();
+    }
 }

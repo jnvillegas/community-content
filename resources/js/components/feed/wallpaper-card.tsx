@@ -1,13 +1,22 @@
-import { ArrowRight, Share2, Monitor, Database } from 'lucide-react';
-import { Link } from '@inertiajs/react';
+import { ArrowRight, Share2, Monitor, Database, Heart, MessageCircle, Send } from 'lucide-react';
+import { Link, router } from '@inertiajs/react';
+import { useState } from 'react';
 
 export default function WallpaperCard({ activity }: { activity: any }) {
     const { subject } = activity;
+    const [comment, setComment] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     if (!subject) return null;
 
     // Determine if it's "NEW" (created in the last 7 days)
     const isNew = subject.created_at ? (new Date().getTime() - new Date(subject.created_at).getTime()) < 7 * 24 * 60 * 60 * 1000 : false;
+
+    const handleLike = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        router.post(route('wallpapers.like', subject.id), {}, { preserveScroll: true });
+    };
 
     const handleShare = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -28,6 +37,25 @@ export default function WallpaperCard({ activity }: { activity: any }) {
             navigator.clipboard.writeText(shareUrl);
             alert('¡Enlace copiado al portapapeles!');
         }
+    };
+
+    const handleSubmitComment = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!comment.trim()) return;
+
+        setIsSubmitting(true);
+        router.post(route('wallpapers.comment', subject.id), {
+            content: comment
+        }, {
+            preserveScroll: true,
+            onSuccess: () => {
+                setComment('');
+                setIsSubmitting(false);
+            },
+            onError: () => {
+                setIsSubmitting(false);
+            }
+        });
     };
 
     return (
@@ -55,7 +83,7 @@ export default function WallpaperCard({ activity }: { activity: any }) {
                 {/* Right: Info Section */}
                 <div className="flex flex-col flex-1 min-w-0 py-1">
                     {/* Accent Text */}
-                    <p className="text-blue-600 dark:text-blue-400 text-[11px] font-semibold tracking-wide uppercase mb-3">
+                    <p className="text-blue-600 dark:text-blue-400 text-[11px] font-semibold tracking-wide uppercase mb-3 text-start">
                         ¡Descubre este increíble fondo de pantalla para tu dispositivo!
                     </p>
 
@@ -77,12 +105,57 @@ export default function WallpaperCard({ activity }: { activity: any }) {
                     </div>
 
                     {/* Title */}
-                    <h2 className="text-2xl font-extrabold text-zinc-900 dark:text-white mb-6 truncate">
+                    <h2 className="text-2xl font-extrabold text-zinc-900 dark:text-white mb-4 truncate text-start">
                         {subject.title}
                     </h2>
 
+                    {/* Action Buttons Row */}
+                    <div className="flex items-center gap-4 mb-4">
+                        <button
+                            onClick={handleLike}
+                            className={`flex items-center gap-1.5 transition-all ${subject.is_liked
+                                ? 'text-red-500 scale-105'
+                                : 'text-zinc-500 hover:text-red-500'
+                                }`}
+                            title="Me gusta"
+                        >
+                            <Heart className={`h-5 w-5 ${subject.is_liked ? 'fill-current' : ''}`} />
+                            <span className="text-sm font-bold">{subject.likes_count || 0}</span>
+                        </button>
+
+                        <Link
+                            href={route('wallpapers.show', subject.id)}
+                            className="flex items-center gap-1.5 text-zinc-500 hover:text-blue-500 transition-colors"
+                            title="Comentarios"
+                        >
+                            <MessageCircle className="h-5 w-5" />
+                            <span className="text-sm font-bold">{subject.comments_count || 0}</span>
+                        </Link>
+                    </div>
+
+                    {/* Quick Comment Section */}
+                    <div className="mt-auto pt-3 border-t border-gray-100 dark:border-white/5">
+                        <form onSubmit={handleSubmitComment} className="relative flex items-center gap-2">
+                            <input
+                                type="text"
+                                value={comment}
+                                onChange={(e) => setComment(e.target.value)}
+                                placeholder="Escribe un comentario..."
+                                className="flex-1 bg-gray-50 dark:bg-zinc-800/50 border-none rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 dark:text-white transition-all shadow-inner"
+                                disabled={isSubmitting}
+                            />
+                            <button
+                                type="submit"
+                                disabled={isSubmitting || !comment.trim()}
+                                className="p-2 bg-blue-500 hover:bg-blue-600 disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-zinc-400 text-white rounded-xl transition-all active:scale-95 shadow-md shadow-blue-500/10"
+                            >
+                                <Send className="h-3.5 w-3.5" />
+                            </button>
+                        </form>
+                    </div>
+
                     {/* Footer Row (Minimal Layout) */}
-                    <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-100 dark:border-zinc-800">
+                    <div className="mt-3 flex items-center justify-between pt-3 border-t border-gray-100 dark:border-zinc-800">
                         <Link
                             href={route('wallpapers.show', subject.id)}
                             className="flex items-center gap-2 text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 font-bold text-sm transition-colors group/link"
@@ -93,7 +166,7 @@ export default function WallpaperCard({ activity }: { activity: any }) {
 
                         <button
                             onClick={handleShare}
-                            className="p-2.5 bg-gray-50 dark:bg-zinc-800/50 hover:bg-gray-100 dark:hover:bg-zinc-800 text-zinc-500 dark:text-zinc-400 rounded-xl transition-all active:scale-95 shadow-sm"
+                            className="p-2 bg-gray-50 dark:bg-zinc-800/50 hover:bg-gray-100 dark:hover:bg-zinc-800 text-zinc-500 dark:text-zinc-400 rounded-xl transition-all active:scale-95 shadow-sm"
                             title="Compartir"
                         >
                             <Share2 className="h-4 w-4" />

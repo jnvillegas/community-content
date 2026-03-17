@@ -1,5 +1,3 @@
-import React from 'react';
-import { Head, Link } from '@inertiajs/react';
 import {
     ArrowLeft,
     Edit,
@@ -14,7 +12,11 @@ import {
     Scale,
     TrendingUp,
     Clock,
-    Hash
+    Hash,
+    Heart,
+    MessageCircle,
+    Send,
+    Share2
 } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { type Wallpaper } from '@/types';
@@ -24,12 +26,18 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { router, usePage, Head, Link } from '@inertiajs/react';
+import { useState } from 'react';
 
 interface Props {
     wallpaper: Wallpaper;
 }
 
 export default function Show({ wallpaper }: Props) {
+    const { auth } = usePage().props as any;
+    const [comment, setComment] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const getStatusBadge = (status: Wallpaper['status']) => {
         switch (status) {
             case 'published':
@@ -166,24 +174,132 @@ export default function Show({ wallpaper }: Props) {
                             <CardHeader>
                                 <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 text-primary">
                                     <TrendingUp className="w-4 h-4" />
-                                    Engagement
+                                    Acciones y Estadísticas
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent className="flex flex-col items-center justify-center py-6">
-                                <div className="text-center">
-                                    <p className="text-5xl font-black tracking-tighter italic text-primary mb-1">
-                                        {wallpaper.downloads_count}
-                                    </p>
-                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
-                                        Total Downloads
-                                    </p>
+                            <CardContent className="space-y-6">
+                                <div className="flex items-center justify-around py-4 border-b border-muted/50">
+                                    <div className="text-center">
+                                        <button
+                                            onClick={() => router.post(route('wallpapers.like', wallpaper.id), {}, { preserveScroll: true })}
+                                            className={`flex flex-col items-center gap-1 transition-all ${wallpaper.is_liked ? 'text-red-500 scale-110' : 'text-muted-foreground hover:text-red-500'}`}
+                                        >
+                                            <Heart className={`w-8 h-8 ${wallpaper.is_liked ? 'fill-current' : ''}`} />
+                                            <span className="text-lg font-black italic tracking-tighter">{wallpaper.likes_count || 0}</span>
+                                            <span className="text-[10px] uppercase font-bold tracking-widest opacity-60">Likes</span>
+                                        </button>
+                                    </div>
+
+                                    <div className="text-center">
+                                        <div className="flex flex-col items-center gap-1 text-muted-foreground">
+                                            <MessageCircle className="w-8 h-8" />
+                                            <span className="text-lg font-black italic tracking-tighter">{wallpaper.comments_count || 0}</span>
+                                            <span className="text-[10px] uppercase font-bold tracking-widest opacity-60">Comentarios</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="text-center">
+                                        <div className="flex flex-col items-center gap-1 text-primary">
+                                            <Download className="w-8 h-8" />
+                                            <span className="text-lg font-black italic tracking-tighter">{wallpaper.downloads_count || 0}</span>
+                                            <span className="text-[10px] uppercase font-bold tracking-widest opacity-60">Descargas</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <Button variant="outline" size="sm" className="mt-6 w-full gap-2 border-dashed" asChild>
-                                    <a href={wallpaper.src} download>
-                                        <Download className="w-3 h-3" />
-                                        Download Current Archive
-                                    </a>
-                                </Button>
+
+                                <div className="flex flex-col gap-3">
+                                    <Button variant="default" className="w-full gap-2 font-black italic uppercase italic tracking-tight" asChild>
+                                        <a href={wallpaper.src} download>
+                                            <Download className="w-4 h-4" />
+                                            Descargar Wallpaper
+                                        </a>
+                                    </Button>
+
+                                    <Button variant="outline" className="w-full gap-2 border-dashed font-bold" onClick={() => {
+                                        const shareUrl = window.location.href;
+                                        if (navigator.share) {
+                                            navigator.share({ title: wallpaper.title, url: shareUrl });
+                                        } else {
+                                            navigator.clipboard.writeText(shareUrl);
+                                            alert('Enlace copiado');
+                                        }
+                                    }}>
+                                        <Share2 className="w-4 h-4" />
+                                        Compartir con Colegas
+                                    </Button>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* Comments Section */}
+                        <Card className="md:col-span-1">
+                            <CardHeader>
+                                <CardTitle className="text-sm font-bold uppercase tracking-wider flex items-center gap-2 text-primary">
+                                    <MessageCircle className="w-4 h-4" />
+                                    Conversación de la Comunidad
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                {/* Comment Form */}
+                                <form onSubmit={(e) => {
+                                    e.preventDefault();
+                                    if (!comment.trim()) return;
+                                    setIsSubmitting(true);
+                                    router.post(route('wallpapers.comment', wallpaper.id), { content: comment }, {
+                                        preserveScroll: true,
+                                        onSuccess: () => { setComment(''); setIsSubmitting(false); },
+                                        onError: () => setIsSubmitting(false)
+                                    });
+                                }} className="flex gap-2">
+                                    <div className="relative flex-1">
+                                        <input
+                                            type="text"
+                                            value={comment}
+                                            onChange={(e) => setComment(e.target.value)}
+                                            placeholder="Añade un comentario a este diseño..."
+                                            className="w-full bg-muted/50 border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary h-12"
+                                            disabled={isSubmitting}
+                                        />
+                                    </div>
+                                    <Button
+                                        type="submit"
+                                        disabled={isSubmitting || !comment.trim()}
+                                        className="h-12 w-12 rounded-xl"
+                                    >
+                                        <Send className="w-5 h-5" />
+                                    </Button>
+                                </form>
+
+                                {/* Comments List */}
+                                <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                                    {wallpaper.comments && wallpaper.comments.length > 0 ? (
+                                        wallpaper.comments.map((comment: any) => (
+                                            <div key={comment.id} className="flex gap-3 animate-in slide-in-from-bottom-2 duration-300">
+                                                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0 border border-primary/20">
+                                                    <span className="text-[10px] font-black text-primary">
+                                                        {comment.user?.name?.substring(0, 2).toUpperCase() || '??'}
+                                                    </span>
+                                                </div>
+                                                <div className="flex-1">
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <span className="text-xs font-black uppercase tracking-tight">{comment.user?.name || 'Anónimo'}</span>
+                                                        <span className="text-[10px] text-muted-foreground font-medium italic">
+                                                            {format(new Date(comment.created_at), 'd MMM, HH:mm')}
+                                                        </span>
+                                                    </div>
+                                                    <p className="text-sm text-foreground/80 leading-relaxed bg-muted/30 p-3 rounded-2xl rounded-tl-none border border-muted-foreground/5">
+                                                        {comment.content}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="text-center py-8 opacity-40">
+                                            <MessageCircle className="w-12 h-12 mx-auto mb-2 opacity-20" />
+                                            <p className="text-xs font-bold uppercase tracking-[0.2em]">Sé el primero en comentar</p>
+                                        </div>
+                                    )}
+                                </div>
                             </CardContent>
                         </Card>
                     </div>

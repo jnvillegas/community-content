@@ -8,11 +8,18 @@ import {
     Play,
     Edit,
     Youtube,
-    User
+    User,
+    Heart,
+    MessageCircle,
+    Send
 } from 'lucide-react';
+import { router, usePage } from '@inertiajs/react';
+import { useState, useEffect } from 'react';
 import { format, isValid } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
+import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -31,14 +38,62 @@ interface Video {
     author: { name: string; avatar?: string };
     categories: Array<{ id: number; name: string }>;
     created_at: string;
+    likes_count?: number;
+    is_liked?: boolean;
+    comments?: any[];
+    comments_count?: number;
 }
 
 interface Props {
     video: Video;
     relatedVideos: Video[];
+    auth: {
+        user: any;
+    };
 }
 
-export default function Show({ video, relatedVideos }: Props) {
+export default function Show({ video: initialVideo, relatedVideos, auth }: Props) {
+    const page = usePage<Props>();
+    const [isLiked, setIsLiked] = useState(initialVideo.is_liked || false);
+    const [likesCount, setLikesCount] = useState(initialVideo.likes_count || 0);
+    const [comments, setComments] = useState(initialVideo.comments || []);
+    const [commentText, setCommentText] = useState('');
+    const [submittingComment, setSubmittingComment] = useState(false);
+
+    useEffect(() => {
+        const updatedVideo = page.props.video;
+        setIsLiked(updatedVideo.is_liked || false);
+        setLikesCount(updatedVideo.likes_count || 0);
+        setComments(updatedVideo.comments || []);
+    }, [page.props.video]);
+
+    const handleLike = () => {
+        router.post(route('videos.like', initialVideo.id), {}, {
+            preserveScroll: true,
+        });
+    };
+
+    const handleCommentSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!commentText.trim()) return;
+
+        setSubmittingComment(true);
+        router.post(route('videos.comment', initialVideo.id),
+            { content: commentText },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setCommentText('');
+                    setSubmittingComment(false);
+                },
+                onError: () => {
+                    setSubmittingComment(false);
+                }
+            }
+        );
+    };
+
+    const video = page.props.video;
     const embedUrl = `https://www.youtube.com/embed/${video.youtube_id}?rel=0&showinfo=0&autoplay=0`;
 
     return (
@@ -126,6 +181,99 @@ export default function Show({ video, relatedVideos }: Props) {
                                     </p>
                                 </CardContent>
                             </Card>
+
+                            {/* Engagement Section */}
+                            <div className="mt-12 pt-12 border-t border-muted">
+                                <div className="flex items-center gap-8 mb-12">
+                                    <button
+                                        onClick={handleLike}
+                                        className={`flex items-center gap-2 transition-all ${isLiked
+                                            ? 'text-red-500 scale-105'
+                                            : 'text-muted-foreground hover:text-red-500'
+                                            }`}
+                                    >
+                                        <Heart className={`w-8 h-8 ${isLiked ? 'fill-current' : ''}`} />
+                                        <span className="font-black text-xl">{likesCount}</span>
+                                    </button>
+                                    <div className="flex items-center gap-2 text-muted-foreground">
+                                        <MessageCircle className="w-8 h-8" />
+                                        <span className="font-black text-xl">{comments.length}</span>
+                                    </div>
+                                </div>
+
+                                {/* Comment Form */}
+                                <h3 className="text-2xl font-black mb-8">Comentarios</h3>
+                                {auth.user ? (
+                                    <form onSubmit={handleCommentSubmit} className="mb-12">
+                                        <div className="flex gap-4">
+                                            <Avatar className="h-10 w-10 border border-muted shrink-0">
+                                                <AvatarImage src={auth.user.avatar} />
+                                                <AvatarFallback className="bg-gray-100 text-white font-bold">
+                                                    {auth.user.name?.charAt(0)}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            <div className="flex-grow space-y-4">
+                                                <Textarea
+                                                    placeholder="Escribe lo que piensas..."
+                                                    value={commentText}
+                                                    onChange={(e) => setCommentText(e.target.value)}
+                                                    className="min-h-[100px] resize-none rounded-2xl border-muted bg-gray-50 dark:bg-zinc-900 focus:ring-primary"
+                                                />
+                                                <div className="flex justify-end">
+                                                    <Button
+                                                        type="submit"
+                                                        disabled={!commentText.trim() || submittingComment}
+                                                        className="rounded-full px-8 font-bold"
+                                                    >
+                                                        {submittingComment ? 'Publicando...' : 'Publicar comentario'}
+                                                        <Send className="ml-2 h-4 w-4" />
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                ) : (
+                                    <div className="mb-12 p-6 rounded-3xl bg-primary/5 border border-primary/10">
+                                        <p className="text-primary font-medium">
+                                            <Link href="/login" className="font-black hover:underline">Inicia sesión</Link> para unirte a la conversación.
+                                        </p>
+                                    </div>
+                                )}
+
+                                {/* Comments List */}
+                                <div className="space-y-8">
+                                    {comments.length > 0 ? (
+                                        comments.map((comment) => (
+                                            <div key={comment.id} className="flex gap-4 group">
+                                                <Avatar className="h-10 w-10 border border-muted shrink-0">
+                                                    <AvatarImage src={comment.user?.avatar} />
+                                                    <AvatarFallback className="bg-gray-100 text-white font-bold">
+                                                        {comment.user?.name?.charAt(0)}
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                                <div className="flex-grow">
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <span className="font-black text-foreground text-sm">{comment.user?.name}</span>
+                                                        <span className="text-muted-foreground text-[10px] uppercase font-bold tracking-widest">•</span>
+                                                        <span className="text-muted-foreground text-xs">
+                                                            {comment.created_at ? format(new Date(comment.created_at), "d 'de' MMM", { locale: es }) : 'N/A'}
+                                                        </span>
+                                                    </div>
+                                                    <p className="text-muted-foreground leading-relaxed">
+                                                        {comment.content}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="text-center py-20 bg-muted/20 rounded-3xl border border-dashed border-muted">
+                                            <MessageCircle className="h-12 w-12 mx-auto text-muted-foreground/30 mb-4" />
+                                            <p className="text-muted-foreground font-bold">No hay comentarios aún.</p>
+                                            <p className="text-sm text-muted-foreground/60">¡Sé el primero en compartir tu opinión!</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </div>
 

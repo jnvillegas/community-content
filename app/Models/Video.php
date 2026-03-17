@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 use App\Traits\RecordsActivity;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Video extends Model
 {
@@ -107,5 +108,21 @@ class Video extends Model
         }
 
         return false;
+    }
+
+    public function likes(): HasMany
+    {
+        return $this->hasMany(VideoLike::class);
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(VideoComment::class);
+    }
+
+    public function isLikedBy(?User $user): bool
+    {
+        if (!$user) return false;
+        return $this->likes()->where('user_id', $user->id)->exists();
     }
 }

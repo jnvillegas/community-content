@@ -1,10 +1,13 @@
-import { Play, Share2 } from 'lucide-react';
-import { Link } from '@inertiajs/react';
+import { Play, Share2, Heart, MessageCircle, Send } from 'lucide-react';
+import { Link, router } from '@inertiajs/react';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { useState } from 'react';
 
 export default function VideoCard({ activity }: { activity: any }) {
     const { subject } = activity;
+    const [comment, setComment] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     if (!subject) return null;
 
@@ -14,6 +17,12 @@ export default function VideoCard({ activity }: { activity: any }) {
     const relativeTime = subject.created_at
         ? formatDistanceToNow(new Date(subject.created_at), { addSuffix: true, locale: es })
         : '';
+
+    const handleLike = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        router.post(route('videos.like', subject.id), {}, { preserveScroll: true });
+    };
 
     const handleShare = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -36,75 +45,141 @@ export default function VideoCard({ activity }: { activity: any }) {
         }
     };
 
+    const handleSubmitComment = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!comment.trim()) return;
+
+        setIsSubmitting(true);
+        router.post(route('videos.comment', subject.id), {
+            content: comment
+        }, {
+            preserveScroll: true,
+            onSuccess: () => {
+                setComment('');
+                setIsSubmitting(false);
+            },
+            onError: () => {
+                setIsSubmitting(false);
+            }
+        });
+    };
+
     return (
         <article className="group relative bg-white dark:bg-zinc-900/50 border border-gray-200 dark:border-white/5 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-black/5 mb-8">
-            <div className="flex flex-col md:flex-row p-4 gap-6">
-
-                {/* Left: Thumbnail Section */}
-                <div className="relative w-full md:w-64 lg:w-80 shrink-0 aspect-video rounded-xl overflow-hidden shadow-sm group/thumb">
-                    {subject.thumbnail_url ? (
-                        <img
-                            src={subject.thumbnail_url}
-                            alt={subject.title}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                    ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-zinc-800 to-black" />
-                    )}
-
-                    {/* Play Overlay (Visible on hover) */}
-                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/thumb:opacity-100 transition-opacity flex items-center justify-center">
-                        <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30 transform scale-75 group-hover/thumb:scale-100 transition-transform">
-                            <Play className="h-6 w-6 text-white fill-current" />
-                        </div>
-                    </div>
-
-                    {/* Duration Badge */}
-                    {subject.duration && (
-                        <div className="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/80 text-white text-[10px] font-bold rounded shadow-sm">
-                            {subject.duration}
-                        </div>
-                    )}
-                </div>
-
-                {/* Right: Info Section */}
-                <div className="flex flex-col flex-1 min-w-0 py-1">
-
-                    {/* Top Metadata */}
-                    <div className="flex items-center gap-2 mb-2">
-                        {isNew && (
-                            <span className="bg-orange-50 dark:bg-orange-950/30 text-[#f25e1c] text-[10px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-wider">
-                                NEW
-                            </span>
+            <div className="flex flex-col p-4 gap-6">
+                <div className="flex flex-col md:flex-row gap-6">
+                    {/* Left: Thumbnail Section */}
+                    <div className="relative w-full md:w-64 lg:w-80 shrink-0 aspect-video rounded-xl overflow-hidden shadow-sm group/thumb">
+                        {subject.thumbnail_url ? (
+                            <img
+                                src={subject.thumbnail_url}
+                                alt={subject.title}
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                        ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-zinc-800 to-black" />
                         )}
-                        <span className="text-zinc-400 dark:text-zinc-500 text-[11px] font-medium flex items-center gap-1.5">
-                            {relativeTime}
-                        </span>
+
+                        {/* Play Overlay (Visible on hover) */}
+                        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/thumb:opacity-100 transition-opacity flex items-center justify-center">
+                            <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30 transform scale-75 group-hover/thumb:scale-100 transition-transform">
+                                <Play className="h-6 w-6 text-white fill-current" />
+                            </div>
+                        </div>
+
+                        {/* Duration Badge */}
+                        {subject.duration && (
+                            <div className="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/80 text-white text-[10px] font-bold rounded shadow-sm">
+                                {subject.duration}
+                            </div>
+                        )}
                     </div>
 
-                    {/* Title */}
-                    <h2 className="text-xl lg:text-2xl font-extrabold text-zinc-900 dark:text-white mb-4 line-clamp-2 leading-tight">
-                        {subject.title}
-                    </h2>
+                    {/* Right: Info Section */}
+                    <div className="flex flex-col flex-1 min-w-0 py-1">
+
+                        {/* Top Metadata */}
+                        <div className="flex items-center gap-2 mb-2">
+                            {isNew && (
+                                <span className="bg-orange-50 dark:bg-orange-950/30 text-[#f25e1c] text-[10px] font-extrabold px-1.5 py-0.5 rounded uppercase tracking-wider">
+                                    NEW
+                                </span>
+                            )}
+                            <span className="text-zinc-400 dark:text-zinc-500 text-[11px] font-medium flex items-center gap-1.5">
+                                {relativeTime}
+                            </span>
+                        </div>
+
+                        {/* Title */}
+                        <h2 className="text-xl lg:text-2xl font-extrabold text-zinc-900 dark:text-white mb-4 line-clamp-2 leading-tight">
+                            {subject.title}
+                        </h2>
 
 
-                    {/* Action Buttons */}
-                    <div className="mt-auto flex items-center gap-3">
-                        <Link
-                            href={route('videos.show', subject.id)}
-                            className="flex items-center gap-2 px-6 py-2.5 bg-[#f25e1c] hover:bg-[#d94e10] text-white rounded-xl font-bold text-sm transition-all duration-300 shadow-md shadow-orange-500/20 active:scale-95"
-                        >
-                            <Play className="h-4 w-4 fill-current" />
-                            Watch Video
-                        </Link>
+                        {/* Action Buttons */}
+                        <div className="mt-3 flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-3">
+                                <Link
+                                    href={route('videos.show', subject.id)}
+                                    className="flex items-center gap-2 px-6 py-2.5 bg-[#f25e1c] hover:bg-[#d94e10] text-white rounded-xl font-bold text-sm transition-all duration-300 shadow-md shadow-orange-500/20 active:scale-95"
+                                >
+                                    <Play className="h-4 w-4 fill-current" />
+                                    Watch Video
+                                </Link>
 
-                        <button
-                            onClick={handleShare}
-                            className="p-2.5 bg-gray-50 dark:bg-zinc-800/50 hover:bg-gray-100 dark:hover:bg-zinc-800 text-zinc-500 dark:text-zinc-400 rounded-xl transition-all active:scale-95 border border-transparent dark:border-zinc-800/50 shadow-sm"
-                            title="Compartir"
-                        >
-                            <Share2 className="h-4 w-4" />
-                        </button>
+                                <div className="flex items-center gap-4 ml-2">
+                                    <button
+                                        onClick={handleLike}
+                                        className={`flex items-center gap-1.5 transition-all ${subject.is_liked
+                                            ? 'text-red-500 scale-105'
+                                            : 'text-zinc-500 hover:text-red-500'
+                                            }`}
+                                        title="Me gusta"
+                                    >
+                                        <Heart className={`h-5 w-5 ${subject.is_liked ? 'fill-current' : ''}`} />
+                                        <span className="text-sm font-bold">{subject.likes_count || 0}</span>
+                                    </button>
+
+                                    <Link
+                                        href={route('videos.show', subject.id)}
+                                        className="flex items-center gap-1.5 text-zinc-500 hover:text-[#f25e1c] transition-colors"
+                                        title="Comentarios"
+                                    >
+                                        <MessageCircle className="h-5 w-5" />
+                                        <span className="text-sm font-bold">{subject.comments_count || 0}</span>
+                                    </Link>
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={handleShare}
+                                className="p-2.5 bg-gray-50 dark:bg-zinc-800/50 hover:bg-gray-100 dark:hover:bg-zinc-800 text-zinc-500 dark:text-zinc-400 rounded-xl transition-all active:scale-95 border border-transparent dark:border-zinc-800/50 shadow-sm"
+                                title="Compartir"
+                            >
+                                <Share2 className="h-4 w-4" />
+                            </button>
+                        </div>
+
+                        {/* Quick Comment Section - Moved here */}
+                        <div className="mt-3 pt-3 border-t border-gray-100 dark:border-white/5">
+                            <form onSubmit={handleSubmitComment} className="relative flex items-center gap-2">
+                                <input
+                                    type="text"
+                                    value={comment}
+                                    onChange={(e) => setComment(e.target.value)}
+                                    placeholder="Escribe un comentario..."
+                                    className="flex-1 bg-gray-50 dark:bg-zinc-800/50 border-none rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-[#f25e1c] dark:text-white transition-all shadow-inner"
+                                    disabled={isSubmitting}
+                                />
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting || !comment.trim()}
+                                    className="p-2.2 bg-[#f25e1c] hover:bg-[#d94e10] disabled:bg-zinc-200 dark:disabled:bg-zinc-800 disabled:text-zinc-400 text-white rounded-xl transition-all active:scale-95 shadow-md shadow-orange-500/10"
+                                >
+                                    <Send className="h-3.5 w-3.5" />
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
