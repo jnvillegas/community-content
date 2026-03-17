@@ -15,6 +15,8 @@ use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
 use App\Models\User;
+use App\Models\ArticleLike;
+use App\Models\ArticleComment;
 
 
 class ArticleController extends Controller implements HasMiddleware
@@ -30,18 +32,40 @@ class ArticleController extends Controller implements HasMiddleware
 
     public function index(): Response
     {
-        $articles = Article::with(['categories', 'author', 'likes', 'comments.user'])
+        $articles = Article::with(['categories', 'author'])
+            ->withCount(['likes', 'comments'])
             ->orderBy('created_at', 'desc')
-            ->paginate(10)
-            ->through(function ($article) {
-                $article->likes_count = $article->likes->count();
-                $article->is_liked = Auth::check() ? $article->isLikedBy(Auth::user()) : false;
-                $article->comments_count = $article->comments->count();
-                return $article;
+            ->paginate(10);
+
+        $stats = [
+            'total_articles' => Article::count(),
+            'total_likes' => ArticleLike::whereHas('article')->count(),
+            'total_comments' => ArticleComment::whereHas('article')->count(),
+            'published_count' => Article::where('status', 'published')->count(),
+        ];
+
+        $recentComments = ArticleComment::whereHas('article')
+            ->with(['user', 'article'])
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map(function ($comment) {
+                return [
+                    'id' => $comment->id,
+                    'content' => $comment->content,
+                    'user' => [
+                        'name' => $comment->user->name,
+                        'avatar' => $comment->user->profile_photo_url,
+                    ],
+                    'article_title' => $comment->article->title ?? 'Articulo eliminado',
+                    'created_at' => $comment->created_at->diffForHumans(),
+                ];
             });
 
         return Inertia::render('articles/Index', [
-            'articles' => $articles
+            'articles' => $articles,
+            'stats' => $stats,
+            'recentComments' => $recentComments,
         ]);
 
     }

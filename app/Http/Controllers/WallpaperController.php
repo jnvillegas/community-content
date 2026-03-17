@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Wallpaper;
 use Illuminate\Http\Request;
+use App\Models\WallpaperLike;
+use App\Models\WallpaperComment;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Inertia;
@@ -43,22 +45,42 @@ class WallpaperController extends Controller implements HasMiddleware
     /**
      * Display a listing of wallpapers for admin panel.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $wallpapers = Wallpaper::with('author')
+        $wallpapers = Wallpaper::with(['author']) // Kept 'author' as per original, assuming 'user' in snippet was a typo or different context
             ->withCount(['likes', 'comments'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+            ->latest()
+            ->paginate(10);
 
-        if (auth()->check()) {
-            $user = auth()->user();
-            $wallpapers->getCollection()->each(function ($wallpaper) use ($user) {
-                $wallpaper->is_liked = $wallpaper->isLikedBy($user);
+        $stats = [
+            'total_wallpapers' => Wallpaper::count(),
+            'total_likes' => WallpaperLike::whereHas('wallpaper')->count(),
+            'total_comments' => WallpaperComment::whereHas('wallpaper')->count(),
+            'total_downloads' => Wallpaper::sum('downloads_count'),
+        ];
+
+        $recentComments = WallpaperComment::whereHas('wallpaper')
+            ->with(['user', 'wallpaper'])
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map(function ($comment) {
+                return [
+                    'id' => $comment->id,
+                    'content' => $comment->content,
+                    'user' => [
+                        'name' => $comment->user->name,
+                        'avatar' => $comment->user->profile_photo_url,
+                    ],
+                    'wallpaper_title' => $comment->wallpaper->title ?? 'Wallpaper eliminado',
+                    'created_at' => $comment->created_at->diffForHumans(),
+                ];
             });
-        }
 
         return Inertia::render('wallpapers/Index', [
             'wallpapers' => $wallpapers,
+            'stats' => $stats,
+            'recentComments' => $recentComments,
         ]);
     }
 

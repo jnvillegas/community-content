@@ -23,6 +23,7 @@ class Video extends Model
         'thumbnail_url',
         'duration',
         'location',
+        'location_url',
         'status',
         'is_featured',
         'author_id',
@@ -104,7 +105,9 @@ class Video extends Model
         }
 
         if ($eventName === 'updated') {
-            return $this->wasChanged('status') && $this->status === 'published';
+            // Notify if becoming published or if major fields change while published
+            return ($this->wasChanged('status') && $this->status === 'published') ||
+                   ($this->status === 'published' && $this->wasChanged(['title', 'description', 'location', 'location_url']));
         }
 
         return false;

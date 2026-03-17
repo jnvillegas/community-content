@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Video;
 use App\Models\VideoCategory;
 use Illuminate\Http\Request;
+use App\Models\VideoLike;
+use App\Models\VideoComment;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Inertia;
@@ -33,7 +35,9 @@ class VideoController extends Controller implements HasMiddleware
 
     public function index(Request $request): Response
     {
-        $query = Video::with(['categories', 'author']);
+        $query = Video::with(['author', 'categories'])
+            ->withCount(['likes', 'comments'])
+            ->latest();
 
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -45,16 +49,41 @@ class VideoController extends Controller implements HasMiddleware
 
         $filter = $request->input('filter', 'recent');
 
-        match ($filter) {
-            'trending' => $query->where('is_featured', true)->orderBy('created_at', 'desc'),
-            'all' => $query->orderBy('created_at', 'desc'),
-            default => $query->orderBy('created_at', 'desc'),
-        };
+        if ($filter === 'trending') {
+            $query->where('is_featured', true);
+        }
 
         $videos = $query->paginate(12)->withQueryString();
 
+        $stats = [
+            'total_videos' => Video::count(),
+            'total_likes' => VideoLike::whereHas('video')->count(),
+            'total_comments' => VideoComment::whereHas('video')->count(),
+            'total_views' => 0, // Placeholder as views_count is not in schema yet
+        ];
+
+        $recentComments = VideoComment::whereHas('video')
+            ->with(['user', 'video'])
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map(function ($comment) {
+                return [
+                    'id' => $comment->id,
+                    'content' => $comment->content,
+                    'user' => [
+                        'name' => $comment->user->name,
+                        'avatar' => $comment->user->profile_photo_url,
+                    ],
+                    'video_title' => $comment->video->title ?? 'Video eliminado',
+                    'created_at' => $comment->created_at->diffForHumans(),
+                ];
+            });
+
         return Inertia::render('videos/Index', [
             'videos' => $videos,
+            'stats' => $stats,
+            'recentComments' => $recentComments,
             'filters' => $request->only(['search', 'filter'])
         ]);
     }
@@ -74,6 +103,7 @@ class VideoController extends Controller implements HasMiddleware
             'description' => 'nullable|string',
             'duration' => 'nullable|string',
             'location' => 'nullable|string',
+            'location_url' => 'nullable|url',
             'status' => 'required|in:draft,published,private',
             'thumbnail_url' => 'nullable|string',
             'categories' => 'array',
@@ -85,6 +115,7 @@ class VideoController extends Controller implements HasMiddleware
             'description' => $validated['description'],
             'duration' => $validated['duration'],
             'location' => $validated['location'],
+            'location_url' => $validated['location_url'] ?? null,
             'status' => $validated['status'],
             'thumbnail_url' => $validated['thumbnail_url'],
             'author_id' => auth()->id(),
@@ -154,6 +185,7 @@ class VideoController extends Controller implements HasMiddleware
             'description' => 'nullable|string',
             'duration' => 'nullable|string',
             'location' => 'nullable|string',
+            'location_url' => 'nullable|url',
             'status' => 'required|in:draft,published,private',
         ]);
 

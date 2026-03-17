@@ -21,7 +21,7 @@ trait RecordsActivity
         static::updated(function (Model $model) {
             if (method_exists($model, 'shouldRecordActivity')) {
                 if ($model->shouldRecordActivity('updated')) {
-                    $model->recordActivity('created');
+                    $model->recordActivity('updated');
                 }
             }
         });

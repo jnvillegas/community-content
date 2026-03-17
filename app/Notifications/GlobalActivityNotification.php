@@ -42,30 +42,41 @@ class GlobalActivityNotification extends Notification
         $type = class_basename($subject);
 
         // Dynamic message based on type
+        $isUpdate = str_starts_with($this->activity->type, 'updated_');
+
         $message = match ($type) {
-            'Article' => 'ha publicado un nuevo artículo: ' . $subject->title,
-            'Video' => 'ha subido un nuevo video: ' . $subject->title,
-            'Wallpaper' => 'ha compartido un nuevo wallpaper: ' . $subject->title,
-            'Event' => 'ha creado un nuevo evento: ' . $subject->title,
-            'Course' => 'ha lanzado un nuevo curso: ' . $subject->title,
-            'Story' => 'ha publicado una nueva historia: ' . $subject->title,
+            'Article' => $isUpdate ? 'ha actualizado el artículo: ' . $subject->title : 'ha publicado un nuevo artículo: ' . $subject->title,
+            'Video' => $isUpdate ? 'ha actualizado el video: ' . $subject->title : 'ha subido un nuevo video: ' . $subject->title,
+            'Wallpaper' => $isUpdate ? 'ha actualizado el wallpaper: ' . $subject->title : 'ha compartido un nuevo wallpaper: ' . $subject->title,
+            'Event' => $isUpdate ? 'ha actualizado el evento: ' . $subject->title : 'ha creado un nuevo evento: ' . $subject->title,
+            'Course' => $isUpdate ? 'ha actualizado el curso: ' . $subject->title : 'ha lanzado un nuevo curso: ' . $subject->title,
+            'Story' => $isUpdate ? 'ha actualizado la historia: ' . $subject->title : 'ha publicado una nueva historia: ' . $subject->title,
             'EventLike' => 'le ha dado like a tu evento: ' . $subject->event->title,
             'EventComment' => 'ha comentado en tu evento: ' . $subject->event->title,
             'StoryLike' => 'le ha dado like a tu historia: ' . $subject->story->title,
             'StoryComment' => 'ha comentado en tu historia: ' . $subject->story->title,
-            default => 'ha realizado una actividad nueva: ' . ($subject->title ?? $subject->name ?? ''),
+            'ArticleLike' => 'le ha dado like a tu artículo: ' . $subject->article->title,
+            'ArticleComment' => 'ha comentado en tu artículo: ' . $subject->article->title,
+            'VideoLike' => 'le ha dado like a tu video: ' . $subject->video->title,
+            'VideoComment' => 'ha comentado en tu video: ' . $subject->video->title,
+            'WallpaperLike' => 'le ha dado like a tu wallpaper: ' . $subject->wallpaper->title,
+            'WallpaperComment' => 'ha comentado en tu wallpaper: ' . $subject->wallpaper->title,
+            default => ($isUpdate ? 'ha actualizado ' : 'ha realizado ') . 'una actividad: ' . ($subject->title ?? $subject->name ?? ''),
         };
 
         // Dynamic URL based on type
         $url = match ($type) {
             'Article' => route('articles.show', $subject->slug),
             'Video' => route('videos.show', $subject->id),
-            'Wallpaper' => route('wallpapers.index'), // Assuming internal gallery or index
+            'Wallpaper' => route('wallpapers.show', $subject->id),
             'Event' => route('events.show', $subject->slug),
             'Course' => route('academy.show', $subject->slug),
             'Story' => route('dashboard', ['story' => $subject->id]),
             'EventLike', 'EventComment' => route('events.show', $subject->event->slug),
             'StoryLike', 'StoryComment' => route('dashboard', ['story' => $subject->story->id]),
+            'ArticleLike', 'ArticleComment' => route('articles.show', $subject->article->slug),
+            'VideoLike', 'VideoComment' => route('videos.show', $subject->video->id),
+            'WallpaperLike', 'WallpaperComment' => route('wallpapers.show', $subject->wallpaper->id),
             default => '#',
         };
 

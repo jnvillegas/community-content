@@ -1,4 +1,4 @@
-import { Play, Share2, Heart, MessageCircle, Send } from 'lucide-react';
+import { Play, Share2, Heart, MessageCircle, Send, MapPin } from 'lucide-react';
 import { Link, router } from '@inertiajs/react';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -108,6 +108,15 @@ export default function VideoCard({ activity }: { activity: any }) {
                             <span className="text-zinc-400 dark:text-zinc-500 text-[11px] font-medium flex items-center gap-1.5">
                                 {relativeTime}
                             </span>
+                            {subject.location && (
+                                <>
+                                    <span className="text-zinc-300 dark:text-zinc-700 mx-0.5">•</span>
+                                    <span className="text-[#f25e1c] text-[11px] font-bold flex items-center gap-1">
+                                        <MapPin className="h-3 w-3" />
+                                        {subject.location}
+                                    </span>
+                                </>
+                            )}
                         </div>
 
                         {/* Title */}

@@ -25,7 +25,13 @@ class Activity extends Model
                 'created_eventlike',
                 'created_eventcomment',
                 'created_storylike',
-                'created_storycomment'
+                'created_storycomment',
+                'created_articlelike',
+                'created_articlecomment',
+                'created_videolike',
+                'created_videocomment',
+                'created_wallpaperlike',
+                'created_wallpapercomment'
             ];
 
             if (in_array($type, $interactions)) {
@@ -36,6 +42,12 @@ class Activity extends Model
                     $recipient = $subject->event->createdBy;
                 } elseif (str_contains($type, 'story')) {
                     $recipient = $subject->story->user;
+                } elseif (str_contains($type, 'article')) {
+                    $recipient = $subject->article->author;
+                } elseif (str_contains($type, 'video')) {
+                    $recipient = $subject->video->author;
+                } elseif (str_contains($type, 'wallpaper')) {
+                    $recipient = $subject->wallpaper->author;
                 }
 
                 // Only notify if there's a recipient and it's not the actor
@@ -45,8 +57,8 @@ class Activity extends Model
                 return;
             }
 
-            // 2. New Content (Article, Video, etc.) -> Notify everyone
-            if (str_starts_with($type, 'created_')) {
+            // 2. New Content or Updates (Article, Video, etc.) -> Notify everyone
+            if (str_starts_with($type, 'created_') || str_starts_with($type, 'updated_')) {
                 $users = User::where('id', '!=', $activity->user_id)->get();
                 Notification::send(
                     $users,

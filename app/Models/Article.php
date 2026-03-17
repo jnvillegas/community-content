@@ -103,7 +103,9 @@ class Article extends Model
         }
 
         if ($eventName === 'updated') {
-            return $this->wasChanged('status') && $this->status === 'published';
+            // Notify if becoming published or if major fields change while published
+            return ($this->wasChanged('status') && $this->status === 'published') ||
+                   ($this->status === 'published' && $this->wasChanged(['title', 'content', 'category_id']));
         }
 
         return false;

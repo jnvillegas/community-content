@@ -38,6 +38,7 @@ interface Video {
     thumbnail_url: string;
     duration: string;
     location: string;
+    location_url?: string;
     status: string;
     is_featured: boolean;
     created_at?: string;
@@ -63,6 +64,7 @@ export default function Edit({ video, categories }: Props) {
         youtube_url: `https://www.youtube.com/watch?v=${video.youtube_id}` || '',
         description: video.description || '',
         location: video.location || '',
+        location_url: video.location_url || '',
         duration: video.duration || '',
         status: video.status || 'draft',
         is_featured: !!video.is_featured,
@@ -241,14 +243,14 @@ export default function Edit({ video, categories }: Props) {
                                 </div> */}
                             </div>
 
-                            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t">
                                 <div className="space-y-2">
-                                    <Label htmlFor="location">Location</Label>
+                                    <Label htmlFor="location">Nombre de la Ubicación</Label>
                                     <div className="relative">
                                         <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                         <Input
                                             id="location"
-                                            placeholder="e.g. Bali, Indonesia"
+                                            placeholder="Ej: Bali, Indonesia"
                                             className="pl-9"
                                             value={data.location}
                                             onChange={e => setData('location', e.target.value)}
@@ -257,6 +259,23 @@ export default function Edit({ video, categories }: Props) {
                                     {errors.location && <p className="text-sm text-red-500">{errors.location}</p>}
                                 </div>
 
+                                <div className="space-y-2">
+                                    <Label htmlFor="location_url">URL de Google Maps</Label>
+                                    <div className="relative">
+                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                        <Input
+                                            id="location_url"
+                                            placeholder="https://maps.google.com/..."
+                                            className="pl-9"
+                                            value={data.location_url}
+                                            onChange={e => setData('location_url', e.target.value)}
+                                        />
+                                    </div>
+                                    {errors.location_url && <p className="text-sm text-red-500">{errors.location_url}</p>}
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-1 gap-4 pt-4 border-t">
                                 <div className="space-y-2">
                                     <Label htmlFor="duration">Duration</Label>
                                     <div className="relative">
@@ -271,7 +290,7 @@ export default function Edit({ video, categories }: Props) {
                                     </div>
                                     {errors.duration && <p className="text-sm text-red-500">{errors.duration}</p>}
                                 </div>
-                            </div> */}
+                            </div>
                         </CardContent>
                     </Card>
 

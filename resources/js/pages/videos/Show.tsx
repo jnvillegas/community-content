@@ -34,6 +34,7 @@ interface Video {
     thumbnail_url: string;
     duration: string;
     location: string;
+    location_url?: string;
     status: string;
     author: { name: string; avatar?: string };
     categories: Array<{ id: number; name: string }>;
@@ -302,7 +303,18 @@ export default function Show({ video: initialVideo, relatedVideos, auth }: Props
                                         </div>
                                         <div>
                                             <p className="text-xs text-muted-foreground font-medium">Location</p>
-                                            <p className="text-sm font-bold">{video.location}</p>
+                                            {video.location_url ? (
+                                                <a
+                                                    href={video.location_url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-sm font-bold text-primary hover:underline flex items-center gap-1"
+                                                >
+                                                    {video.location}
+                                                </a>
+                                            ) : (
+                                                <p className="text-sm font-bold">{video.location}</p>
+                                            )}
                                         </div>
                                     </div>
                                 )}
